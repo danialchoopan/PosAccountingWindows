@@ -15,42 +15,34 @@ public partial class App : Application
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "PosAccountingApp", "settings.json");
 
-        // First run: show setup dialog
         if (!File.Exists(settingsPath))
         {
             var setupWindow = new SetupWindow();
             setupWindow.ShowDialog();
-
-            // If setup was cancelled (settings still doesn't exist), exit
-            if (!File.Exists(settingsPath))
-            {
-                Shutdown();
-                return;
-            }
+            if (!File.Exists(settingsPath)) { Shutdown(); return; }
         }
 
-        // Show login window
         var loginWindow = new LoginWindow();
         loginWindow.ShowDialog();
 
-        // If login was successful (CurrentUser is set), open main window
         if (AppSettings.CurrentUser != null)
         {
             var mainWindow = new MainWindow();
             mainWindow.ShowDialog();
         }
 
-        // Exit after main window closes
         Shutdown();
     }
 
-    private void OnExit(object sender, ExitEventArgs e)
-    {
-    }
+    private void OnExit(object sender, ExitEventArgs e) { }
 }
 
 public class AppSettings
 {
+    private static readonly string SettingsPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "PosAccountingApp", "settings.json");
+
     public static User? CurrentUser { get; set; }
 
     public string ShopName { get; set; } = "";
@@ -60,18 +52,23 @@ public class AppSettings
     public decimal VatPercentage { get; set; } = 10;
     public decimal CommissionPercentage { get; set; } = 2;
     public bool IsSetupComplete { get; set; }
+    public bool IsDarkTheme { get; set; }
 
     public static AppSettings Load()
     {
-        var settingsPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "PosAccountingApp", "settings.json");
-
-        if (File.Exists(settingsPath))
+        if (File.Exists(SettingsPath))
         {
-            var json = File.ReadAllText(settingsPath);
+            var json = File.ReadAllText(SettingsPath);
             return System.Text.Json.JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
         }
         return new AppSettings();
+    }
+
+    public void Save()
+    {
+        var dir = Path.GetDirectoryName(SettingsPath);
+        if (dir != null) Directory.CreateDirectory(dir);
+        var json = System.Text.Json.JsonSerializer.Serialize(this, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(SettingsPath, json);
     }
 }

@@ -23,6 +23,7 @@ public class AppDbContext : DbContext
     public DbSet<InstallmentSchedule> InstallmentSchedules => Set<InstallmentSchedule>();
     public DbSet<SuspendedInvoice> SuspendedInvoices => Set<SuspendedInvoice>();
     public DbSet<CashRegister> CashRegisters => Set<CashRegister>();
+    public DbSet<ProductCategory> Categories => Set<ProductCategory>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

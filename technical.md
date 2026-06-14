@@ -1,20 +1,19 @@
-# مستندات فنی سیستم مدیریت فروش و حسابداری
+# مستندات فنی
 
-## معماری کلی
+## ساختار پروژه
 
 ```
 PosAccountingApp/
-├── Models/              # مدل‌های داده + ایلوم‌ها (14 جدول)
-├── Data/                # EF Core DbContext + DatabaseInitializer
-├── ViewModels/          # ویومدل‌ها (9 فایل)
-├── Views/               # نماهای XAML (10 فایل)
-├── Converters/          # مبدلهای XAML (Jalali, Persian digits, Enum)
-├── Resources/           # استایل‌ها - تم روشن ویندوز
-├── Migrations/          # مایگریشن‌های EF Core
-├── .gitignore           # فایل‌های نادیده‌گرفته‌شده
-├── readme.md            # معرفی پروژه
-├── setup.md             # راهنمای نصب
-└── technical.md         # مستندات فنی
+├── Controls/              # کنترلهای قابل استفاده مجدد
+│   ├── PaginatedDataGrid  # جدول با صفحه‌بندی/خروجی/چاپ
+│   └── DetailWindow       # پنجره جزئیات ردیف
+├── Converters/            # مبدلهای XAML
+├── Data/                  # DbContext + ThemeManager + ExportHelper
+├── Models/                # 16 مدل داده
+├── Resources/             # Themes.xaml + Styles.xaml
+├── ViewModels/            # 11 ویومدل
+├── Views/                 # 12 نمای XAML
+└── Migrations/            # مایگریشن‌های EF Core
 ```
 
 ## فناوری‌ها
@@ -24,120 +23,77 @@ PosAccountingApp/
 | .NET SDK | ۹.۰ | محیط اجرایی |
 | WPF | ۹.۰ | رابط کاربری |
 | EF Core | ۹.۰ | ORM |
-| SQLite | - | پایگاه داده محلی |
+| SQLite | - | پایگاه داده |
 | CommunityToolkit.Mvvm | ۸.۴ | MVVM |
-| System.Text.Json | ۹.۰ | JSON |
+| iTextSharp.LGPLv2.Core | ۳.۸ | خروجی PDF |
+| DocumentFormat.OpenXml | ۳.۵ | خروجی Excel |
 
-## جریان راه‌اندازی
+## سیستم صفحه‌بندی
 
-```
-برنامه اجرا می‌شود
-    │
-    ├── settings.json وجود ندارد؟
-    │       → SetupWindow (اطلاعات فروشگاه + کد عبور مدیر)
-    │       → دیتابیس ایجاد می‌شود + فقط کاربر مدیر ساخته می‌شود
-    │       → LoginWindow
-    │
-    ├── settings.json وجود دارد؟
-    │       → LoginWindow (انتخاب کاربر + کد عبور)
-    │
-    └── ورود موفق → MainWindow (داشبورد)
-```
+- PaginatedDataGrid: کنترل قابل استفاده مجدد
+- انتخاب تعداد ردیف: 5، 10، 20، 50، همه
+- دکمه‌های: اولین، قبلی، بعدی، آخرین صفحه
+- نمایش "صفحه X از Y" و "کل: N"
 
-**نکته مهم:** فقط کاربر مدیر در راه‌اندازی اولیه ساخته می‌شود. کاربران دیگر توسط مدیر از صفحه مدیریت کاربران اضافه می‌شوند.
+## خروجی
 
-## سیستم کاربران
+### PDF (iTextSharp)
+- صفحه A4 افقی
+- فونت Tahoma/Persian
+- هدر آبی با متن سفید
+- RTL (راست به چپ)
 
-### نقش‌ها
+### Excel (OpenXml)
+- فایل .xlsx
+- هدر با فونت Bold
+- SharedStringTable برای بهینه‌سازی
+
+### چاپ
+- PDF موقت در %TEMP%
+- باز شدن در برنامه پیش‌فرض PDF
+
+## جدول دسته‌بندی کالاها
+
+| فیلد | توضیح |
+|------|-------|
+| Name | نام دسته |
+| Description | توضیح |
+| Icon | آیکون Segoe MDL2 |
+| SortOrder | ترتیب نمایش |
+| Profile | پروفایل کسب‌وکار |
+
+## جدول کاربران
 
 | نقش | توضیح |
 |-----|-------|
-| SuperAdmin | مدیر ارشد - دسترسی کامل |
-| Admin | مدیر - دسترسی به مدیریت کاربران |
-| Cashier | صندوقدار - فقط صندوق فروش |
-| Broker | مشاور - املاک و خودرو |
-| Accountant | حسابدار - گزارشات |
+| SuperAdmin | مدیر ارشد |
+| Admin | مدیر |
+| Cashier | صندوقدار |
+| Broker | مشاور |
+| Accountant | حسابدار |
 
-### مدیریت کاربران
-- فقط مدیر ارشد و مدیر می‌توانند کاربر جدید بسازند
-- افزودن کاربر: نام + کد عبور + نقش
-- حذف کاربر: غیرفعال‌سازی (حذف نرم)
-- کاربر نمی‌تواند خودش را حذف کند
+## فرمول‌های مالیات
 
-## سیستم جستجو
-
-### جستجوی سراسری (Ctrl+G)
-- پنجره جداگانه با فیلد جستجو
-- جستجو در: کالاها، مشتریان، چک‌ها، کاربران
-- نتایج در جدول با نمایش نوع، نام و جزئیات
-- بستن با ESC
-
-### جستجوی هر بخش
-- فیلتر لحظه‌ای با تایپ در فیلد جستجو
-- جستجو بر اساس نام، بارکد، دسته، تلفن، شماره چک
-- دکمه X برای پاک کردن جستجو
-
-## پایگاه داده
-
-### مسیر: `%LOCALAPPDATA%\PosAccountingApp\pos_data.db`
-
-### موجودیت‌ها
-
-| جدول | توضیح |
-|------|-------|
-| User | کاربران با نقش‌ها و کد عبور SHA-256 |
-| Warehouse | انبارها |
-| Product | کالاها (بارکد، قیمت، موجودی) |
-| Customer | مشتریان (تلفن، سقف اعتبار) |
-| CustomerLedger | دفتر معین مشتری |
-| Sale | فاکتورهای فروش |
-| SaleItem | آیتم‌های فاکتور |
-| Cheque | چک‌ها (دریافتی/پرداختی) |
-| Expense | هزینه‌ها |
-| RealEstateProperty | املاک |
-| Vehicle | خودروها |
-| InstallmentBook | دفترچه اقساط |
-| InstallmentSchedule | جزئیات اقساط |
-| SuspendedInvoice | فاکتورهای معلق |
-| CashRegister | صندوق |
-
-### فیلتر حذف نرم
-تمام جداول از `IsActive` برای حذف منطقی استفاده می‌کنند.
-
-## فرمول‌های محاسباتی
-
-### مالیات
 ```
 TaxAmount = Subtotal × (VATPercentage / 100)
-TotalAmount = (Subtotal + TaxAmount) + Rounding + DeliveryFare
+TotalAmount = Subtotal + TaxAmount + Rounding + DeliveryFare
 ```
 
-### کارمزد املاک
+## فرمول اقساط
+
 ```
-فروش: Commission = TotalPrice × CommissionPercentage
-اجاره/رهن: Commission = (MortgagePrice × 0.0025 + RentPrice) × CommissionPercentage
+TotalInterest = Principal × (MonthlyRate/100) × Count
+MonthlyPayment = (Principal + TotalInterest) / Count
 ```
 
-### فروش اقساطی
-```
-TotalInterest = PrincipalDebt × (MonthlyRate / 100) × InstallmentCount
-MonthlyPayment = (PrincipalDebt + TotalInterest) / InstallmentCount
-```
+## سیستم تم
 
-## سیستم صفحه‌کلید
-
-| کلید | عملکرد |
-|------|--------|
-| Ctrl+G | جستجوی سراسری |
-| F1 | صندوق فروشگاهی |
-| F2 | مدیریت کالاها |
-| F3 | خزانه‌داری و چک |
-| F4 | نگهداری فاکتور |
-| F9 | گزارشات |
-| ESC | بستن پنجره جستجو |
+- Themes.xaml: تعریف رنگ‌های روشن/تاریک
+- ThemeManager.cs: تغییر پویای تم
+- DynamicResource در تمام استایل‌ها
+- ذخیره انتخاب تم در settings.json
 
 ## قوانین زبانی
 
-- **رابط کاربری:** ۱۰۰٪ فارسی با اصطلاحات استاندارد حسابداری ایرانی
-- **کدنویسی:** ۱۰۰٪ انگلیسی
-- **کامنت‌ها:** انگلیسی با توضیح مفاهیم حسابداری ایرانی
+- رابط کاربری: ۱۰۰٪ فارسی با فونت Vazirmatn
+- کدنویسی: ۱۰۰٪ انگلیسی

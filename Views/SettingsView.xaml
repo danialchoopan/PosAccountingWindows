@@ -10,80 +10,100 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14">
         <StackPanel MaxWidth="700" HorizontalAlignment="Right" Margin="0,0,0,20">
 
-            <!-- Business Profile -->
+            <!-- Theme -->
             <Border Style="{StaticResource CardBorder}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="پروفایل کسب‌وکار" FontSize="17" FontWeight="Bold"
-                               Foreground="#FF0078D4" Margin="0,0,0,12"/>
+                    <TextBlock Text="&#xE793;  ظاهر برنامه" FontSize="16" FontWeight="Bold"
+                               Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,12"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="پوسته برنامه" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                            <TextBlock Text="روشن یا تاریک بودن برنامه را تغییر دهید"
+                                       FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="تغییر تم" Style="{StaticResource PrimaryButton}"
+                                Command="{Binding ToggleThemeCommand}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Shop Profile -->
+            <Border Style="{StaticResource CardBorder}" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="&#xE774;  پروفایل کسب‌وکار" FontSize="16" FontWeight="Bold"
+                               Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,12"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" Margin="4">
-                            <TextBlock Text="نام فروشگاه" FontSize="11" Foreground="#FF888888" Margin="0,0,0,3"/>
+                            <TextBlock Text="نام فروشگاه" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                             <TextBox Text="{Binding BusinessName, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="4">
-                            <TextBlock Text="تلفن" FontSize="11" Foreground="#FF888888" Margin="0,0,0,3"/>
+                            <TextBlock Text="تلفن" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                             <TextBox Text="{Binding BusinessPhone, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </Grid>
                     <StackPanel Margin="4,8,4,0">
-                        <TextBlock Text="آدرس" FontSize="11" Foreground="#FF888888" Margin="0,0,0,3"/>
+                        <TextBlock Text="آدرس" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding BusinessAddress, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Margin="4,10,4,0">
-                        <TextBlock Text="نوع کسب‌وکار" FontSize="11" Foreground="#FF888888" Margin="0,0,0,3"/>
-                        <ComboBox ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}"
-                                  Width="220" HorizontalAlignment="Left"/>
+                        <TextBlock Text="نوع کسب‌وکار" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <ComboBox ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}" Width="220" HorizontalAlignment="Left"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
 
-            <!-- Tax & Rounding -->
+            <!-- Tax -->
             <Border Style="{StaticResource CardBorder}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="مالیات و گرد کردن" FontSize="17" FontWeight="Bold"
-                               Foreground="#FF0078D4" Margin="0,0,0,12"/>
+                    <TextBlock Text="&#xE74D;  مالیات و گرد کردن" FontSize="16" FontWeight="Bold"
+                               Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,12"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" Margin="4">
-                            <TextBlock Text="درصد مالیات (VAT)" FontSize="11" Foreground="#FF888888" Margin="0,0,0,3"/>
+                            <TextBlock Text="درصد مالیات (VAT)" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                             <TextBox Text="{Binding VatPercentage, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="4">
-                            <TextBlock Text="روش گرد کردن" FontSize="11" Foreground="#FF888888" Margin="0,0,0,3"/>
-                            <ComboBox ItemsSource="{Binding RoundingModes}" SelectedItem="{Binding RoundingMode}"
-                                      Width="180" HorizontalAlignment="Left"/>
+                            <TextBlock Text="روش گرد کردن" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                            <ComboBox ItemsSource="{Binding RoundingModes}" SelectedItem="{Binding RoundingMode}" Width="180" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </Grid>
+                    <StackPanel Margin="4,10,4,0">
+                        <TextBlock Text="درصد کارمزد (املاک/خودرو)" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBox Text="{Binding CommissionPercentage, UpdateSourceTrigger=PropertyChanged}" Width="200" HorizontalAlignment="Left"/>
+                    </StackPanel>
                 </StackPanel>
             </Border>
 
             <!-- Backup -->
             <Border Style="{StaticResource CardBorder}" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="پشتیبان‌گیری" FontSize="17" FontWeight="Bold"
-                               Foreground="#FF0078D4" Margin="0,0,0,12"/>
+                    <TextBlock Text="&#xE74E;  پشتیبان‌گیری" FontSize="16" FontWeight="Bold"
+                               Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,12"/>
+                    <TextBlock Text="فایل پشتیبان در دسکتاپ ذخیره می‌شود"
+                               FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,8"/>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="پشتیبان‌گیری از دیتابیس"
-                                Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"
+                        <Button Content="پشتیبان‌گیری" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"
                                 Command="{Binding BackupDatabaseCommand}"/>
-                        <Button Content="بازیابی دیتابیس"
-                                Style="{StaticResource DangerButton}"
+                        <Button Content="بازیابی" Style="{StaticResource DangerButton}"
                                 Command="{Binding RestoreDatabaseCommand}"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
 
             <Button Content="ذخیره تنظیمات" Style="{StaticResource PrimaryButton}"
-                    HorizontalAlignment="Left" Margin="6,8,6,0" Padding="20,8"
+                    HorizontalAlignment="Left" Margin="6,10,6,0" Padding="22,9"
                     Command="{Binding SaveSettingsCommand}"/>
-
         </StackPanel>
     </ScrollViewer>
 </UserControl>

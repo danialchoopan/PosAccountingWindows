@@ -1,0 +1,25 @@
+<Window x:Class="PosAccountingApp.Controls.DetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="جزئیات"
+        Width="450" Height="500"
+        WindowStartupLocation="CenterOwner"
+        FlowDirection="RightToLeft"
+        Background="{DynamicResource BgBrush}">
+
+    <DockPanel Margin="16">
+        <Border DockPanel.Dock="Top" Padding="0,0,0,12">
+            <Grid>
+                <TextBlock x:Name="TitleText" Text="جزئیات" FontSize="18" FontWeight="Bold"
+                           Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right"/>
+                <Button Content="بستن" Style="{StaticResource DangerButton}"
+                        HorizontalAlignment="Left" Padding="12,5"
+                        Click="Close_Click"/>
+            </Grid>
+        </Border>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="DetailsPanel"/>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

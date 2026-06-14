@@ -6,20 +6,11 @@ namespace PosAccountingApp.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private ObservableObject _currentView;
-
-    [ObservableProperty]
-    private string _currentViewTitle = "داشبورد";
-
-    [ObservableProperty]
-    private string _currentUser = "مدیر سیستم";
-
-    [ObservableProperty]
-    private bool _isDarkTheme;
-
-    [ObservableProperty]
-    private string _statusMessage = "آماده";
+    [ObservableProperty] private ObservableObject _currentView;
+    [ObservableProperty] private string _currentViewTitle = "داشبورد";
+    [ObservableProperty] private string _currentUser = "مدیر";
+    [ObservableProperty] private bool _isDarkTheme;
+    [ObservableProperty] private string _statusMessage = "آماده";
 
     public DashboardViewModel DashboardVm { get; } = new();
     public ProductsViewModel ProductsVm { get; } = new();
@@ -30,6 +21,7 @@ public partial class MainViewModel : ObservableObject
     public ReportsViewModel ReportsVm { get; } = new();
     public SettingsViewModel SettingsVm { get; } = new();
     public UsersViewModel UsersVm { get; } = new();
+    public CategoriesViewModel CategoriesVm { get; } = new();
 
     public bool IsAdmin => AppSettings.CurrentUser?.Role == UserRole.SuperAdmin
                         || AppSettings.CurrentUser?.Role == UserRole.Admin;
@@ -53,6 +45,11 @@ public partial class MainViewModel : ObservableObject
                 StatusMessage = r;
         }
 
+        // Load saved theme
+        var settings = AppSettings.Load();
+        IsDarkTheme = settings.IsDarkTheme;
+        Data.ThemeManager.ApplyTheme(IsDarkTheme);
+
         DashboardVm.LoadData();
     }
 
@@ -62,52 +59,44 @@ public partial class MainViewModel : ObservableObject
         switch (viewName)
         {
             case "Dashboard":
-                CurrentView = DashboardVm;
-                CurrentViewTitle = "داشبورد";
-                DashboardVm.LoadData();
-                break;
+                CurrentView = DashboardVm; CurrentViewTitle = "داشبورد";
+                DashboardVm.LoadData(); break;
             case "Products":
-                CurrentView = ProductsVm;
-                CurrentViewTitle = "کالاها و خدمات";
-                ProductsVm.LoadProducts();
-                break;
+                CurrentView = ProductsVm; CurrentViewTitle = "کالاها و خدمات";
+                ProductsVm.LoadProducts(); break;
             case "Customers":
-                CurrentView = CustomersVm;
-                CurrentViewTitle = "مشتریان";
-                CustomersVm.LoadCustomers();
-                break;
+                CurrentView = CustomersVm; CurrentViewTitle = "مشتریان";
+                CustomersVm.LoadCustomers(); break;
             case "POS":
-                CurrentView = PosVm;
-                CurrentViewTitle = "صندوق فروشگاهی";
-                break;
+                CurrentView = PosVm; CurrentViewTitle = "صندوق فروشگاهی"; break;
             case "Cheques":
-                CurrentView = ChequesVm;
-                CurrentViewTitle = "خزانه‌داری و چک";
-                ChequesVm.LoadCheques();
-                break;
+                CurrentView = ChequesVm; CurrentViewTitle = "خزانه‌داری و چک";
+                ChequesVm.LoadCheques(); break;
             case "Expenses":
-                CurrentView = ExpensesVm;
-                CurrentViewTitle = "هزینه‌ها";
-                ExpensesVm.LoadExpenses();
-                break;
+                CurrentView = ExpensesVm; CurrentViewTitle = "هزینه‌ها";
+                ExpensesVm.LoadExpenses(); break;
             case "Reports":
-                CurrentView = ReportsVm;
-                CurrentViewTitle = "گزارشات";
-                break;
+                CurrentView = ReportsVm; CurrentViewTitle = "گزارشات"; break;
             case "Users":
-                CurrentView = UsersVm;
-                CurrentViewTitle = "مدیریت کاربران";
-                UsersVm.LoadUsers();
-                break;
+                CurrentView = UsersVm; CurrentViewTitle = "مدیریت کاربران";
+                UsersVm.LoadUsers(); break;
+            case "Categories":
+                CurrentView = CategoriesVm; CurrentViewTitle = "دسته‌بندی کالاها";
+                CategoriesVm.LoadCategories(); break;
             case "Settings":
-                CurrentView = SettingsVm;
-                CurrentViewTitle = "تنظیمات";
-                break;
+                CurrentView = SettingsVm; CurrentViewTitle = "تنظیمات"; break;
         }
     }
 
     [RelayCommand]
-    private void ToggleTheme() => IsDarkTheme = !IsDarkTheme;
+    private void ToggleTheme()
+    {
+        IsDarkTheme = !IsDarkTheme;
+        Data.ThemeManager.ApplyTheme(IsDarkTheme);
+        var settings = AppSettings.Load();
+        settings.IsDarkTheme = IsDarkTheme;
+        settings.Save();
+    }
 
     [RelayCommand]
     private void OpenGlobalSearch()
