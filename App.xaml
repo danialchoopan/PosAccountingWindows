@@ -10,6 +10,24 @@
                 <ResourceDictionary Source="Resources/Themes.xaml"/>
                 <ResourceDictionary Source="Resources/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- App Icon -->
+            <DrawingImage x:Key="AppIcon">
+                <DrawingImage.Drawing>
+                    <DrawingGroup>
+                        <GeometryDrawing Brush="#FF0078D4">
+                            <GeometryDrawing.Geometry>
+                                <EllipseGeometry Center="16,16" RadiusX="14" RadiusY="14"/>
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+                        <GeometryDrawing Brush="White">
+                            <GeometryDrawing.Geometry>
+                                <PathGeometry Figures="M10,10 L22,10 M10,16 L20,16 M10,22 L18,22"/>
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
