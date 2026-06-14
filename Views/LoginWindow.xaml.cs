@@ -76,9 +76,9 @@ public partial class LoginWindow : Window
             return;
         }
 
+        // Login successful - set user and close
         AppSettings.CurrentUser = user;
-        var mainWindow = new MainWindow();
-        mainWindow.Show();
+        this.DialogResult = true;
         this.Close();
     }
 

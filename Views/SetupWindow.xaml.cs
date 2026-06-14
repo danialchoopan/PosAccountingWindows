@@ -41,17 +41,13 @@ public partial class SetupWindow : Window
             DatabaseInitializer.Initialize();
             using var db = DatabaseInitializer.CreateDbContext();
 
-            // Update admin user with chosen PIN
             var admin = db.Users.First(u => u.Id == 1);
             admin.PinCodeHash = ComputeSha256(PinBox.Text);
             admin.Name = "مدیر";
 
-            // Add one default warehouse
             db.Warehouses.Add(new Warehouse { Name = "انبار اصلی", Location = "محل فروشگاه" });
-
             db.SaveChanges();
 
-            // Save settings
             var settingsDir = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "PosAccountingApp");
@@ -67,12 +63,12 @@ public partial class SetupWindow : Window
                 IsSetupComplete = true
             };
 
-            var json = System.Text.Json.JsonSerializer.Serialize(settings, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+            var json = System.Text.Json.JsonSerializer.Serialize(settings,
+                new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(Path.Combine(settingsDir, "settings.json"), json);
 
-            // Open login window and close this one
-            var loginWindow = new LoginWindow();
-            loginWindow.Show();
+            // Close dialog with success
+            this.DialogResult = true;
             this.Close();
         }
         catch (Exception ex)

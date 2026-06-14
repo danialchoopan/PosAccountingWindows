@@ -9,34 +9,48 @@ public partial class App : Application
 {
     private void OnStartup(object sender, StartupEventArgs e)
     {
+        Data.DatabaseInitializer.Initialize();
+
         var settingsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "PosAccountingApp", "settings.json");
 
-        if (File.Exists(settingsPath))
+        // First run: show setup dialog
+        if (!File.Exists(settingsPath))
         {
-            var json = File.ReadAllText(settingsPath);
-            var settings = System.Text.Json.JsonSerializer.Deserialize<AppSettings>(json);
-            if (settings?.IsSetupComplete == true)
+            var setupWindow = new SetupWindow();
+            setupWindow.ShowDialog();
+
+            // If setup was cancelled (settings still doesn't exist), exit
+            if (!File.Exists(settingsPath))
             {
-                // Setup done - go to login
-                var loginWindow = new LoginWindow();
-                loginWindow.Show();
+                Shutdown();
                 return;
             }
         }
 
-        // First run
-        var setupWindow = new SetupWindow();
-        setupWindow.Show();
+        // Show login window
+        var loginWindow = new LoginWindow();
+        loginWindow.ShowDialog();
+
+        // If login was successful (CurrentUser is set), open main window
+        if (AppSettings.CurrentUser != null)
+        {
+            var mainWindow = new MainWindow();
+            mainWindow.ShowDialog();
+        }
+
+        // Exit after main window closes
+        Shutdown();
+    }
+
+    private void OnExit(object sender, ExitEventArgs e)
+    {
     }
 }
 
-// Global settings holder
 public class AppSettings
 {
-    private static AppSettings? _instance;
-    public static AppSettings? CurrentInstance => _instance;
     public static User? CurrentUser { get; set; }
 
     public string ShopName { get; set; } = "";
@@ -56,12 +70,8 @@ public class AppSettings
         if (File.Exists(settingsPath))
         {
             var json = File.ReadAllText(settingsPath);
-            _instance = System.Text.Json.JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            return System.Text.Json.JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
         }
-        else
-        {
-            _instance = new AppSettings();
-        }
-        return _instance;
+        return new AppSettings();
     }
 }
