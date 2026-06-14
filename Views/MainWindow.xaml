@@ -1,0 +1,163 @@
+<Window x:Class="PosAccountingApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:PosAccountingApp.ViewModels"
+        xmlns:views="clr-namespace:PosAccountingApp.Views"
+        xmlns:conv="clr-namespace:PosAccountingApp.Converters"
+        Title="سیستم مدیریت فروش و حسابداری"
+        Width="1400" Height="800"
+        MinWidth="1000" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        FlowDirection="RightToLeft"
+        Background="{DynamicResource SystemColorWindowBrush}">
+
+    <Window.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
+        <conv:DecimalToPersianStringConverter x:Key="DecToPersian"/>
+        <conv:JalaliDateConverter x:Key="JalaliDate"/>
+        <conv:EnumToPersianConverter x:Key="EnumToPersian"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis2"/>
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Key="F1" Command="{Binding NavigateToCommand}" CommandParameter="POS"/>
+        <KeyBinding Key="F2" Command="{Binding NavigateToCommand}" CommandParameter="Products"/>
+        <KeyBinding Key="F3" Command="{Binding NavigateToCommand}" CommandParameter="Cheques"/>
+        <KeyBinding Key="F9" Command="{Binding NavigateToCommand}" CommandParameter="Reports"/>
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Background="#FFF5F5F5" BorderBrush="#FFE0E0E0" BorderThickness="0,0,1,0">
+            <DockPanel>
+                <!-- Logo -->
+                <Border DockPanel.Dock="Top" Padding="14,18" Margin="0,0,0,4">
+                    <StackPanel>
+                        <TextBlock Text="سیستم حسابداری" FontSize="17" FontWeight="Bold"
+                                   Foreground="#FF0078D4" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="ShopNameLabel" Text="" FontSize="11"
+                                   Foreground="#FF888888" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- User Info -->
+                <Border DockPanel.Dock="Top" Background="White" BorderBrush="#FFE0E0E0"
+                        BorderThickness="1" CornerRadius="6" Margin="10,0,10,10" Padding="10">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="32" Height="32" CornerRadius="16"
+                                Background="#FF0078D4" Margin="0,0,8,0">
+                            <TextBlock Text="م" FontSize="14" FontWeight="Bold" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="مدیر سیستم" FontSize="12" FontWeight="SemiBold"/>
+                            <TextBlock Text="مدیر ارشد" FontSize="10" Foreground="#FF888888"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Navigation -->
+                <StackPanel DockPanel.Dock="Top" Margin="4,0">
+                    <RadioButton Style="{StaticResource SidebarButton}" IsChecked="True"
+                                 Content="داشبورد"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Dashboard"/>
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="صندوق فروشگاهی (F1)"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="POS"/>
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="کالاها و خدمات (F2)"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Products"/>
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="مشتریان"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Customers"/>
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="خزانه‌داری و چک (F3)"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Cheques"/>
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="هزینه‌ها"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Expenses"/>
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="گزارشات (F9)"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Reports"/>
+                </StackPanel>
+
+                <!-- Bottom -->
+                <StackPanel DockPanel.Dock="Bottom" Margin="4,0,4,10">
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="تنظیمات"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Settings"/>
+                </StackPanel>
+                <Border/>
+            </DockPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <DockPanel Grid.Column="1">
+            <!-- Top Bar -->
+            <Border DockPanel.Dock="Top" Background="White" BorderBrush="#FFE0E0E0" BorderThickness="0,0,0,1"
+                    Padding="18,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" x:Name="TitleLabel" Text="داشبورد"
+                               FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Content="موضوع" FontSize="12"
+                            Command="{Binding ToggleThemeCommand}"
+                            Visibility="Collapsed"/>
+                </Grid>
+            </Border>
+
+            <!-- Status Bar -->
+            <Border DockPanel.Dock="Bottom" Background="#FFF5F5F5" BorderBrush="#FFE0E0E0" BorderThickness="0,1,0,0"
+                    Padding="14,5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="آماده | F1: صندوق | F2: کالا | F3: چک | F9: گزارش"
+                               FontSize="11" Foreground="#FF888888" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" x:Name="ViewTitleBar" Text=""
+                               FontSize="11" Foreground="#FF0078D4" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- View Content -->
+            <ContentControl Grid.Column="1" Content="{Binding CurrentView}">
+                <ContentControl.Resources>
+                    <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+                        <views:DashboardView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:ProductsViewModel}">
+                        <views:ProductsView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:CustomersViewModel}">
+                        <views:CustomersView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:PosViewModel}">
+                        <views:PosView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:ChequesViewModel}">
+                        <views:ChequesView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:ExpensesViewModel}">
+                        <views:ExpensesView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:ReportsViewModel}">
+                        <views:ReportsView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+                        <views:SettingsView/>
+                    </DataTemplate>
+                </ContentControl.Resources>
+            </ContentControl>
+        </DockPanel>
+    </Grid>
+</Window>

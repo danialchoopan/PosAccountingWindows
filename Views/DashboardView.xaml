@@ -1,0 +1,71 @@
+<UserControl x:Class="PosAccountingApp.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+        <StackPanel Margin="6">
+
+            <TextBlock Text="داشبورد" FontSize="24" FontWeight="Bold" Margin="6,0,6,16"
+                       Foreground="#FF333333"/>
+
+            <!-- Stats Cards -->
+            <UniformGrid Columns="3" Margin="0,0,0,14">
+                <Border Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="فروش امروز" FontSize="12" Foreground="#FF888888"/>
+                        <TextBlock Text="۰ فاکتور" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
+                                   Foreground="#FF107C10"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="درآمد امروز" FontSize="12" Foreground="#FF888888"/>
+                        <TextBlock Text="۰ ریال" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
+                                   Foreground="#FF0078D4"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="تعداد مشتریان" FontSize="12" Foreground="#FF888888"/>
+                        <TextBlock Text="۰" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
+                                   Foreground="#FFFF8C00"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <UniformGrid Columns="3" Margin="0,0,0,14">
+                <Border Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="تعداد کالاها" FontSize="12" Foreground="#FF888888"/>
+                        <TextBlock Text="۰" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
+                                   Foreground="#FF333333"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="چک‌های در انتظار" FontSize="12" Foreground="#FF888888"/>
+                        <TextBlock Text="۰" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
+                                   Foreground="#FFD13438"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorder}">
+                    <StackPanel>
+                        <TextBlock Text="هشدار موجودی" FontSize="12" Foreground="#FF888888"/>
+                        <TextBlock Text="۰ کالا" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
+                                   Foreground="#FFFF8C00"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- Quick Actions -->
+            <TextBlock Text="دسترسی سریع" FontSize="16" FontWeight="Bold" Margin="6,0,6,10"/>
+            <UniformGrid Columns="4">
+                <Button Content="صندوق فروش (F1)" Style="{StaticResource PrimaryButton}" Margin="4"/>
+                <Button Content="کالای جدید" Style="{StaticResource PrimaryButton}" Margin="4"/>
+                <Button Content="مشتری جدید" Style="{StaticResource PrimaryButton}" Margin="4"/>
+                <Button Content="ثبت چک" Style="{StaticResource PrimaryButton}" Margin="4"/>
+            </UniformGrid>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
