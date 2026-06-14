@@ -58,7 +58,13 @@
 
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="4">
                         <TextBlock Text="واحد" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
-                        <ComboBox ItemsSource="{Binding UnitTypes}" SelectedItem="{Binding EditUnit}"/>
+                        <ComboBox ItemsSource="{Binding UnitTypes}" SelectedItem="{Binding EditUnit}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumToPersian}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" Margin="4">
                         <TextBlock Text="قیمت خرید" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>

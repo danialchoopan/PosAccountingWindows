@@ -53,6 +53,8 @@ public class AppSettings
     public decimal CommissionPercentage { get; set; } = 2;
     public bool IsSetupComplete { get; set; }
     public bool IsDarkTheme { get; set; }
+    public double FontSize { get; set; } = 14;
+    public bool IsHighContrast { get; set; }
 
     public static AppSettings Load()
     {

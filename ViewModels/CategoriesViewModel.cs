@@ -17,15 +17,17 @@ public partial class CategoriesViewModel : ObservableObject
     [ObservableProperty] private string _editDescription = string.Empty;
     [ObservableProperty] private string _editIcon = "\uE74C";
     [ObservableProperty] private int _editSortOrder;
+    [ObservableProperty] private ProductCategory? _editParentCategory;
 
     public ObservableCollection<ProductCategory> Categories { get; } = new();
+    public ObservableCollection<ProductCategory> ParentCategories { get; } = new();
 
-    // Common icons for categories
     public string[] AvailableIcons { get; } =
     [
         "\uE74C", "\uE71C", "\uE77B", "\uE7F3", "\uE8D8",
         "\uE80F", "\uE74D", "\uE71E", "\uE774", "\uE719",
-        "\uE736", "\uE740", "\uE78B", "\uE787", "\uE72D"
+        "\uE736", "\uE740", "\uE78B", "\uE787", "\uE72D",
+        "\uE7BA", "\uE9D9", "\uE74E", "\uE7C3", "\uE716"
     ];
 
     public CategoriesViewModel() { LoadCategories(); }
@@ -38,6 +40,25 @@ public partial class CategoriesViewModel : ObservableObject
             .OrderBy(c => c.SortOrder)
             .ThenBy(c => c.Name)
             .ToList();
+
+        // Build full names with parent prefix
+        foreach (var cat in _allCategories)
+        {
+            if (cat.ParentCategoryId.HasValue)
+            {
+                var parent = _allCategories.FirstOrDefault(p => p.Id == cat.ParentCategoryId);
+                cat.FullName = parent != null ? $"{parent.Name} / {cat.Name}" : cat.Name;
+            }
+            else
+            {
+                cat.FullName = cat.Name;
+            }
+        }
+
+        ParentCategories.Clear();
+        foreach (var c in _allCategories.Where(c => !c.ParentCategoryId.HasValue))
+            ParentCategories.Add(c);
+
         ApplyFilter();
     }
 
@@ -50,7 +71,7 @@ public partial class CategoriesViewModel : ObservableObject
         var filtered = string.IsNullOrEmpty(q) ? _allCategories
             : _allCategories.Where(c =>
                 c.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                (c.Description != null && c.Description.Contains(q, StringComparison.OrdinalIgnoreCase)))
+                (c.FullName != null && c.FullName.Contains(q, StringComparison.OrdinalIgnoreCase)))
             .ToList();
         foreach (var c in filtered) Categories.Add(c);
     }
@@ -59,7 +80,7 @@ public partial class CategoriesViewModel : ObservableObject
     private void ClearSearch() { SearchText = string.Empty; }
 
     [RelayCommand]
-    private void ToggleAddPanel() => IsAddPanelOpen = !IsAddPanelOpen;
+    private void ToggleAddPanel() { IsAddPanelOpen = !IsAddPanelOpen; }
 
     [RelayCommand]
     private void SaveCategory()
@@ -71,12 +92,13 @@ public partial class CategoriesViewModel : ObservableObject
             Name = EditName,
             Description = EditDescription,
             Icon = EditIcon,
-            SortOrder = EditSortOrder
+            SortOrder = EditSortOrder,
+            ParentCategoryId = EditParentCategory?.Id
         });
         db.SaveChanges();
         IsAddPanelOpen = false;
         EditName = string.Empty; EditDescription = string.Empty;
-        EditIcon = "\uE74C"; EditSortOrder = 0;
+        EditIcon = "\uE74C"; EditSortOrder = 0; EditParentCategory = null;
         LoadCategories();
     }
 
@@ -95,6 +117,6 @@ public partial class CategoriesViewModel : ObservableObject
     {
         IsAddPanelOpen = false;
         EditName = string.Empty; EditDescription = string.Empty;
-        EditIcon = "\uE74C"; EditSortOrder = 0;
+        EditIcon = "\uE74C"; EditSortOrder = 0; EditParentCategory = null;
     }
 }

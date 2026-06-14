@@ -13,5 +13,7 @@ public class ProductCategory : BaseEntity
 
     public int SortOrder { get; set; }
 
-    public BusinessProfile Profile { get; set; }
+    public int? ParentCategoryId { get; set; }
+
+    public string? FullName { get; set; }
 }

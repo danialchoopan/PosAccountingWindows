@@ -1,3 +1,5 @@
+using System.Windows;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PosAccountingApp.Data;
@@ -15,9 +17,12 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private decimal _commissionPercentage = 2;
     [ObservableProperty] private RoundingMode _roundingMode = RoundingMode.Off;
     [ObservableProperty] private bool _isDarkTheme;
+    [ObservableProperty] private double _fontSize = 14;
+    [ObservableProperty] private bool _isHighContrast;
 
     public BusinessProfile[] Profiles { get; } = Enum.GetValues<BusinessProfile>();
     public RoundingMode[] RoundingModes { get; } = Enum.GetValues<RoundingMode>();
+    public double[] FontSizes { get; } = [10, 12, 14, 16, 18, 20];
 
     public SettingsViewModel()
     {
@@ -28,6 +33,8 @@ public partial class SettingsViewModel : ObservableObject
         VatPercentage = s.VatPercentage;
         CommissionPercentage = s.CommissionPercentage;
         IsDarkTheme = s.IsDarkTheme;
+        FontSize = s.FontSize > 0 ? s.FontSize : 14;
+        IsHighContrast = s.IsHighContrast;
     }
 
     [RelayCommand]
@@ -37,6 +44,47 @@ public partial class SettingsViewModel : ObservableObject
         ThemeManager.ApplyTheme(IsDarkTheme);
         var s = AppSettings.Load();
         s.IsDarkTheme = IsDarkTheme;
+        s.Save();
+    }
+
+    [RelayCommand]
+    private void ApplyFontSize()
+    {
+        var app = Application.Current;
+        if (app == null) return;
+        app.Resources["AppFontSize"] = FontSize;
+        app.Resources["AppFontLarge"] = FontSize + 4;
+        app.Resources["AppFontSmall"] = FontSize - 2;
+
+        var s = AppSettings.Load();
+        s.FontSize = FontSize;
+        s.Save();
+    }
+
+    [RelayCommand]
+    private void ToggleHighContrast()
+    {
+        IsHighContrast = !IsHighContrast;
+        var app = Application.Current;
+        if (app == null) return;
+
+        if (IsHighContrast)
+        {
+            app.Resources["TextPrimaryBrush"] = new SolidColorBrush(System.Windows.Media.Colors.Black);
+            app.Resources["TextSecondaryBrush"] = new SolidColorBrush(System.Windows.Media.Colors.DarkGray);
+            app.Resources["BgBrush"] = new SolidColorBrush(System.Windows.Media.Colors.White);
+            app.Resources["CardBgBrush"] = new SolidColorBrush(System.Windows.Media.Colors.White);
+            app.Resources["SurfaceBrush"] = new SolidColorBrush(System.Windows.Media.Colors.WhiteSmoke);
+            app.Resources["AccentBrush"] = new SolidColorBrush(System.Windows.Media.Colors.Black);
+            app.Resources["AccentDarkBrush"] = new SolidColorBrush(System.Windows.Media.Colors.DarkGray);
+        }
+        else
+        {
+            ThemeManager.ApplyTheme(IsDarkTheme);
+        }
+
+        var s = AppSettings.Load();
+        s.IsHighContrast = IsHighContrast;
         s.Save();
     }
 
@@ -66,7 +114,5 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void RestoreDatabase()
-    {
-    }
+    private void RestoreDatabase() { }
 }
