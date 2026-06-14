@@ -46,7 +46,7 @@
                                Foreground="#FF333333" Margin="0,0,0,5"/>
                     <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
                             Background="White" Margin="0,0,0,14">
-                        <TextBox x:Name="ShopNameBox" FontSize="14" Padding="12,10"
+                        <TextBox x:Name="ShopNameBox" FontSize="14" Padding="10,7"
                                  Background="Transparent" BorderThickness="0"/>
                     </Border>
 
@@ -55,7 +55,7 @@
                                Foreground="#FF333333" Margin="0,0,0,5"/>
                     <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
                             Background="White" Margin="0,0,0,14">
-                        <ComboBox x:Name="BusinessTypeCombo" FontSize="14" Padding="12,9"
+                        <ComboBox x:Name="BusinessTypeCombo" FontSize="14" Padding="10,7"
                                   Background="Transparent" BorderThickness="0">
                             <ComboBoxItem Content="سوپرمارکت و خرده‌فروشی" Tag="Supermarket"/>
                             <ComboBoxItem Content="پوشاک و کیف و کفش" Tag="Boutique"/>
@@ -70,7 +70,7 @@
                                Foreground="#FF333333" Margin="0,0,0,5"/>
                     <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
                             Background="White" Margin="0,0,0,14">
-                        <TextBox x:Name="PhoneBox" FontSize="14" Padding="12,10"
+                        <TextBox x:Name="PhoneBox" FontSize="14" Padding="10,7"
                                  Background="Transparent" BorderThickness="0"
                                  FlowDirection="LeftToRight"/>
                     </Border>
@@ -80,7 +80,7 @@
                                Foreground="#FF333333" Margin="0,0,0,5"/>
                     <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
                             Background="White" Margin="0,0,0,14">
-                        <TextBox x:Name="AddressBox" FontSize="14" Padding="12,10"
+                        <TextBox x:Name="AddressBox" FontSize="14" Padding="10,7"
                                  Background="Transparent" BorderThickness="0"/>
                     </Border>
 
@@ -89,7 +89,7 @@
                                Foreground="#FF333333" Margin="0,0,0,5"/>
                     <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
                             Background="White" Margin="0,0,0,14">
-                        <TextBox x:Name="PinBox" FontSize="22" Padding="12,10"
+                        <TextBox x:Name="PinBox" FontSize="22" Padding="10,7"
                                  MaxLength="4" FlowDirection="LeftToRight" FontWeight="Bold"
                                  HorizontalContentAlignment="Center"
                                  Background="Transparent" BorderThickness="0"/>
@@ -100,7 +100,7 @@
                                Foreground="#FF333333" Margin="0,0,0,5"/>
                     <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
                             Background="White" Margin="0,0,0,14" Width="120" HorizontalAlignment="Left">
-                        <TextBox x:Name="VatBox" FontSize="14" Padding="12,10"
+                        <TextBox x:Name="VatBox" FontSize="14" Padding="10,7"
                                  Text="10" FlowDirection="LeftToRight"
                                  HorizontalContentAlignment="Center"
                                  Background="Transparent" BorderThickness="0"/>

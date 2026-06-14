@@ -2,68 +2,89 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
-        <StackPanel Margin="6">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
+        <StackPanel Margin="8" MaxWidth="1200" HorizontalAlignment="Center">
 
-            <TextBlock Text="داشبورد" FontSize="24" FontWeight="Bold" Margin="6,0,6,16"
-                       Foreground="#FF333333"/>
+            <TextBlock Text="داشبورد" FontSize="26" FontWeight="Bold" Margin="8,0,8,20"
+                       Foreground="{DynamicResource AccentBrush}"/>
 
-            <!-- Stats Cards -->
+            <!-- Stats Cards Row 1 -->
             <UniformGrid Columns="3" Margin="0,0,0,14">
-                <Border Style="{StaticResource CardBorder}">
+                <!-- Sales Today - Blue -->
+                <Border Background="#FF0078D4" CornerRadius="10" Padding="18,16" Margin="6">
                     <StackPanel>
-                        <TextBlock Text="فروش امروز" FontSize="12" Foreground="#FF888888"/>
-                        <TextBlock Text="۰ فاکتور" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
-                                   Foreground="#FF107C10"/>
+                        <TextBlock Text="&#xE74C;  فروش امروز" FontFamily="Segoe MDL2 Assets"
+                                   FontSize="12" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="۰ فاکتور" FontSize="28" FontWeight="Bold"
+                                   Foreground="White" Margin="0,8,0,0"/>
                     </StackPanel>
                 </Border>
-                <Border Style="{StaticResource CardBorder}">
+
+                <!-- Revenue - Green -->
+                <Border Background="#FF107C10" CornerRadius="10" Padding="18,16" Margin="6">
                     <StackPanel>
-                        <TextBlock Text="درآمد امروز" FontSize="12" Foreground="#FF888888"/>
-                        <TextBlock Text="۰ ریال" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
-                                   Foreground="#FF0078D4"/>
+                        <TextBlock Text="&#xE9D9;  درآمد امروز" FontFamily="Segoe MDL2 Assets"
+                                   FontSize="12" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="۰ ریال" FontSize="28" FontWeight="Bold"
+                                   Foreground="White" Margin="0,8,0,0"/>
                     </StackPanel>
                 </Border>
-                <Border Style="{StaticResource CardBorder}">
+
+                <!-- Customers - Orange -->
+                <Border Background="#FFFF8C00" CornerRadius="10" Padding="18,16" Margin="6">
                     <StackPanel>
-                        <TextBlock Text="تعداد مشتریان" FontSize="12" Foreground="#FF888888"/>
-                        <TextBlock Text="۰" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
-                                   Foreground="#FFFF8C00"/>
+                        <TextBlock Text="&#xE77B;  مشتریان" FontFamily="Segoe MDL2 Assets"
+                                   FontSize="12" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="۰" FontSize="28" FontWeight="Bold"
+                                   Foreground="White" Margin="0,8,0,0"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>
 
+            <!-- Stats Cards Row 2 -->
             <UniformGrid Columns="3" Margin="0,0,0,14">
-                <Border Style="{StaticResource CardBorder}">
+                <!-- Products - Purple -->
+                <Border Background="#FF7C3AED" CornerRadius="10" Padding="18,16" Margin="6">
                     <StackPanel>
-                        <TextBlock Text="تعداد کالاها" FontSize="12" Foreground="#FF888888"/>
-                        <TextBlock Text="۰" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
-                                   Foreground="#FF333333"/>
+                        <TextBlock Text="&#xE71C;  کالاها" FontFamily="Segoe MDL2 Assets"
+                                   FontSize="12" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="۰" FontSize="28" FontWeight="Bold"
+                                   Foreground="White" Margin="0,8,0,0"/>
                     </StackPanel>
                 </Border>
-                <Border Style="{StaticResource CardBorder}">
+
+                <!-- Pending Cheques - Red -->
+                <Border Background="#FFD13438" CornerRadius="10" Padding="18,16" Margin="6">
                     <StackPanel>
-                        <TextBlock Text="چک‌های در انتظار" FontSize="12" Foreground="#FF888888"/>
-                        <TextBlock Text="۰" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
-                                   Foreground="#FFD13438"/>
+                        <TextBlock Text="&#xE7F3;  چک‌های در انتظار" FontFamily="Segoe MDL2 Assets"
+                                   FontSize="12" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="۰" FontSize="28" FontWeight="Bold"
+                                   Foreground="White" Margin="0,8,0,0"/>
                     </StackPanel>
                 </Border>
-                <Border Style="{StaticResource CardBorder}">
+
+                <!-- Low Stock - Teal -->
+                <Border Background="#FF0D9488" CornerRadius="10" Padding="18,16" Margin="6">
                     <StackPanel>
-                        <TextBlock Text="هشدار موجودی" FontSize="12" Foreground="#FF888888"/>
-                        <TextBlock Text="۰ کالا" FontSize="26" FontWeight="Bold" Margin="0,6,0,0"
-                                   Foreground="#FFFF8C00"/>
+                        <TextBlock Text="&#xE7BA;  هشدار موجودی" FontFamily="Segoe MDL2 Assets"
+                                   FontSize="12" Foreground="#CCFFFFFF"/>
+                        <TextBlock Text="۰ کالا" FontSize="28" FontWeight="Bold"
+                                   Foreground="White" Margin="0,8,0,0"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>
 
             <!-- Quick Actions -->
-            <TextBlock Text="دسترسی سریع" FontSize="16" FontWeight="Bold" Margin="6,0,6,10"/>
+            <TextBlock Text="دسترسی سریع" FontSize="17" FontWeight="Bold" Margin="8,8,8,12"/>
             <UniformGrid Columns="4">
-                <Button Content="صندوق فروش (F1)" Style="{StaticResource PrimaryButton}" Margin="4"/>
-                <Button Content="کالای جدید" Style="{StaticResource PrimaryButton}" Margin="4"/>
-                <Button Content="مشتری جدید" Style="{StaticResource PrimaryButton}" Margin="4"/>
-                <Button Content="ثبت چک" Style="{StaticResource PrimaryButton}" Margin="4"/>
+                <Button Content="&#xE74C;  صندوق فروش (F1)"
+                        Style="{StaticResource PrimaryButton}" Margin="6"/>
+                <Button Content="&#xE71C;  کالای جدید"
+                        Style="{StaticResource SuccessButton}" Margin="6"/>
+                <Button Content="&#xE77B;  مشتری جدید"
+                        Style="{StaticResource WarningButton}" Margin="6"/>
+                <Button Content="&#xE7F3;  ثبت چک"
+                        Style="{StaticResource DangerButton}" Margin="6"/>
             </UniformGrid>
 
         </StackPanel>
