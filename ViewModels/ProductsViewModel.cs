@@ -23,12 +23,10 @@ public partial class ProductsViewModel : ObservableObject
     [ObservableProperty] private UnitType _editUnit = UnitType.Number;
 
     public ObservableCollection<Product> Products { get; } = new();
+    public ObservableCollection<string> Categories { get; } = new();
     public UnitType[] UnitTypes { get; } = Enum.GetValues<UnitType>();
 
-    public ProductsViewModel()
-    {
-        LoadProducts();
-    }
+    public ProductsViewModel() { LoadProducts(); LoadCategories(); }
 
     public void LoadProducts()
     {
@@ -37,17 +35,21 @@ public partial class ProductsViewModel : ObservableObject
         ApplyFilter();
     }
 
-    partial void OnSearchTextChanged(string value)
+    public void LoadCategories()
     {
-        ApplyFilter();
+        using var db = DatabaseInitializer.CreateDbContext();
+        Categories.Clear();
+        foreach (var c in db.Categories.Where(c => c.IsActive).OrderBy(c => c.SortOrder).Select(c => c.Name).ToList())
+            Categories.Add(c);
     }
+
+    partial void OnSearchTextChanged(string value) { ApplyFilter(); }
 
     private void ApplyFilter()
     {
         Products.Clear();
         var q = SearchText?.Trim() ?? "";
-        var filtered = string.IsNullOrEmpty(q)
-            ? _allProducts
+        var filtered = string.IsNullOrEmpty(q) ? _allProducts
             : _allProducts.Where(p =>
                 p.Title.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                 (p.Barcode != null && p.Barcode.Contains(q)) ||
@@ -57,20 +59,17 @@ public partial class ProductsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ClearSearch()
-    {
-        SearchText = string.Empty;
-    }
+    private void ClearSearch() { SearchText = string.Empty; }
 
     [RelayCommand]
-    private void ToggleAddPanel() => IsAddPanelOpen = !IsAddPanelOpen;
+    private void ToggleAddPanel() { IsAddPanelOpen = !IsAddPanelOpen; }
 
     [RelayCommand]
     private void SaveProduct()
     {
         if (string.IsNullOrWhiteSpace(EditTitle)) return;
         using var db = DatabaseInitializer.CreateDbContext();
-        var product = new Product
+        db.Products.Add(new Product
         {
             Title = EditTitle,
             Barcode = string.IsNullOrWhiteSpace(EditBarcode) ? null : EditBarcode,
@@ -81,8 +80,7 @@ public partial class ProductsViewModel : ObservableObject
             Stock = EditStock,
             MinStock = EditMinStock,
             WarehouseId = 1
-        };
-        db.Products.Add(product);
+        });
         db.SaveChanges();
         IsAddPanelOpen = false;
         ClearForm();
@@ -90,21 +88,17 @@ public partial class ProductsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void DeleteProduct(Product? product)
+    private void DeleteProduct(Product? p)
     {
-        if (product == null) return;
+        if (p == null) return;
         using var db = DatabaseInitializer.CreateDbContext();
-        var p = db.Products.Find(product.Id);
-        if (p != null) { p.IsActive = false; db.SaveChanges(); }
+        var found = db.Products.Find(p.Id);
+        if (found != null) { found.IsActive = false; db.SaveChanges(); }
         LoadProducts();
     }
 
     [RelayCommand]
-    private void CancelEdit()
-    {
-        IsAddPanelOpen = false;
-        ClearForm();
-    }
+    private void CancelEdit() { IsAddPanelOpen = false; ClearForm(); }
 
     private void ClearForm()
     {

@@ -14,78 +14,63 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="420"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="1" Background="White" CornerRadius="16"
                 BorderBrush="#FFE0E0E0" BorderThickness="1"
-                Margin="0,20,0,20" Padding="36,28"
-                VerticalAlignment="Center" MaxHeight="600">
+                Margin="20" Padding="36,24"
+                VerticalAlignment="Center"
+                MinWidth="380" MaxWidth="460" Width="420">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" Opacity="0.1" ShadowDepth="4"/>
             </Border.Effect>
 
             <StackPanel>
-                <!-- Header -->
-                <Border Background="#FF0078D4" CornerRadius="12" Padding="20,18" Margin="0,0,0,24">
+                <Border Background="#FF0078D4" CornerRadius="12" Padding="20,16" Margin="0,0,0,22">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="32"
+                        <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="30"
                                    Foreground="White" HorizontalAlignment="Center"/>
-                        <TextBlock Text="ورود به سیستم" FontSize="20" FontWeight="Bold"
-                                   Foreground="White" HorizontalAlignment="Center" Margin="0,6,0,3"/>
+                        <TextBlock Text="ورود به سیستم" FontSize="19" FontWeight="Bold"
+                                   Foreground="White" HorizontalAlignment="Center" Margin="0,6,0,2"/>
                         <TextBlock Text="کاربر خود را انتخاب کرده و کد عبور را وارد کنید" FontSize="12"
                                    Foreground="#CCFFFFFF" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
 
-                <!-- User -->
-                <TextBlock Text="کاربر" FontSize="13" FontWeight="SemiBold"
-                           Foreground="#FF333333" Margin="0,0,0,5"/>
-                <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
-                        Background="White" Margin="0,0,0,14">
-                    <ComboBox x:Name="UserCombo" FontSize="14" Padding="12,9"
-                              DisplayMemberPath="Name" Background="Transparent"
-                              BorderThickness="0" SelectionChanged="UserCombo_SelectionChanged"/>
+                <TextBlock Text="کاربر" FontSize="13" FontWeight="SemiBold" Foreground="#FF333333" Margin="0,0,0,5"/>
+                <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6" Background="White" Margin="0,0,0,14">
+                    <ComboBox x:Name="UserCombo" FontSize="14" Padding="10,7"
+                              DisplayMemberPath="Name" Background="Transparent" BorderThickness="0"
+                              SelectionChanged="UserCombo_SelectionChanged"/>
                 </Border>
 
-                <!-- PIN -->
-                <TextBlock Text="کد عبور" FontSize="13" FontWeight="SemiBold"
-                           Foreground="#FF333333" Margin="0,0,0,5"/>
-                <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
-                        Background="White" Margin="0,0,0,14">
-                    <PasswordBox x:Name="PinBox" FontSize="20" Padding="12,10"
+                <TextBlock Text="کد عبور" FontSize="13" FontWeight="SemiBold" Foreground="#FF333333" Margin="0,0,0,5"/>
+                <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6" Background="White" Margin="0,0,0,14">
+                    <PasswordBox x:Name="PinBox" FontSize="20" Padding="10,7"
                                  MaxLength="10" HorizontalContentAlignment="Center"/>
                 </Border>
 
-                <!-- Role Display -->
-                <Border Background="#FFF5F7FA" BorderBrush="#FFE8E8E8"
-                        BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,0,0,14">
+                <Border Background="#FFF5F7FA" BorderBrush="#FFE8E8E8" BorderThickness="1"
+                        CornerRadius="6" Padding="12,8" Margin="0,0,0,14">
                     <Grid>
-                        <TextBlock Text="نقش:" HorizontalAlignment="Left"
-                                   Foreground="#FF888888" FontSize="12"/>
+                        <TextBlock Text="نقش:" HorizontalAlignment="Left" Foreground="#FF888888" FontSize="12"/>
                         <TextBlock x:Name="RoleLabel" Text="-" HorizontalAlignment="Right"
                                    FontSize="12" FontWeight="SemiBold" Foreground="#FF333333"/>
                     </Grid>
                 </Border>
 
-                <!-- Error -->
                 <TextBlock x:Name="ErrorText" Text="" Foreground="#FFD13438"
                            FontSize="12" Margin="0,0,0,8" TextAlignment="Center"/>
-
-                <!-- No Users -->
-                <TextBlock x:Name="NoUsersText"
-                           Text="هنوز کاربری وجود ندارد."
+                <TextBlock x:Name="NoUsersText" Text="هنوز کاربری وجود ندارد."
                            FontSize="12" Foreground="#FF888888" HorizontalAlignment="Center"
                            Visibility="Collapsed"/>
 
-                <!-- Login Button -->
                 <Button x:Name="LoginButton" Content="&#xE768;  ورود"
-                        Width="200" Height="48" FontSize="16" FontWeight="Bold"
-                        Cursor="Hand" Margin="0,8,0,0"
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource PrimaryButton}"
-                        Click="LoginButton_Click"/>
+                        Width="180" Height="46" FontSize="16" FontWeight="Bold"
+                        Cursor="Hand" Margin="0,8,0,0" HorizontalAlignment="Center"
+                        Style="{StaticResource PrimaryButton}" Click="LoginButton_Click"/>
             </StackPanel>
         </Border>
     </Grid>

@@ -62,7 +62,7 @@ public class EnumToPersianConverter : IValueConverter
     private static readonly Dictionary<string, string> PersianNames = new()
     {
         // Units
-        ["Number"] = "عدد", ["Weight"] = "وزن", ["Box"] = "جعبه", ["Meter"] = "متر",
+        ["Number"] = "عدد", ["Weight"] = "کیلوگرم", ["Box"] = "جعبه", ["Meter"] = "متر",
         ["Ton"] = "تن", ["Bag"] = "کیسه", ["CubicMeter"] = "مترمکعب",
         // Payment
         ["Cash"] = "نقدی", ["Card"] = "کارتخوان", ["Ledger"] = "نسیه",

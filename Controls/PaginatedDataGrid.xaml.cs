@@ -24,6 +24,11 @@ public partial class PaginatedDataGrid : UserControl
 
     public void SetTitle(string title) { _title = title; }
 
+    public void SetEmptyMessage(string msg)
+    {
+        if (EmptyText != null) EmptyText.Text = msg;
+    }
+
     public void SetColumns(params (string Binding, string Header, double Width)[] columns)
     {
         MainGrid.Columns.Clear();
@@ -54,15 +59,17 @@ public partial class PaginatedDataGrid : UserControl
 
     private void RefreshGrid()
     {
-        if (!_initialized || _allData == null || _allData.Rows.Count == 0)
+        if (!_initialized) return;
+
+        if (_allData == null || _allData.Rows.Count == 0)
         {
             MainGrid.ItemsSource = null;
-            if (PageInfoText != null) PageInfoText.Text = "داده‌ای موجود نیست";
-            if (PageNumbersText != null) PageNumbersText.Text = "";
-            if (TotalText != null) TotalText.Text = "";
+            PaginationBar.Visibility = Visibility.Collapsed;
+            EmptyState.Visibility = Visibility.Visible;
             return;
         }
 
+        EmptyState.Visibility = Visibility.Collapsed;
         int totalRows = _allData.Rows.Count;
         bool showAll = _pageSize >= totalRows;
         int totalPages = showAll ? 1 : (int)Math.Ceiling((double)totalRows / _pageSize);
@@ -74,11 +81,9 @@ public partial class PaginatedDataGrid : UserControl
         {
             int start = (_currentPage - 1) * _pageSize;
             int count = Math.Min(_pageSize, totalRows - start);
-
             var pageTable = _allData.Clone();
             for (int i = start; i < start + count && i < totalRows; i++)
                 pageTable.ImportRow(_allData.Rows[i]);
-
             MainGrid.ItemsSource = pageTable.DefaultView;
         }
         else
@@ -86,10 +91,13 @@ public partial class PaginatedDataGrid : UserControl
             MainGrid.ItemsSource = _allData.DefaultView;
         }
 
+        // Show/hide pagination
+        PaginationBar.Visibility = totalPages > 1 ? Visibility.Visible : Visibility.Collapsed;
+
         int from = showAll ? 1 : (_currentPage - 1) * _pageSize + 1;
         int to = showAll ? totalRows : Math.Min(_currentPage * _pageSize, totalRows);
 
-        PageInfoText.Text = $"نمایش {from} تا {to}";
+        PageInfoText.Text = $"{from} تا {to}";
         TotalText.Text = $"کل: {totalRows}";
         PageNumbersText.Text = totalPages > 1 ? $"صفحه {_currentPage} از {totalPages}" : "";
     }
@@ -109,13 +117,12 @@ public partial class PaginatedDataGrid : UserControl
     private void PrevPage_Click(object sender, RoutedEventArgs e) { if (_currentPage > 1) { _currentPage--; RefreshGrid(); } }
     private void NextPage_Click(object sender, RoutedEventArgs e)
     {
-        int totalPages = _allData.Rows.Count == 0 ? 1 : (int)Math.Ceiling((double)_allData.Rows.Count / _pageSize);
-        if (_currentPage < totalPages) { _currentPage++; RefreshGrid(); }
+        int tp = _allData.Rows.Count == 0 ? 1 : (int)Math.Ceiling((double)_allData.Rows.Count / _pageSize);
+        if (_currentPage < tp) { _currentPage++; RefreshGrid(); }
     }
     private void LastPage_Click(object sender, RoutedEventArgs e)
     {
         _currentPage = _allData.Rows.Count == 0 ? 1 : (int)Math.Ceiling((double)_allData.Rows.Count / _pageSize);
-        if (_currentPage < 1) _currentPage = 1;
         RefreshGrid();
     }
 

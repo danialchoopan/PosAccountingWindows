@@ -1,10 +1,9 @@
 <UserControl x:Class="PosAccountingApp.Controls.PaginatedDataGrid"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:PosAccountingApp.Controls">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <DockPanel>
-        <!-- Toolbar: Page size, Export, Print -->
+        <!-- Toolbar -->
         <Border DockPanel.Dock="Top" Padding="0,0,0,8">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -12,10 +11,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-
-                <!-- Page Size -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="تعداد در صفحه:" FontSize="12" Margin="0,0,6,0"
+                    <TextBlock Text="تعداد:" FontSize="12" Margin="0,0,6,0"
                                VerticalAlignment="Center"/>
                     <ComboBox x:Name="PageSizeCombo" Width="70" Padding="4,2"
                               SelectedIndex="1" SelectionChanged="PageSize_Changed">
@@ -26,54 +23,58 @@
                         <ComboBoxItem Content="همه"/>
                     </ComboBox>
                 </StackPanel>
-
-                <!-- Export Buttons -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button Content="PDF  خروجی" Style="{StaticResource OutlineButton}"
-                            Margin="0,0,4,0" Click="ExportPdf_Click"/>
-                    <Button Content="Excel  خروجی" Style="{StaticResource OutlineButton}"
-                            Margin="0,0,4,0" Click="ExportExcel_Click"/>
+                    <Button Content="PDF" Style="{StaticResource PrimaryButton}"
+                            Padding="10,5" Margin="0,0,4,0" FontSize="11" Click="ExportPdf_Click"/>
+                    <Button Content="Excel" Style="{StaticResource SuccessButton}"
+                            Padding="10,5" Margin="0,0,4,0" FontSize="11" Click="ExportExcel_Click"/>
                     <Button Content="چاپ" Style="{StaticResource OutlineButton}"
-                            Click="Print_Click"/>
+                            Padding="10,5" FontSize="11" Click="Print_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
 
         <!-- DataGrid -->
-        <DataGrid x:Name="MainGrid" DockPanel.Dock="Top"
-                  AutoGenerateColumns="False" CanUserAddRows="False"
-                  SelectionMode="Single" MouseDoubleClick="MainGrid_MouseDoubleClick"
-                  RowHeaderWidth="0">
-        </DataGrid>
+        <DataGrid x:Name="MainGrid" DockPanel.Dock="Top"/>
 
         <!-- Pagination -->
-        <Border DockPanel.Dock="Bottom" Padding="0,8,0,0">
+        <Border DockPanel.Dock="Bottom" Padding="0,6,0,0"
+                x:Name="PaginationBar" Visibility="Collapsed">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-
                 <TextBlock Grid.Column="0" x:Name="PageInfoText" FontSize="12"
                            VerticalAlignment="Center" Margin="0,0,12,0"/>
-
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Content="&gt;&gt;" Style="{StaticResource OutlineButton}"
-                            Padding="8,4" Margin="2,0" Click="LastPage_Click"/>
+                            Padding="6,3" Margin="2,0" Click="LastPage_Click"/>
                     <Button Content="&gt;" Style="{StaticResource OutlineButton}"
-                            Padding="8,4" Margin="2,0" Click="NextPage_Click"/>
-                    <TextBlock x:Name="PageNumbersText" FontSize="12" Margin="8,0"
+                            Padding="6,3" Margin="2,0" Click="NextPage_Click"/>
+                    <TextBlock x:Name="PageNumbersText" FontSize="12" Margin="6,0"
                                VerticalAlignment="Center"/>
                     <Button Content="&lt;" Style="{StaticResource OutlineButton}"
-                            Padding="8,4" Margin="2,0" Click="PrevPage_Click"/>
+                            Padding="6,3" Margin="2,0" Click="PrevPage_Click"/>
                     <Button Content="&lt;&lt;" Style="{StaticResource OutlineButton}"
-                            Padding="8,4" Margin="2,0" Click="FirstPage_Click"/>
+                            Padding="6,3" Margin="2,0" Click="FirstPage_Click"/>
                 </StackPanel>
-
                 <TextBlock Grid.Column="2" x:Name="TotalText" FontSize="12"
                            VerticalAlignment="Center"/>
             </Grid>
+        </Border>
+
+        <!-- Empty State -->
+        <Border x:Name="EmptyState" Visibility="Collapsed"
+                Background="Transparent" Padding="0,60,0,60">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets" FontSize="48"
+                           Foreground="#FFCCCCCC" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="EmptyText" Text="داده‌ای موجود نیست"
+                           FontSize="16" Foreground="#FFAAAAAA"
+                           HorizontalAlignment="Center" Margin="0,12,0,0"/>
+            </StackPanel>
         </Border>
     </DockPanel>
 </UserControl>
