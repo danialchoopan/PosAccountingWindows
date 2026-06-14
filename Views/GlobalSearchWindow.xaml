@@ -1,0 +1,63 @@
+<Window x:Class="PosAccountingApp.Views.GlobalSearchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="جستجوی سراسری"
+        Width="600" Height="500"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="NoResize"
+        FlowDirection="RightToLeft"
+        ShowInTaskbar="False">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Search Box -->
+        <Border Grid.Row="0" Padding="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="SearchBox"
+                         FontSize="16" Padding="10,8"
+                         TextChanged="SearchBox_TextChanged"/>
+                <TextBlock Grid.Column="1" Text="جستجو..." VerticalAlignment="Center"
+                           Margin="0,0,12,0" Foreground="#FFAAAAAA" FontSize="14"
+                           IsHitTestVisible="False">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </Border>
+
+        <!-- Results -->
+        <DataGrid Grid.Row="1" x:Name="ResultsGrid"
+                  AutoGenerateColumns="False" CanUserAddRows="False"
+                  HeadersVisibility="Column" IsReadOnly="True"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="نوع" Binding="{Binding Type}" Width="70"/>
+                <DataGridTextColumn Header="نام" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="جزئیات" Binding="{Binding Detail}" Width="250"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Hint -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+            <TextBlock Text="ESC برای بستن" FontSize="11" Foreground="#FFAAAAAA"/>
+        </StackPanel>
+    </Grid>
+</Window>

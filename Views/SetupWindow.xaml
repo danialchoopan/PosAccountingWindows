@@ -22,19 +22,16 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
         <TextBlock Grid.Row="0" Text="تنظیم اولیه سیستم" FontSize="24" FontWeight="Bold"
                    Foreground="#FF0078D4" Margin="0,0,0,6"/>
         <TextBlock Grid.Row="1" Text="لطفاً اطلاعات فروشگاه خود را وارد کنید" FontSize="13"
                    Foreground="#FF666666" Margin="0,0,0,20"/>
 
-        <!-- Shop Name -->
         <StackPanel Grid.Row="2" Margin="0,0,0,14">
             <TextBlock Text="نام فروشگاه" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,4"/>
             <TextBox x:Name="ShopNameBox" FontSize="14" Padding="8,6" Height="36"/>
         </StackPanel>
 
-        <!-- Business Type -->
         <StackPanel Grid.Row="3" Margin="0,0,0,14">
             <TextBlock Text="نوع کسب‌وکار" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,4"/>
             <ComboBox x:Name="BusinessTypeCombo" FontSize="14" Padding="8,4" Height="36">
@@ -46,20 +43,17 @@
             </ComboBox>
         </StackPanel>
 
-        <!-- Phone -->
         <StackPanel Grid.Row="4" Margin="0,0,0,14">
             <TextBlock Text="تلفن فروشگاه" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,4"/>
             <TextBox x:Name="PhoneBox" FontSize="14" Padding="8,6" Height="36"
                      FlowDirection="LeftToRight"/>
         </StackPanel>
 
-        <!-- Address -->
         <StackPanel Grid.Row="5" Margin="0,0,0,14">
             <TextBlock Text="آدرس فروشگاه" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,4"/>
             <TextBox x:Name="AddressBox" FontSize="14" Padding="8,6" Height="36"/>
         </StackPanel>
 
-        <!-- Admin PIN -->
         <StackPanel Grid.Row="6" Margin="0,0,0,14">
             <TextBlock Text="کد عبور مدیر (۴ رقمی)" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,4"/>
             <TextBox x:Name="PinBox" FontSize="18" Padding="8,6" Height="40"
@@ -67,23 +61,22 @@
                      HorizontalContentAlignment="Center"/>
         </StackPanel>
 
-        <!-- VAT -->
-        <StackPanel Grid.Row="7" Margin="0,0,0,14">
+        <StackPanel Grid.Row="7" Margin="0,0,0,6">
             <TextBlock Text="درصد مالیات (VAT)" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,4"/>
             <TextBox x:Name="VatBox" FontSize="14" Padding="8,6" Height="36"
                      Text="10" FlowDirection="LeftToRight" HorizontalContentAlignment="Center" Width="120"
                      HorizontalAlignment="Left"/>
         </StackPanel>
 
-        <!-- Error message -->
         <TextBlock Grid.Row="8" x:Name="ErrorText" Text="" Foreground="#FFD13438"
                    FontSize="12" VerticalAlignment="Center"/>
 
-        <!-- Buttons -->
-        <StackPanel Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Left">
-            <Button Content="شروع کار" x:Name="StartButton" Width="140" Height="40"
+        <StackPanel Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Center"
+                    Margin="0,12,0,0">
+            <Button Content="شروع به کار" x:Name="StartButton" Width="180" Height="44"
                     FontSize="15" FontWeight="SemiBold"
                     Style="{StaticResource PrimaryButton}"
+                    Margin="0,0,0,8"
                     Click="StartButton_Click"/>
         </StackPanel>
     </Grid>

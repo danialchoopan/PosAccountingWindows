@@ -9,6 +9,8 @@ namespace PosAccountingApp.ViewModels;
 
 public partial class CustomersViewModel : ObservableObject
 {
+    private List<Customer> _allCustomers = new();
+
     [ObservableProperty] private string _searchText = string.Empty;
     [ObservableProperty] private bool _isAddPanelOpen;
     [ObservableProperty] private string _editName = string.Empty;
@@ -17,18 +19,30 @@ public partial class CustomersViewModel : ObservableObject
 
     public ObservableCollection<Customer> Customers { get; } = new();
 
-    public CustomersViewModel()
-    {
-        LoadCustomers();
-    }
+    public CustomersViewModel() { LoadCustomers(); }
 
     public void LoadCustomers()
     {
         using var db = DatabaseInitializer.CreateDbContext();
-        Customers.Clear();
-        foreach (var c in db.Customers.AsNoTracking().ToList())
-            Customers.Add(c);
+        _allCustomers = db.Customers.AsNoTracking().Where(c => c.IsActive).OrderBy(c => c.Name).ToList();
+        ApplyFilter();
     }
+
+    partial void OnSearchTextChanged(string value) { ApplyFilter(); }
+
+    private void ApplyFilter()
+    {
+        Customers.Clear();
+        var q = SearchText?.Trim() ?? "";
+        var filtered = string.IsNullOrEmpty(q) ? _allCustomers
+            : _allCustomers.Where(c =>
+                c.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                c.Phone.Contains(q)).ToList();
+        foreach (var c in filtered) Customers.Add(c);
+    }
+
+    [RelayCommand]
+    private void ClearSearch() { SearchText = string.Empty; }
 
     [RelayCommand]
     private void ToggleAddPanel() => IsAddPanelOpen = !IsAddPanelOpen;
@@ -38,44 +52,23 @@ public partial class CustomersViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(EditName)) return;
         using var db = DatabaseInitializer.CreateDbContext();
-        var customer = new Customer
-        {
-            Name = EditName,
-            Phone = EditPhone,
-            CreditLimit = EditCreditLimit
-        };
-        db.Customers.Add(customer);
+        db.Customers.Add(new Customer { Name = EditName, Phone = EditPhone, CreditLimit = EditCreditLimit });
         db.SaveChanges();
         IsAddPanelOpen = false;
-        ClearForm();
+        EditName = string.Empty; EditPhone = string.Empty; EditCreditLimit = 0;
         LoadCustomers();
     }
 
     [RelayCommand]
-    private void DeleteCustomer(Customer? customer)
+    private void DeleteCustomer(Customer? c)
     {
-        if (customer == null) return;
+        if (c == null) return;
         using var db = DatabaseInitializer.CreateDbContext();
-        var c = db.Customers.Find(customer.Id);
-        if (c != null)
-        {
-            c.IsActive = false;
-            db.SaveChanges();
-        }
+        var found = db.Customers.Find(c.Id);
+        if (found != null) { found.IsActive = false; db.SaveChanges(); }
         LoadCustomers();
     }
 
     [RelayCommand]
-    private void CancelEdit()
-    {
-        IsAddPanelOpen = false;
-        ClearForm();
-    }
-
-    private void ClearForm()
-    {
-        EditName = string.Empty;
-        EditPhone = string.Empty;
-        EditCreditLimit = 0;
-    }
+    private void CancelEdit() { IsAddPanelOpen = false; EditName = string.Empty; EditPhone = string.Empty; EditCreditLimit = 0; }
 }

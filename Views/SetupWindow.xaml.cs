@@ -41,18 +41,12 @@ public partial class SetupWindow : Window
             DatabaseInitializer.Initialize();
             using var db = DatabaseInitializer.CreateDbContext();
 
-            // Update admin
+            // Update admin user with chosen PIN
             var admin = db.Users.First(u => u.Id == 1);
             admin.PinCodeHash = ComputeSha256(PinBox.Text);
+            admin.Name = "مدیر";
 
-            // Add demo employees
-            db.Users.AddRange(
-                new User { Name = "کارمند ۱", PinCodeHash = ComputeSha256("1111"), Role = UserRole.Cashier },
-                new User { Name = "کارمند ۲", PinCodeHash = ComputeSha256("2222"), Role = UserRole.Cashier },
-                new User { Name = "حسابدار", PinCodeHash = ComputeSha256("3333"), Role = UserRole.Accountant }
-            );
-
-            // Add demo warehouse
+            // Add one default warehouse
             db.Warehouses.Add(new Warehouse { Name = "انبار اصلی", Location = "محل فروشگاه" });
 
             db.SaveChanges();
@@ -76,9 +70,10 @@ public partial class SetupWindow : Window
             var json = System.Text.Json.JsonSerializer.Serialize(settings, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(Path.Combine(settingsDir, "settings.json"), json);
 
+            // Open login window and close this one
             var loginWindow = new LoginWindow();
             loginWindow.Show();
-            Close();
+            this.Close();
         }
         catch (Exception ex)
         {

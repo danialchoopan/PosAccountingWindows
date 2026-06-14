@@ -1,5 +1,6 @@
 using System.IO;
 using System.Windows;
+using PosAccountingApp.Models;
 using PosAccountingApp.ViewModels;
 
 namespace PosAccountingApp.Views;
@@ -15,6 +16,7 @@ public partial class MainWindow : Window
         _vm = new MainViewModel();
         DataContext = _vm;
         LoadShopName();
+        ApplyRoleVisibility();
     }
 
     private void LoadShopName()
@@ -36,5 +38,20 @@ public partial class MainWindow : Window
             }
         }
         catch { }
+    }
+
+    private void ApplyRoleVisibility()
+    {
+        var user = AppSettings.CurrentUser;
+        if (user == null) return;
+        if (user.Role == UserRole.SuperAdmin || user.Role == UserRole.Admin)
+            UsersNavBtn.Visibility = Visibility.Visible;
+    }
+
+    // Called from XAML CommandParameter="GlobalSearch"
+    public void OpenGlobalSearch()
+    {
+        var searchWindow = new GlobalSearchWindow { Owner = this };
+        searchWindow.ShowDialog();
     }
 }

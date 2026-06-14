@@ -29,6 +29,10 @@ public partial class MainViewModel : ObservableObject
     public ExpensesViewModel ExpensesVm { get; } = new();
     public ReportsViewModel ReportsVm { get; } = new();
     public SettingsViewModel SettingsVm { get; } = new();
+    public UsersViewModel UsersVm { get; } = new();
+
+    public bool IsAdmin => AppSettings.CurrentUser?.Role == UserRole.SuperAdmin
+                        || AppSettings.CurrentUser?.Role == UserRole.Admin;
 
     public MainViewModel()
     {
@@ -90,6 +94,11 @@ public partial class MainViewModel : ObservableObject
                 CurrentView = ReportsVm;
                 CurrentViewTitle = "گزارشات";
                 break;
+            case "Users":
+                CurrentView = UsersVm;
+                CurrentViewTitle = "مدیریت کاربران";
+                UsersVm.LoadUsers();
+                break;
             case "Settings":
                 CurrentView = SettingsVm;
                 CurrentViewTitle = "تنظیمات";
@@ -99,4 +108,11 @@ public partial class MainViewModel : ObservableObject
 
     [RelayCommand]
     private void ToggleTheme() => IsDarkTheme = !IsDarkTheme;
+
+    [RelayCommand]
+    private void OpenGlobalSearch()
+    {
+        var window = new Views.GlobalSearchWindow();
+        window.ShowDialog();
+    }
 }

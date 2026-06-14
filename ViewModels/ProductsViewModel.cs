@@ -9,6 +9,8 @@ namespace PosAccountingApp.ViewModels;
 
 public partial class ProductsViewModel : ObservableObject
 {
+    private List<Product> _allProducts = new();
+
     [ObservableProperty] private string _searchText = string.Empty;
     [ObservableProperty] private bool _isAddPanelOpen;
     [ObservableProperty] private string _editTitle = string.Empty;
@@ -31,9 +33,33 @@ public partial class ProductsViewModel : ObservableObject
     public void LoadProducts()
     {
         using var db = DatabaseInitializer.CreateDbContext();
+        _allProducts = db.Products.AsNoTracking().Where(p => p.IsActive).OrderBy(p => p.Title).ToList();
+        ApplyFilter();
+    }
+
+    partial void OnSearchTextChanged(string value)
+    {
+        ApplyFilter();
+    }
+
+    private void ApplyFilter()
+    {
         Products.Clear();
-        foreach (var p in db.Products.AsNoTracking().ToList())
-            Products.Add(p);
+        var q = SearchText?.Trim() ?? "";
+        var filtered = string.IsNullOrEmpty(q)
+            ? _allProducts
+            : _allProducts.Where(p =>
+                p.Title.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                (p.Barcode != null && p.Barcode.Contains(q)) ||
+                (p.Category != null && p.Category.Contains(q, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+        foreach (var p in filtered) Products.Add(p);
+    }
+
+    [RelayCommand]
+    private void ClearSearch()
+    {
+        SearchText = string.Empty;
     }
 
     [RelayCommand]
@@ -69,11 +95,7 @@ public partial class ProductsViewModel : ObservableObject
         if (product == null) return;
         using var db = DatabaseInitializer.CreateDbContext();
         var p = db.Products.Find(product.Id);
-        if (p != null)
-        {
-            p.IsActive = false;
-            db.SaveChanges();
-        }
+        if (p != null) { p.IsActive = false; db.SaveChanges(); }
         LoadProducts();
     }
 
@@ -86,13 +108,8 @@ public partial class ProductsViewModel : ObservableObject
 
     private void ClearForm()
     {
-        EditTitle = string.Empty;
-        EditBarcode = string.Empty;
-        EditCategory = string.Empty;
-        EditPurchasePrice = 0;
-        EditSalePrice = 0;
-        EditStock = 0;
-        EditMinStock = 0;
+        EditTitle = string.Empty; EditBarcode = string.Empty; EditCategory = string.Empty;
+        EditPurchasePrice = 0; EditSalePrice = 0; EditStock = 0; EditMinStock = 0;
         EditUnit = UnitType.Number;
     }
 }

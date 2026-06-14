@@ -9,6 +9,8 @@ namespace PosAccountingApp.ViewModels;
 
 public partial class ChequesViewModel : ObservableObject
 {
+    private List<Cheque> _allCheques = new();
+
     [ObservableProperty] private string _searchText = string.Empty;
     [ObservableProperty] private bool _isAddPanelOpen;
     [ObservableProperty] private string _editChequeNumber = string.Empty;
@@ -22,18 +24,32 @@ public partial class ChequesViewModel : ObservableObject
 
     public ObservableCollection<Cheque> Cheques { get; } = new();
 
-    public ChequesViewModel()
-    {
-        LoadCheques();
-    }
+    public ChequesViewModel() { LoadCheques(); }
 
     public void LoadCheques()
     {
         using var db = DatabaseInitializer.CreateDbContext();
-        Cheques.Clear();
-        foreach (var c in db.Cheques.AsNoTracking().ToList())
-            Cheques.Add(c);
+        _allCheques = db.Cheques.AsNoTracking().Where(c => c.IsActive).OrderByDescending(c => c.CreatedAt).ToList();
+        ApplyFilter();
     }
+
+    partial void OnSearchTextChanged(string value) { ApplyFilter(); }
+
+    private void ApplyFilter()
+    {
+        Cheques.Clear();
+        var q = SearchText?.Trim() ?? "";
+        var filtered = string.IsNullOrEmpty(q) ? _allCheques
+            : _allCheques.Where(c =>
+                c.ChequeNumber.Contains(q) ||
+                c.BankName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                c.PayerName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                c.ReceiverName.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+        foreach (var c in filtered) Cheques.Add(c);
+    }
+
+    [RelayCommand]
+    private void ClearSearch() { SearchText = string.Empty; }
 
     [RelayCommand]
     private void ToggleAddPanel() => IsAddPanelOpen = !IsAddPanelOpen;
@@ -43,18 +59,12 @@ public partial class ChequesViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(EditChequeNumber)) return;
         using var db = DatabaseInitializer.CreateDbContext();
-        var cheque = new Cheque
+        db.Cheques.Add(new Cheque
         {
-            ChequeNumber = EditChequeNumber,
-            BankName = EditBankName,
-            Branch = EditBranch,
-            Amount = EditAmount,
-            DueDate = EditDueDate,
-            PayerName = EditPayerName,
-            ReceiverName = EditReceiverName,
-            Type = EditType
-        };
-        db.Cheques.Add(cheque);
+            ChequeNumber = EditChequeNumber, BankName = EditBankName, Branch = EditBranch,
+            Amount = EditAmount, DueDate = EditDueDate, PayerName = EditPayerName,
+            ReceiverName = EditReceiverName, Type = EditType
+        });
         db.SaveChanges();
         IsAddPanelOpen = false;
         LoadCheques();

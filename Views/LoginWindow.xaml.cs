@@ -25,7 +25,16 @@ public partial class LoginWindow : Window
         UserCombo.ItemsSource = _users;
 
         if (_users.Count > 0)
+        {
             UserCombo.SelectedIndex = 0;
+            NoUsersText.Visibility = Visibility.Collapsed;
+            LoginButton.IsEnabled = true;
+        }
+        else
+        {
+            NoUsersText.Visibility = Visibility.Visible;
+            LoginButton.IsEnabled = false;
+        }
     }
 
     private void UserCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -67,11 +76,10 @@ public partial class LoginWindow : Window
             return;
         }
 
-        // Login successful
         AppSettings.CurrentUser = user;
         var mainWindow = new MainWindow();
         mainWindow.Show();
-        Close();
+        this.Close();
     }
 
     private static string ComputeSha256(string input)

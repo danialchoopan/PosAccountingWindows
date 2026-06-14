@@ -24,6 +24,7 @@
         <KeyBinding Key="F2" Command="{Binding NavigateToCommand}" CommandParameter="Products"/>
         <KeyBinding Key="F3" Command="{Binding NavigateToCommand}" CommandParameter="Cheques"/>
         <KeyBinding Key="F9" Command="{Binding NavigateToCommand}" CommandParameter="Reports"/>
+        <KeyBinding Key="G" Modifiers="Control" Command="{Binding OpenGlobalSearchCommand}"/>
     </Window.InputBindings>
 
     <Grid>
@@ -35,7 +36,6 @@
         <!-- Sidebar -->
         <Border Grid.Column="0" Background="#FFF5F5F5" BorderBrush="#FFE0E0E0" BorderThickness="0,0,1,0">
             <DockPanel>
-                <!-- Logo -->
                 <Border DockPanel.Dock="Top" Padding="14,18" Margin="0,0,0,4">
                     <StackPanel>
                         <TextBlock Text="سیستم حسابداری" FontSize="17" FontWeight="Bold"
@@ -55,8 +55,8 @@
                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="مدیر سیستم" FontSize="12" FontWeight="SemiBold"/>
-                            <TextBlock Text="مدیر ارشد" FontSize="10" Foreground="#FF888888"/>
+                            <TextBlock Text="{Binding CurrentUser}" FontSize="12" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding StatusMessage}" FontSize="10" Foreground="#FF888888"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -84,9 +84,13 @@
                     <RadioButton Style="{StaticResource SidebarButton}"
                                  Content="گزارشات (F9)"
                                  Command="{Binding NavigateToCommand}" CommandParameter="Reports"/>
+                    <!-- Only show Users for admins -->
+                    <RadioButton x:Name="UsersNavBtn" Style="{StaticResource SidebarButton}"
+                                 Content="مدیریت کاربران"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Users"
+                                 Visibility="Collapsed"/>
                 </StackPanel>
 
-                <!-- Bottom -->
                 <StackPanel DockPanel.Dock="Bottom" Margin="4,0,4,10">
                     <RadioButton Style="{StaticResource SidebarButton}"
                                  Content="تنظیمات"
@@ -98,7 +102,6 @@
 
         <!-- Main Content -->
         <DockPanel Grid.Column="1">
-            <!-- Top Bar -->
             <Border DockPanel.Dock="Top" Background="White" BorderBrush="#FFE0E0E0" BorderThickness="0,0,0,1"
                     Padding="18,10">
                 <Grid>
@@ -106,15 +109,11 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" x:Name="TitleLabel" Text="داشبورد"
+                    <TextBlock Grid.Column="0" Text="{Binding CurrentViewTitle}"
                                FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
-                    <Button Grid.Column="1" Content="موضوع" FontSize="12"
-                            Command="{Binding ToggleThemeCommand}"
-                            Visibility="Collapsed"/>
                 </Grid>
             </Border>
 
-            <!-- Status Bar -->
             <Border DockPanel.Dock="Bottom" Background="#FFF5F5F5" BorderBrush="#FFE0E0E0" BorderThickness="0,1,0,0"
                     Padding="14,5">
                 <Grid>
@@ -124,12 +123,11 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="آماده | F1: صندوق | F2: کالا | F3: چک | F9: گزارش"
                                FontSize="11" Foreground="#FF888888" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="1" x:Name="ViewTitleBar" Text=""
+                    <TextBlock Grid.Column="1" Text="{Binding CurrentViewTitle}"
                                FontSize="11" Foreground="#FF0078D4" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
 
-            <!-- View Content -->
             <ContentControl Grid.Column="1" Content="{Binding CurrentView}">
                 <ContentControl.Resources>
                     <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
@@ -155,6 +153,9 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
                         <views:SettingsView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:UsersViewModel}">
+                        <views:UsersView/>
                     </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>

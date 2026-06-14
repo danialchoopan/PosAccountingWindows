@@ -9,6 +9,9 @@ namespace PosAccountingApp.ViewModels;
 
 public partial class ExpensesViewModel : ObservableObject
 {
+    private List<Expense> _allExpenses = new();
+
+    [ObservableProperty] private string _searchText = string.Empty;
     [ObservableProperty] private bool _isAddPanelOpen;
     [ObservableProperty] private string _editDescription = string.Empty;
     [ObservableProperty] private decimal _editAmount;
@@ -18,18 +21,30 @@ public partial class ExpensesViewModel : ObservableObject
     public ObservableCollection<Expense> Expenses { get; } = new();
     public ExpenseCategory[] Categories { get; } = Enum.GetValues<ExpenseCategory>();
 
-    public ExpensesViewModel()
-    {
-        LoadExpenses();
-    }
+    public ExpensesViewModel() { LoadExpenses(); }
 
     public void LoadExpenses()
     {
         using var db = DatabaseInitializer.CreateDbContext();
-        Expenses.Clear();
-        foreach (var e in db.Expenses.AsNoTracking().ToList())
-            Expenses.Add(e);
+        _allExpenses = db.Expenses.AsNoTracking().Where(e => e.IsActive).OrderByDescending(e => e.Date).ToList();
+        ApplyFilter();
     }
+
+    partial void OnSearchTextChanged(string value) { ApplyFilter(); }
+
+    private void ApplyFilter()
+    {
+        Expenses.Clear();
+        var q = SearchText?.Trim() ?? "";
+        var filtered = string.IsNullOrEmpty(q) ? _allExpenses
+            : _allExpenses.Where(e =>
+                e.Description.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                e.Category.ToString().Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+        foreach (var e in filtered) Expenses.Add(e);
+    }
+
+    [RelayCommand]
+    private void ClearSearch() { SearchText = string.Empty; }
 
     [RelayCommand]
     private void ToggleAddPanel() => IsAddPanelOpen = !IsAddPanelOpen;
@@ -39,14 +54,11 @@ public partial class ExpensesViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(EditDescription) || EditAmount <= 0) return;
         using var db = DatabaseInitializer.CreateDbContext();
-        var expense = new Expense
+        db.Expenses.Add(new Expense
         {
-            Description = EditDescription,
-            Amount = EditAmount,
-            Category = EditCategory,
-            Date = EditDate
-        };
-        db.Expenses.Add(expense);
+            Description = EditDescription, Amount = EditAmount,
+            Category = EditCategory, Date = EditDate
+        });
         db.SaveChanges();
         IsAddPanelOpen = false;
         LoadExpenses();
