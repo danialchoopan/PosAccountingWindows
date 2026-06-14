@@ -9,7 +9,7 @@
         MinWidth="1000" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         FlowDirection="RightToLeft"
-        Background="{DynamicResource SystemColorWindowBrush}">
+        Background="White">
 
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
