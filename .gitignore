@@ -74,3 +74,16 @@ publish/
 ## dotnet tool
 .dotnet/
 .vscode/
+
+## Installer
+installer_output/
+*.exe
+app_icon.ico
+
+## Publish
+publish/
+
+## Database (local only)
+*.db
+*.db-shm
+*.db-wal
