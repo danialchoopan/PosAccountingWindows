@@ -78,7 +78,7 @@ public class EnumToPersianConverter : IValueConverter
         ["InShowroom"] = "در نمایشگاه", ["Sold"] = "فروخته شده", ["Reserved"] = "رزرو شده",
         // Expense
         ["Rent"] = "اجاره", ["Utilities"] = "قبوض", ["Salary"] = "حقوق",
-        ["Supplies"] = "ลูกอม", ["Maintenance"] = "تعمیرات", ["Transport"] = "حمل‌ونقل", ["Other"] = "سایر",
+        ["Supplies"] = "لوازم", ["Maintenance"] = "تعمیرات", ["Transport"] = "حمل‌ونقل", ["Other"] = "سایر",
         // Ledger
         ["Charge"] = "شارژ", ["Payment"] = "پرداخت", ["Sale"] = "فروش",
         // Roles

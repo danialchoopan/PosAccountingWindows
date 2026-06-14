@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,6 +34,10 @@ public partial class ProductsView : UserControl
             );
             PagedGrid.SetHeaders("عنوان کالا", "بارکد", "دسته", "موجودی", "قیمت فروش", "قیمت خرید");
             PagedGrid.ItemDoubleClicked += OnItemDoubleClicked;
+
+            // Refresh when products change
+            vm.Products.CollectionChanged += (_, _) => RefreshGrid();
+
             RefreshGrid();
         }
     }

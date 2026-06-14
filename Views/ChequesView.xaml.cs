@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,6 +33,7 @@ public partial class ChequesView : UserControl
             );
             PagedGrid.SetHeaders("شماره چک", "بانک", "مبلغ", "سررسید", "صاحب چک", "وضعیت");
             PagedGrid.ItemDoubleClicked += OnItemDoubleClicked;
+            vm.Cheques.CollectionChanged += (_, _) => RefreshGrid();
             RefreshGrid();
         }
     }

@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,6 +31,7 @@ public partial class ExpensesView : UserControl
             );
             PagedGrid.SetHeaders("دسته", "توضیحات", "مبلغ", "تاریخ");
             PagedGrid.ItemDoubleClicked += OnItemDoubleClicked;
+            vm.Expenses.CollectionChanged += (_, _) => RefreshGrid();
             RefreshGrid();
         }
     }

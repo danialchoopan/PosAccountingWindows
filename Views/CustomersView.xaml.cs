@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +32,7 @@ public partial class CustomersView : UserControl
             );
             PagedGrid.SetHeaders("نام", "تلفن", "موجودی حساب", "سقف اعتبار", "امتیاز وفاداری");
             PagedGrid.ItemDoubleClicked += OnItemDoubleClicked;
+            vm.Customers.CollectionChanged += (_, _) => RefreshGrid();
             RefreshGrid();
         }
     }
