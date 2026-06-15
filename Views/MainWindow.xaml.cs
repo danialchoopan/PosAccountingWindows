@@ -54,4 +54,10 @@ public partial class MainWindow : Window
         var searchWindow = new GlobalSearchWindow { Owner = this };
         searchWindow.ShowDialog();
     }
+
+    private void Help_Click(object sender, RoutedEventArgs e)
+    {
+        var helpWindow = new HelpWindow { Owner = this };
+        helpWindow.ShowDialog();
+    }
 }

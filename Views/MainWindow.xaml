@@ -100,6 +100,9 @@
 
                 <!-- Bottom -->
                 <StackPanel DockPanel.Dock="Bottom" Margin="4,0,4,12">
+                    <RadioButton x:Name="HelpNavBtn" Style="{StaticResource SidebarButton}"
+                                 Content="&#xE897;  راهنما"
+                                 Click="Help_Click"/>
                     <RadioButton Style="{StaticResource SidebarButton}"
                                  Content="&#xE713;  تنظیمات"
                                  Command="{Binding NavigateToCommand}" CommandParameter="Settings"/>

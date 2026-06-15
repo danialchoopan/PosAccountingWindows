@@ -1,0 +1,327 @@
+<Window x:Class="PosAccountingApp.Views.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="راهنمای استفاده از برنامه"
+        Width="1000" Height="700"
+        WindowStartupLocation="CenterOwner"
+        WindowState="Maximized"
+        FlowDirection="RightToLeft"
+        Background="#FFF0F4F8"
+        Icon="{StaticResource AppIcon}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.25*"/>
+            <ColumnDefinition Width="0.50*"/>
+            <ColumnDefinition Width="0.25*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="1" Background="White" CornerRadius="12"
+                BorderBrush="#FFE0E0E0" BorderThickness="1"
+                Margin="20" Padding="32,24">
+            <DockPanel>
+                <Border DockPanel.Dock="Top" Background="#FF0078D4" CornerRadius="10" Padding="18,14" Margin="0,0,0,16">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="&#xE897;" FontFamily="Segoe MDL2 Assets" FontSize="22" Foreground="White"/>
+                            <TextBlock Text="راهنمای استفاده از برنامه" FontSize="18" FontWeight="Bold"
+                                       Foreground="White" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Button Content="بستن" Style="{StaticResource DangerButton}"
+                                HorizontalAlignment="Left" Padding="14,6" FontSize="12"
+                                Click="Close_Click"/>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+
+                        <!-- Section 1 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۱. راه‌اندازی اولیه" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    در اولین اجرای برنامه، پنجره تنظیم اولیه نمایش داده می‌شود. در این پنجره باید اطلاعات فروشگاه خود را وارد کنید:
+
+- نام فروشگاه: نام کسب‌وکار خود را وارد کنید
+- نوع کسب‌وکار: نوع فعالیت خود را انتخاب کنید (سوپرمارکت، پوشاک، املاک، خودرو، مصالح)
+- تلفن فروشگاه: شماره تماس فروشگاه
+- آدرس فروشگاه: آدرس محل کسب‌وکار
+- کد عبور مدیر: یک کد ۴ رقمی برای ورود به سیستم (مهم: این کد را به خاطر بسپارید)
+- درصد مالیات: درصد مالیات ارزش افزوده (پیش‌فرض ۱۰٪)
+
+پس از تکمیل، روی دکمه شروع به کار کلیک کنید.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 2 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۲. ورود به سیستم" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    پس از راه‌اندازی، پنجره ورود نمایش داده می‌شود:
+
+- نام کاربر خود را از لیست کشویی انتخاب کنید
+- کد عبور ۴ رقمی خود را وارد کنید
+- روی دکمه ورود کلیک کنید
+
+نکته: فقط مدیر می‌تواند کاربران جدید بسازد. کاربران دیگر توسط مدیر ایجاد می‌شوند.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 3 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۳. داشبورد" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    پس از ورود، وارد داشبورد می‌شوید. در این صفحه:
+
+- کارت‌های رنگی آمار کلی فروش، درآمد، مشتریان و کالاها را نشان می‌دهد
+- دسترسی سریع به بخش‌های مهم برنامه
+- برای رفتن به هر بخش، روی نام آن در سایدبار کلیک کنید
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 4 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۴. صندوق فروشگاهی" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    برای ثبت فروش:
+
+- نام یا بارکد کالا را در فیلد بالا تایپ کنید
+- لیست کالاهای مرتبط نمایش داده می‌شود
+- روی کالای مورد نظر کلیک کنید تا به سبد اضافه شود
+- تعداد و قیمت را بررسی کنید
+- نام مشتری را وارد کنید (اختیاری)
+- روش پرداخت را انتخاب کنید (نقدی، کارتخوان، نسیه، اقساطی)
+- مبلغ پرداختی را وارد کنید
+- روی تکمیل فروش کلیک کنید
+
+نکته: برای نگهداری فاکتور جاری، از دکمه نگهداری فاکتور استفاده کنید.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 5 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۵. مدیریت کالاها" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    برای افزودن کالای جدید:
+
+- روی دکمه کالای جدید کلیک کنید
+- اطلاعات کالا را وارد کنید: عنوان، بارکد، دسته‌بندی، واحد، قیمت خرید و فروش، موجودی
+- دسته‌بندی را از لیست کشویی انتخاب کنید
+- واحد را به فارسی انتخاب کنید (عدد، کیلوگرم، جعبه و...)
+- روی ذخیره کلیک کنید
+
+برای حذف کالا، روی ردیف مورد نظر کلیک کنید و دکمه حذف را بزنید.
+
+برای جستجو، نام کالا یا بارکد را در فیلد جستجو تایپ کنید.
+
+برای دیدن جزئیات، دوبار روی ردیف کلیک کنید.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 6 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۶. دسته‌بندی کالاها" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    برای مدیریت دسته‌بندی‌ها:
+
+- روی دکمه دسته جدید کلیک کنید
+- نام دسته را وارد کنید
+- آیکون مورد نظر را انتخاب کنید
+- برای ایجاد زیرمجموعه، دسته والد را انتخاب کنید
+- ترتیب نمایش را مشخص کنید
+- روی ذخیره کلیک کنید
+
+دسته‌بندی‌ها در بخش افزودن کالا نمایش داده می‌شوند.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 7 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۷. مدیریت مشتریان" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    برای افزودن مشتری جدید:
+
+- نام و شماره تماس مشتری را وارد کنید
+- سقف اعتبار (حداکثر مبلغ نسیه) را مشخص کنید
+- روی ذخیره کلیک کنید
+
+مشتریان در صندوق فروشگاهی قابل انتخاب هستند.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 8 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۸. خزانه‌داری و چک" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    برای ثبت چک:
+
+- شماره چک، نام بانک و مبلغ را وارد کنید
+- تاریخ سررسید را مشخص کنید
+- نام صاحب چک و نوع (دریافتی/پرداختی) را انتخاب کنید
+- روی ذخیره کلیک کنید
+
+چک‌ها در جدول لیست می‌شوند و قابل فیلتر و جستجو هستند.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 9 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۹. هزینه‌ها" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    برای ثبت هزینه:
+
+- دسته‌بندی هزینه را انتخاب کنید (اجاره، قبوض، حقوق و...)
+- مبلغ و تاریخ را وارد کنید
+- توضیحات بنویسید
+- روی ذخیره کلیک کنید
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 10 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۱۰. جستجوی سراسری" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    برای جستجو در تمام بخش‌ها:
+
+- کلیدهای Ctrl+G را فشار دهید
+- پنجره جستجو باز می‌شود
+- عبارت مورد نظر را تایپ کنید
+- نتایج در کالاها، مشتریان، چک‌ها و کاربران نمایش داده می‌شود
+- برای بستن، کلید ESC را فشار دهید
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 11 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۱۱. خروجی و چاپ" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    در هر صفحه با جدول داده:
+
+- دکمه PDF: خروجی فایل PDF با فونت فارسی
+- دکمه Excel: خروجی فایل اکسل (.xlsx)
+- دکمه چاپ: چاپ مستقیم روی پرینتر (صفحه A4 افقی)
+- کشویی بالای جدول: انتخاب تعداد ردیف در هر صفحه (۵، ۱۰، ۲۰، ۵۰، همه)
+
+برای دیدن جزئیات یک ردیف، دوبار روی آن کلیک کنید.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 12 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۱۲. تنظیمات" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+                                    از بخش تنظیمات می‌توانید:
+
+- تم برنامه را تغییر دهید (روشن/تاریک)
+- اندازه فونت را تنظیم کنید (۱۰ تا ۲۰)
+- کنتراست بالا را فعال کنید (برای دسترسی‌پذیری بیشتر)
+- اطلاعات فروشگاه را ویرایش کنید
+- درصد مالیات و کارمزد را تغییر دهید
+- پشتیبان از دیتابیس بگیرید
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 13 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۱۳. میانبرهای صفحه‌کلید" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+Ctrl+G  -  جستجوی سراسری
+F1  -  صندوق فروشگاهی
+F2  -  کالاها و خدمات
+F3  -  خزانه‌داری و چک
+F4  -  دسته‌بندی کالاها
+F9  -  گزارشات
+ESC  -  بستن پنجره جستجو
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 14 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="۱۴. مدیریت کاربران" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+فقط کاربران با نقش مدیر ارشد یا مدیر می‌توانند کاربر بسازند.
+
+برای افزودن کاربر:
+- از سایدبار روی مدیریت کاربران کلیک کنید
+- روی کاربر جدید کلیک کنید
+- نام، کد عبور و نقش را انتخاب کنید
+- روی ذخیره کلیک کنید
+
+نقش‌ها:
+- مدیر ارشد: دسترسی کامل به تمام بخش‌ها
+- مدیر: دسترسی به مدیریت کاربران و تنظیمات
+- صندوقدار: فقط صندوق فروشگاهی
+- مشاور: بخش املاک و خودرو
+- حسابدار: بخش گزارشات و حسابداری
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Section 15 -->
+                        <Border Background="#FFF5F7FA" CornerRadius="8" Padding="16" Margin="0,0,0,4">
+                            <StackPanel>
+                                <TextBlock Text="۱۵. پشتیبان‌گیری" FontSize="16" FontWeight="Bold"
+                                           Foreground="#FF0078D4" Margin="0,0,0,8"/>
+                                <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="24">
+برای پشتیبان‌گیری از اطلاعات:
+
+- از بخش تنظیمات، دکمه پشتیبان‌گیری را کلیک کنید
+- فایل پشتیبان در دسکتاپ ذخیره می‌شود
+- نام فایل شامل تاریخ و ساعت است
+
+برای بازیابی اطلاعات:
+- دکمه بازیابی را کلیک کنید
+- فایل پشتیبان را انتخاب کنید
+
+نکته مهم: قبل از بازیابی، از اطلاعات فعلی پشتیبان بگیرید.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>
