@@ -7,6 +7,101 @@
 ## معرفی
 
 نرم‌افزار حرفه‌ای مدیریت فروشگاه و حسابداری برای کسب‌وکارهای ایرانی. پشتیبانی کامل از فارسی، تقویم جلالی، مالیات و گرد کردن ریالی. طراحی شده برای فروشگاه‌های کوچک تا متوسط با امکان گسترش.
+
+## ساختار پروژه
+
+```
+PosAccountingApp/
+├── App.xaml                          نقطه ورود برنامه + منابع سراسری
+├── App.xaml.cs                       منطق راه‌اندازی و AppSettings
+├── PosAccountingApp.csproj           تنظیمات پروژه و بسته‌ها
+├── AssemblyInfo.cs                   اطلاعات مونتاژ
+│
+├── Controls/                         کنترلهای قابل استفاده مجدد
+│   ├── PaginatedDataGrid.xaml        جدول با صفحه‌بندی/خروجی/چاپ
+│   ├── PaginatedDataGrid.xaml.cs     منطق صفحه‌بندی و خروجی
+│   ├── DetailWindow.xaml             پنجره جزئیات ردیف
+│   └── DetailWindow.xaml.cs          نمایش فیلدها به صورت کارت
+│
+├── Converters/                       مبدلهای XAML
+│   └── BoolToVisibilityConverter.cs  تبدیل Bool به Visibility، رقم فارسی، تاریخ جلالی، ایلوم به فارسی
+│
+├── Data/                             لایه دسترسی به داده
+│   ├── AppDbContext.cs               کانتکست EF Core + پیکربندی ۱۶ جدول + فیلتر حذف نرم
+│   ├── DatabaseInitializer.cs        ایجاد خودکار دیتابیس + مسیر ذخیره
+│   ├── ExportHelper.cs               خروجی PDF (iTextSharp) + Excel (OpenXml) + چاپ
+│   └── ThemeManager.cs              تغییر پویای تم روشن/تاریک
+│
+├── Models/                           مدل‌های داده
+│   ├── Enums.cs                      ۱۶ ایلوم (نقش، واحد، نوع پرداخت، وضعیت و...)
+│   ├── User.cs                       BaseEntity + User + Warehouse + Product + Customer + Sale + Cheque + Expense + ۸ مدل دیگر
+│   └── Category.cs                   ProductCategory با زیرمجموعه
+│
+├── Resources/                        منابع بصری
+│   ├── Themes.xaml                   تعریف رنگ‌های تم روشن و تاریک
+│   └── Styles.xaml                   استایل‌های سراسری (دکمه، متن، جدول، سایدبار و...)
+│
+├── ViewModels/                       ویومدل‌ها (MVVM)
+│   ├── MainViewModel.cs              مدیریت ناوبری و تم
+│   ├── DashboardViewModel.cs         آمار داشبورد
+│   ├── PosViewModel.cs               صندوق فروشگاهی + جستجوی محصول
+│   ├── ProductsViewModel.cs          مدیریت کالاها + دسته‌بندی
+│   ├── CustomersViewModel.cs         مدیریت مشتریان
+│   ├── ChequesViewModel.cs           مدیریت چک‌ها
+│   ├── ExpensesViewModel.cs          مدیریت هزینه‌ها
+│   ├── ReportsViewModel.cs           گزارشات
+│   ├── SettingsViewModel.cs          تنظیمات + تم + فونت + کنتراست
+│   ├── UsersViewModel.cs             مدیریت کاربران
+│   ├── CategoriesViewModel.cs        مدیریت دسته‌بندی‌ها با زیرمجموعه
+│   └── GlobalSearchViewModel.cs      جستجوی سراسری
+│
+├── Views/                            نماهای XAML (رابط کاربری)
+│   ├── MainWindow.xaml               پنجره اصلی + سایدبار
+│   ├── MainWindow.xaml.cs
+│   ├── SetupWindow.xaml              پنجره راه‌اندازی اولیه
+│   ├── SetupWindow.xaml.cs
+│   ├── LoginWindow.xaml              پنجره ورود
+│   ├── LoginWindow.xaml.cs
+│   ├── DashboardView.xaml            داشبورد با کارت‌های رنگی
+│   ├── DashboardView.xaml.cs
+│   ├── PosView.xaml                  صندوق فروشگاهی با جستجو
+│   ├── PosView.xaml.cs
+│   ├── ProductsView.xaml             مدیریت کالاها
+│   ├── ProductsView.xaml.cs
+│   ├── CategoriesView.xaml           مدیریت دسته‌بندی‌ها
+│   ├── CategoriesView.xaml.cs
+│   ├── CustomersView.xaml            مدیریت مشتریان
+│   ├── CustomersView.xaml.cs
+│   ├── ChequesView.xaml              خزانه‌داری و چک
+│   ├── ChequesView.xaml.cs
+│   ├── ExpensesView.xaml             ثبت هزینه‌ها
+│   ├── ExpensesView.xaml.cs
+│   ├── ReportsView.xaml              گزارشات
+│   ├── ReportsView.xaml.cs
+│   ├── SettingsView.xaml             تنظیمات + تم + فونت + کنتراست
+│   ├── SettingsView.xaml.cs
+│   ├── UsersView.xaml                مدیریت کاربران
+│   ├── UsersView.xaml.cs
+│   ├── GlobalSearchWindow.xaml       پنجره جستجوی سراسری
+│   ├── GlobalSearchWindow.xaml.cs
+│   ├── HelpWindow.xaml               راهنمای برنامه
+│   └── HelpWindow.xaml.cs
+│
+├── Migrations/                       مایگریشن‌های EF Core
+│   ├── 20260614114553_InitialCreate.cs
+│   ├── 20260614114553_InitialCreate.Designer.cs
+│   └── AppDbContextModelSnapshot.cs
+│
+├── .gitignore                        فایل‌های نادیده‌گرفته‌شده گیت
+├── readme.md                         راهنمای پروژه (فارسی)
+├── setup.md                          راهنمای نصب (فارسی)
+├── technical.md                      مستندات فنی (فارسی)
+├── thisapp2.txt                      لیست کامل امکانات (فارسی)
+├── installer.iss                     اسکریپت Inno Setup برای نصب‌کننده
+├── publish.bat                       اسکریپت ساخت نسخه اجرایی
+├── license.txt                       مجوز نرم‌افزار
+└── readme_install.txt                راهنمای نصب (فارسی)
+```
 ## تصاویر برنامه 
 
 <img src="screenshot/1.jpg" height="500">
