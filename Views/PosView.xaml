@@ -122,7 +122,7 @@
                 </ComboBox>
 
                 <CheckBox x:Name="FullyPaidChk" Content="پول کامل پرداخت شده"
-                          IsChecked="True" FontSize="13" DockPanel.Dock="Top"
+                          FontSize="13" DockPanel.Dock="Top"
                           Checked="FullyPaidChk_Checked" Unchecked="FullyPaidChk_Unchecked"
                           Margin="0,0,0,8"/>
 

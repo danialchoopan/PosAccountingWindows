@@ -20,9 +20,11 @@ public partial class PosView : UserControl
         InitializeComponent();
         LoadProducts();
         LoadPaymentMethods();
-        FullyPaidChk.IsChecked = true;
-        UpdateTotals();
-        Loaded += (_, _) => SearchBox.Focus();
+        Loaded += (_, _) =>
+        {
+            FullyPaidChk.IsChecked = true;
+            UpdateTotals();
+        };
     }
 
     private void LoadProducts()
@@ -190,6 +192,7 @@ public partial class PosView : UserControl
 
     private void FullyPaidChk_Checked(object sender, RoutedEventArgs e)
     {
+        if (PaidAmountBox == null) return;
         var total = CalculateTotal();
         PaidAmountBox.Text = total.ToString("N0");
         UpdateChange();
@@ -197,6 +200,7 @@ public partial class PosView : UserControl
 
     private void FullyPaidChk_Unchecked(object sender, RoutedEventArgs e)
     {
+        if (PaidAmountBox == null) return;
         PaidAmountBox.Text = "0";
         UpdateChange();
     }
