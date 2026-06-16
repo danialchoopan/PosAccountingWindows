@@ -11,12 +11,19 @@ public partial class MainWindow : Window
 
     public MainWindow()
     {
-        InitializeComponent();
-        Data.DatabaseInitializer.Initialize();
-        _vm = new MainViewModel();
-        DataContext = _vm;
-        LoadShopName();
-        ApplyRoleVisibility();
+        try
+        {
+            InitializeComponent();
+            Data.DatabaseInitializer.Initialize();
+            _vm = new MainViewModel();
+            DataContext = _vm;
+            LoadShopName();
+            ApplyRoleVisibility();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("خطا در راه‌اندازی: " + ex.Message, "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private void LoadShopName()
@@ -42,27 +49,25 @@ public partial class MainWindow : Window
 
     private void ApplyRoleVisibility()
     {
-        var user = AppSettings.CurrentUser;
-        if (user == null) return;
-        if (user.Role == UserRole.SuperAdmin || user.Role == UserRole.Admin)
-            UsersNavBtn.Visibility = Visibility.Visible;
-    }
-
-    // Called from XAML CommandParameter="GlobalSearch"
-    public void OpenGlobalSearch()
-    {
-        var searchWindow = new GlobalSearchWindow { Owner = this };
-        searchWindow.ShowDialog();
+        try
+        {
+            var user = AppSettings.CurrentUser;
+            if (user == null) return;
+            if (user.Role == UserRole.SuperAdmin || user.Role == UserRole.Admin)
+                UsersNavBtn.Visibility = Visibility.Visible;
+        }
+        catch { }
     }
 
     private void Help_Click(object sender, RoutedEventArgs e)
     {
-        var helpWindow = new HelpWindow { Owner = this };
-        helpWindow.ShowDialog();
+        try { new HelpWindow { Owner = this }.ShowDialog(); }
+        catch (Exception ex) { MessageBox.Show("خطا: " + ex.Message, "خطا", MessageBoxButton.OK, MessageBoxImage.Error); }
     }
 
     private void ScanBarcode_Click(object sender, RoutedEventArgs e)
     {
-        _vm.OpenBarcodeScannerCommand.Execute(null);
+        try { _vm.OpenBarcodeScannerCommand.Execute(null); }
+        catch (Exception ex) { MessageBox.Show("خطا: " + ex.Message, "خطا", MessageBoxButton.OK, MessageBoxImage.Error); }
     }
 }

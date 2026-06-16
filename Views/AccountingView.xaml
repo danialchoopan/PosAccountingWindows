@@ -25,7 +25,7 @@
                 Margin="0,0,0,10" Padding="18">
             <StackPanel>
                 <TextBlock Text="ثبت سند حسابداری جدید" FontSize="15" FontWeight="Bold" Margin="0,0,0,12"
-                           Foreground="{DynamicResource AccentBrush}"/>
+                           Foreground="{StaticResource AccentBrush}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -38,21 +38,21 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="4">
-                        <TextBlock Text="حساب" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="حساب" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <ComboBox ItemsSource="{Binding AccountList}" SelectedItem="{Binding EditAccount}"
                                   DisplayMemberPath="Name" Padding="8,5"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1" Margin="4">
-                        <TextBlock Text="بدهکار" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="بدهکار" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditDebit, UpdateSourceTrigger=PropertyChanged}" FlowDirection="LeftToRight"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="2" Margin="4">
-                        <TextBlock Text="بستانکار" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="بستانکار" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditCredit, UpdateSourceTrigger=PropertyChanged}" FlowDirection="LeftToRight"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="4">
-                        <TextBlock Text="توضیحات" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="توضیحات" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditDescription, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </Grid>
@@ -66,21 +66,21 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Orientation="Horizontal">
                         <TextBlock Text="جمع بدهکار: " FontSize="12" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding TotalDebit, StringFormat=N0}" FontSize="12" Foreground="{DynamicResource ErrorBrush}"/>
+                        <TextBlock Text="{Binding TotalDebit, StringFormat=N0}" FontSize="12" Foreground="{StaticResource ErrorBrush}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <TextBlock Text="جمع بستانکار: " FontSize="12" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding TotalCredit, StringFormat=N0}" FontSize="12" Foreground="{DynamicResource SuccessBrush}"/>
+                        <TextBlock Text="{Binding TotalCredit, StringFormat=N0}" FontSize="12" Foreground="{StaticResource SuccessBrush}"/>
                     </StackPanel>
                     <TextBlock Grid.Column="2" FontSize="12" FontWeight="Bold">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text" Value="تراز نیست"/>
-                                <Setter Property="Foreground" Value="{DynamicResource ErrorBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource ErrorBrush}"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsBalanced}" Value="True">
                                         <Setter Property="Text" Value="تراز است"/>
-                                        <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+                                        <Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

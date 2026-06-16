@@ -1,5 +1,6 @@
 using System.IO;
 using System.Windows;
+using System.Windows.Threading;
 using PosAccountingApp.Models;
 using PosAccountingApp.Views;
 
@@ -9,6 +10,12 @@ public partial class App : Application
 {
     private void OnStartup(object sender, StartupEventArgs e)
     {
+        // Global error handler - never crash, show dialog instead
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += OnDomainUnhandledException;
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+
+        Data.ThemeManager.ApplyTheme(Data.AppTheme.OceanBlue);
         Data.DatabaseInitializer.Initialize();
 
         var settingsPath = Path.Combine(
@@ -32,6 +39,31 @@ public partial class App : Application
         }
 
         Shutdown();
+    }
+
+    private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        MessageBox.Show(
+            "خطا در برنامه:\n\n" + e.Exception.Message + "\n\n" + e.Exception.StackTrace,
+            "خطای برنامه",
+            MessageBoxButton.OK, MessageBoxImage.Error);
+        e.Handled = true;
+    }
+
+    private void OnDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        if (e.ExceptionObject is Exception ex)
+        {
+            MessageBox.Show("خطای بحرانی:\n\n" + ex.Message, "خطای بحرانی",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void OnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+    {
+        MessageBox.Show("خطای پس‌زمینه:\n\n" + e.Exception.Message, "خطا",
+            MessageBoxButton.OK, MessageBoxImage.Error);
+        e.SetObserved();
     }
 
     private void OnExit(object sender, ExitEventArgs e) { }
@@ -60,6 +92,8 @@ public class AppSettings
     public string? ReceiptHeader { get; set; } = "فاکتور فروش";
     public string? InvoicePrefix { get; set; } = "INV";
     public bool UsePopupForAdd { get; set; } = true;
+    public int AddModeIndex { get; set; } = 2;
+    public int SelectedProfileIndex { get; set; } = 0;
 
     public static AppSettings Load()
     {

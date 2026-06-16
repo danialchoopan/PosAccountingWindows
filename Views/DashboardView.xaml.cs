@@ -13,44 +13,49 @@ public partial class DashboardView : UserControl
 
     private MainViewModel? GetMainViewModel()
     {
-        if (Window.GetWindow(this)?.DataContext is MainViewModel vm)
-            return vm;
-        return null;
+        try { return Window.GetWindow(this)?.DataContext as MainViewModel; }
+        catch { return null; }
     }
 
     private void NavigateToPOS(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("POS");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("POS"));
 
     private void NavigateToProducts(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Products");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("Products"));
 
     private void NavigateToCustomers(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Customers");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("Customers"));
 
     private void NavigateToCheques(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Cheques");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("Cheques"));
 
     private void NavigateToCategories(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Categories");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("Categories"));
 
     private void NavigateToExpenses(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Expenses");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("Expenses"));
 
     private void NavigateToSuppliers(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Suppliers");
-
-    private void NavigateToLoyalty(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Loyalty");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("Suppliers"));
 
     private void NavigateToAccounting(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Accounting");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("Accounting"));
 
     private void NavigateToReports(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Reports");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("Reports"));
 
     private void NavigateToUsers(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Users");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("Users"));
 
     private void NavigateToSettings(object sender, RoutedEventArgs e) =>
-        GetMainViewModel()?.NavigateToCommand.Execute("Settings");
+        Safe(() => GetMainViewModel()?.NavigateToCommand.Execute("Settings"));
+
+    private static void Safe(Action action)
+    {
+        try { action(); }
+        catch (Exception ex)
+        {
+            MessageBox.Show("خطا: " + ex.Message, "خطای برنامه", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
 }

@@ -9,7 +9,6 @@ namespace PosAccountingApp.ViewModels;
 
 public partial class SettingsViewModel : ObservableObject
 {
-    [ObservableProperty] private BusinessProfile _selectedProfile = BusinessProfile.Supermarket;
     [ObservableProperty] private string _businessName = "";
     [ObservableProperty] private string _businessPhone = string.Empty;
     [ObservableProperty] private string _businessAddress = string.Empty;
@@ -23,14 +22,18 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _receiptFooter = "با تشکر از خرید شما";
     [ObservableProperty] private string _receiptHeader = "فاکتور فروش";
     [ObservableProperty] private string _invoicePrefix = "INV";
-    [ObservableProperty] private bool _usePopupForAdd = true;
+    [ObservableProperty] private int _addModeIndex = 2;
+    [ObservableProperty] private string _statusMessage = string.Empty;
+    [ObservableProperty] private int _selectedProfileIndex = 0;
 
     public string[] ThemeNames { get; } = ["اقیانوس آبی", "سبز زمردی", "بنفش سلطنتی", "غروب نارنجی", "نیمه‌شب تاریک"];
+    public string[] ProfileNames { get; } = ["سوپرمارکت", "پوشاک", "املاک", "خودرو", "مصالح"];
     public double[] FontSizes { get; } = [10, 12, 14, 16, 18, 20];
-    public BusinessProfile[] Profiles { get; } = Enum.GetValues<BusinessProfile>();
     public RoundingMode[] RoundingModes { get; } = Enum.GetValues<RoundingMode>();
 
-    public SettingsViewModel()
+    public SettingsViewModel() { LoadSettings(); }
+
+    public void LoadSettings()
     {
         var s = AppSettings.Load();
         BusinessName = s.ShopName;
@@ -45,7 +48,8 @@ public partial class SettingsViewModel : ObservableObject
         ReceiptFooter = s.ReceiptFooter ?? "با تشکر از خرید شما";
         ReceiptHeader = s.ReceiptHeader ?? "فاکتور فروش";
         InvoicePrefix = s.InvoicePrefix ?? "INV";
-        UsePopupForAdd = s.UsePopupForAdd;
+        AddModeIndex = s.AddModeIndex;
+        SelectedProfileIndex = s.SelectedProfileIndex;
     }
 
     private static int GetThemeIndex(string theme) => theme switch
@@ -56,71 +60,57 @@ public partial class SettingsViewModel : ObservableObject
     };
 
     [RelayCommand]
-    private void ApplyTheme()
-    {
-        var theme = (AppTheme)SelectedThemeIndex;
-        ThemeManager.ApplyTheme(theme);
-        var s = AppSettings.Load();
-        s.SelectedTheme = theme.ToString();
-        s.Save();
-    }
-
-    [RelayCommand]
-    private void ApplyFontSize()
-    {
-        var app = Application.Current;
-        if (app != null)
-        {
-            app.Resources["AppFontSize"] = FontSize;
-            app.Resources["AppFontLarge"] = FontSize + 4;
-            app.Resources["AppFontSmall"] = FontSize - 2;
-        }
-        var s = AppSettings.Load();
-        s.FontSize = FontSize;
-        s.Save();
-    }
-
-    [RelayCommand]
-    private void ToggleHighContrast()
-    {
-        IsHighContrast = !IsHighContrast;
-        var app = Application.Current;
-        if (app == null) return;
-
-        if (IsHighContrast)
-        {
-            app.Resources["TextPrimaryBrush"] = new SolidColorBrush(System.Windows.Media.Colors.Black);
-            app.Resources["TextSecondaryBrush"] = new SolidColorBrush(System.Windows.Media.Colors.DarkGray);
-            app.Resources["BgBrush"] = new SolidColorBrush(System.Windows.Media.Colors.White);
-            app.Resources["CardBgBrush"] = new SolidColorBrush(System.Windows.Media.Colors.White);
-            app.Resources["SurfaceBrush"] = new SolidColorBrush(System.Windows.Media.Colors.WhiteSmoke);
-        }
-        else
-        {
-            var theme = (AppTheme)SelectedThemeIndex;
-            ThemeManager.ApplyTheme(theme);
-        }
-
-        var s = AppSettings.Load();
-        s.IsHighContrast = IsHighContrast;
-        s.Save();
-    }
-
-    [RelayCommand]
     private void SaveSettings()
     {
-        var s = AppSettings.Load();
-        s.ShopName = BusinessName;
-        s.Phone = BusinessPhone;
-        s.Address = BusinessAddress;
-        s.VatPercentage = VatPercentage;
-        s.CommissionPercentage = CommissionPercentage;
-        s.CurrencySymbol = CurrencySymbol;
-        s.ReceiptFooter = ReceiptFooter;
-        s.ReceiptHeader = ReceiptHeader;
-        s.InvoicePrefix = InvoicePrefix;
-        s.UsePopupForAdd = UsePopupForAdd;
-        s.Save();
+        try
+        {
+            // Apply theme immediately
+            var theme = (AppTheme)SelectedThemeIndex;
+            ThemeManager.ApplyTheme(theme);
+
+            // Apply font size immediately
+            var app = Application.Current;
+            if (app != null)
+            {
+                app.Resources["AppFontSize"] = FontSize;
+            }
+
+            // Apply high contrast immediately
+            if (IsHighContrast)
+            {
+                if (app != null)
+                {
+                    app.Resources["TextPrimaryBrush"] = new SolidColorBrush(System.Windows.Media.Colors.Black);
+                    app.Resources["TextSecondaryBrush"] = new SolidColorBrush(System.Windows.Media.Colors.DarkGray);
+                    app.Resources["BgBrush"] = new SolidColorBrush(System.Windows.Media.Colors.White);
+                    app.Resources["CardBgBrush"] = new SolidColorBrush(System.Windows.Media.Colors.White);
+                }
+            }
+
+            // Save to file
+            var s = AppSettings.Load();
+            s.ShopName = BusinessName;
+            s.Phone = BusinessPhone;
+            s.Address = BusinessAddress;
+            s.VatPercentage = VatPercentage;
+            s.CommissionPercentage = CommissionPercentage;
+            s.SelectedTheme = theme.ToString();
+            s.FontSize = FontSize;
+            s.IsHighContrast = IsHighContrast;
+            s.CurrencySymbol = CurrencySymbol;
+            s.ReceiptFooter = ReceiptFooter;
+            s.ReceiptHeader = ReceiptHeader;
+            s.InvoicePrefix = InvoicePrefix;
+            s.AddModeIndex = AddModeIndex;
+            s.SelectedProfileIndex = SelectedProfileIndex;
+            s.Save();
+
+            StatusMessage = "تنظیمات ذخیره و اعمال شد";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = "خطا: " + ex.Message;
+        }
     }
 
     [RelayCommand]
@@ -133,11 +123,12 @@ public partial class SettingsViewModel : ObservableObject
             Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
             $"pos_backup_{DateTime.Now:yyyyMMdd_HHmmss}.db");
         if (System.IO.File.Exists(dbPath))
+        {
             System.IO.File.Copy(dbPath, backupPath, true);
+            StatusMessage = "پشتیبان ذخیره شد در دسکتاپ";
+        }
     }
 
     [RelayCommand]
-    private void RestoreDatabase()
-    {
-    }
+    private void RestoreDatabase() { StatusMessage = "بازیابی"; }
 }

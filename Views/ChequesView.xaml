@@ -29,7 +29,7 @@
                 Margin="0,0,0,10" Padding="18">
             <StackPanel>
                 <TextBlock Text="اطلاعات چک" FontSize="15" FontWeight="Bold" Margin="0,0,0,12"
-                           Foreground="{DynamicResource AccentBrush}"/>
+                           Foreground="{StaticResource AccentBrush}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
@@ -40,27 +40,27 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="4">
-                        <TextBlock Text="شماره چک" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="شماره چک" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditChequeNumber, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1" Margin="4">
-                        <TextBlock Text="نام بانک" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="نام بانک" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditBankName, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="2" Margin="4">
-                        <TextBlock Text="مبلغ" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="مبلغ" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditAmount, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="4">
-                        <TextBlock Text="سررسید" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="سررسید" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <DatePicker SelectedDate="{Binding EditDueDate}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" Margin="4">
-                        <TextBlock Text="صاحب چک" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="صاحب چک" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditPayerName, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="2" Margin="4">
-                        <TextBlock Text="نوع" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="نوع" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <ComboBox SelectedItem="{Binding EditType}"/>
                     </StackPanel>
                 </Grid>

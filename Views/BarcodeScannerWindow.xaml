@@ -5,7 +5,7 @@
         Width="1000" Height="650"
         WindowStartupLocation="CenterOwner"
         FlowDirection="RightToLeft"
-        Background="{DynamicResource BgBrush}"
+        Background="{StaticResource BgBrush}"
         Icon="{StaticResource AppIcon}">
 
     <Grid>
@@ -15,10 +15,10 @@
         </Grid.ColumnDefinitions>
 
         <!-- Controls Panel -->
-        <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}"
-                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+        <Border Grid.Column="0" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource CustomBorderBrush}" BorderThickness="0,0,1,0">
             <DockPanel>
-                <Border DockPanel.Dock="Top" Background="{DynamicResource AccentBrush}" Padding="16,14">
+                <Border DockPanel.Dock="Top" Background="{StaticResource AccentBrush}" Padding="16,14">
                     <StackPanel>
                         <TextBlock Text="&#xE722;  اسکن بارکد و QR" FontFamily="Segoe MDL2 Assets"
                                    FontSize="18" FontWeight="Bold" Foreground="White"
@@ -43,8 +43,8 @@
                 <StackPanel DockPanel.Dock="Top" Margin="16,16,16,0">
                     <TextBlock Text="&#xE70F;  ورود دستی کد" FontFamily="Segoe MDL2 Assets"
                                FontSize="13" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                    <Border BorderBrush="{DynamicResource InputBorderBrush}" BorderThickness="2"
-                            CornerRadius="6" Background="{DynamicResource InputBgBrush}" Margin="0,0,0,8">
+                    <Border BorderBrush="{StaticResource InputBorderBrush}" BorderThickness="2"
+                            CornerRadius="6" Background="{StaticResource InputBgBrush}" Margin="0,0,0,8">
                         <TextBox x:Name="ManualInput" FontSize="18" Padding="12,10"
                                  HorizontalContentAlignment="Center" FontWeight="Bold"
                                  FlowDirection="LeftToRight" Background="Transparent"
@@ -58,10 +58,10 @@
                 <StackPanel DockPanel.Dock="Top" Margin="16,16,16,0">
                     <TextBlock Text="&#xE74E;  نتیجه اسکن" FontFamily="Segoe MDL2 Assets"
                                FontSize="13" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
-                            CornerRadius="6" Background="{DynamicResource InputBgBrush}">
+                    <Border BorderBrush="{StaticResource CustomBorderBrush}" BorderThickness="1"
+                            CornerRadius="6" Background="{StaticResource InputBgBrush}">
                         <TextBlock x:Name="ScanResultText" Text="---" FontSize="18" FontWeight="Bold"
-                                   Padding="12,10" Foreground="{DynamicResource AccentBrush}"
+                                   Padding="12,10" Foreground="{StaticResource AccentBrush}"
                                    HorizontalAlignment="Center"/>
                     </Border>
                 </StackPanel>
@@ -70,15 +70,15 @@
                     <TextBlock Text="&#xE81C;  تاریخچه اسکن" FontFamily="Segoe MDL2 Assets"
                                FontSize="13" FontWeight="SemiBold" Margin="0,0,0,6"/>
                     <ListBox x:Name="ScanHistory" MaxHeight="120"
-                             BorderBrush="{DynamicResource BorderBrush}"
-                             Background="{DynamicResource InputBgBrush}"/>
+                             BorderBrush="{StaticResource CustomBorderBrush}"
+                             Background="{StaticResource InputBgBrush}"/>
                 </StackPanel>
             </DockPanel>
         </Border>
 
         <!-- Info Panel -->
-        <Border Grid.Column="1" Background="{DynamicResource SurfaceBrush}"
-                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,0,0,0">
+        <Border Grid.Column="1" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource CustomBorderBrush}" BorderThickness="1,0,0,0">
             <DockPanel>
                 <Border DockPanel.Dock="Top" Background="#FF000000" Height="300" Margin="16,16,16,0"
                         CornerRadius="8">
@@ -96,58 +96,58 @@
                     <StackPanel>
                         <TextBlock Text="&#xE897;  راهنمای استفاده" FontFamily="Segoe MDL2 Assets"
                                    FontSize="16" FontWeight="Bold"
-                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,12"/>
+                                   Foreground="{StaticResource AccentBrush}" Margin="0,0,0,12"/>
 
-                        <Border Background="{DynamicResource HoverBgBrush}" CornerRadius="8"
+                        <Border Background="{StaticResource HoverBgBrush}" CornerRadius="8"
                                 Padding="14" Margin="0,0,0,8">
                             <StackPanel>
                                 <TextBlock Text="&#xE7F4;  روش ۱: دوربین وب‌کم" FontFamily="Segoe MDL2 Assets"
                                            FontSize="14" FontWeight="SemiBold"
-                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                           Foreground="{StaticResource AccentBrush}" Margin="0,0,0,6"/>
                                 <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="20"
-                                           Foreground="{DynamicResource TextSecondaryBrush}">
+                                           Foreground="{StaticResource TextSecondaryBrush}">
                                     دوربین وب‌کم یا USB را وصل کنید و دکمه شروع دوربین را بزنید.
                                     دوربین را روی بارکد یا کد QR بگیرید تا به صورت خودکار شناسایی شود.
                                 </TextBlock>
                             </StackPanel>
                         </Border>
 
-                        <Border Background="{DynamicResource HoverBgBrush}" CornerRadius="8"
+                        <Border Background="{StaticResource HoverBgBrush}" CornerRadius="8"
                                 Padding="14" Margin="0,0,0,8">
                             <StackPanel>
                                 <TextBlock Text="&#xE7F3;  روش ۲: اسکنر USB" FontFamily="Segoe MDL2 Assets"
                                            FontSize="14" FontWeight="SemiBold"
-                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                           Foreground="{StaticResource AccentBrush}" Margin="0,0,0,6"/>
                                 <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="20"
-                                           Foreground="{DynamicResource TextSecondaryBrush}">
+                                           Foreground="{StaticResource TextSecondaryBrush}">
                                     اسکنرهای USB بارکد مانند صفحه‌کلید عمل می‌کنند.
                                     کافیست بارکد را با اسکنر بخوانید و کد وارد می‌شود.
                                 </TextBlock>
                             </StackPanel>
                         </Border>
 
-                        <Border Background="{DynamicResource HoverBgBrush}" CornerRadius="8"
+                        <Border Background="{StaticResource HoverBgBrush}" CornerRadius="8"
                                 Padding="14" Margin="0,0,0,8">
                             <StackPanel>
                                 <TextBlock Text="&#xE8D4;  روش ۳: ورود دستی" FontFamily="Segoe MDL2 Assets"
                                            FontSize="14" FontWeight="SemiBold"
-                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                           Foreground="{StaticResource AccentBrush}" Margin="0,0,0,6"/>
                                 <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="20"
-                                           Foreground="{DynamicResource TextSecondaryBrush}">
+                                           Foreground="{StaticResource TextSecondaryBrush}">
                                     کد بارکد را به صورت دستی در فیلد بالا تایپ کنید
                                     و دکمه افزودن را بزنید.
                                 </TextBlock>
                             </StackPanel>
                         </Border>
 
-                        <Border Background="{DynamicResource HoverBgBrush}" CornerRadius="8"
+                        <Border Background="{StaticResource HoverBgBrush}" CornerRadius="8"
                                 Padding="14">
                             <StackPanel>
                                 <TextBlock Text="&#xE7C3;  فرمت‌های پشتیبانی شده" FontFamily="Segoe MDL2 Assets"
                                            FontSize="14" FontWeight="SemiBold"
-                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                           Foreground="{StaticResource AccentBrush}" Margin="0,0,0,6"/>
                                 <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="20"
-                                           Foreground="{DynamicResource TextSecondaryBrush}">
+                                           Foreground="{StaticResource TextSecondaryBrush}">
                                     EAN-13, EAN-8, Code 128, Code 39,
                                     QR Code, DataMatrix, UPC-A
                                 </TextBlock>

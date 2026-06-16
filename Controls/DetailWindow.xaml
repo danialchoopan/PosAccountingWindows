@@ -5,13 +5,13 @@
         Width="450" Height="500"
         WindowStartupLocation="CenterOwner"
         FlowDirection="RightToLeft"
-        Background="{DynamicResource BgBrush}">
+        Background="{StaticResource BgBrush}">
 
     <DockPanel Margin="16">
         <Border DockPanel.Dock="Top" Padding="0,0,0,12">
             <Grid>
                 <TextBlock x:Name="TitleText" Text="جزئیات" FontSize="18" FontWeight="Bold"
-                           Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right"/>
+                           Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right"/>
                 <Button Content="بستن" Style="{StaticResource DangerButton}"
                         HorizontalAlignment="Left" Padding="12,5"
                         Click="Close_Click"/>

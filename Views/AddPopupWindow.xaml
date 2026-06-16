@@ -5,12 +5,12 @@
         Width="600" Height="500"
         WindowStartupLocation="CenterOwner"
         FlowDirection="RightToLeft"
-        Background="{DynamicResource BgBrush}"
+        Background="{StaticResource BgBrush}"
         Icon="{StaticResource AppIcon}">
 
     <DockPanel Margin="20">
         <!-- Header -->
-        <Border DockPanel.Dock="Top" Background="{DynamicResource AccentBrush}"
+        <Border DockPanel.Dock="Top" Background="{StaticResource AccentBrush}"
                 CornerRadius="8" Padding="16,12" Margin="0,0,0,16">
             <Grid>
                 <TextBlock x:Name="TitleText" Text="افزودن"
@@ -40,7 +40,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock x:Name="FileNameText" Text="فایلی انتخاب نشده"
-                               FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"
+                               FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"
                                VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <Button Content="&#xE8B7;  انتخاب فایل" FontFamily="Segoe MDL2 Assets"
@@ -51,7 +51,7 @@
                                 Click="RemoveFile_Click"/>
                     </StackPanel>
                 </Grid>
-                <Border x:Name="ImagePreview" Background="{DynamicResource HoverBgBrush}"
+                <Border x:Name="ImagePreview" Background="{StaticResource HoverBgBrush}"
                         CornerRadius="6" Height="120" Margin="0,8,0,0"
                         Visibility="Collapsed">
                     <Image x:Name="PreviewImage" Stretch="Uniform"/>

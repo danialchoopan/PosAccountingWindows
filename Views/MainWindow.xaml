@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         FlowDirection="RightToLeft"
-        Background="{DynamicResource BgBrush}"
+        Background="{StaticResource BgBrush}"
         Icon="{StaticResource AppIcon}">
 
     <Window.Resources>
@@ -37,76 +37,75 @@
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar -->
-        <Border Grid.Column="0" Background="{DynamicResource SidebarBgBrush}"
-                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+        <Border Grid.Column="0" Background="{StaticResource SidebarBgBrush}"
+                BorderBrush="{StaticResource CustomBorderBrush}" BorderThickness="0,0,1,0">
             <DockPanel>
                 <!-- Brand -->
                 <Border DockPanel.Dock="Top" Padding="14,20" Margin="0,0,0,6">
                     <StackPanel>
                         <TextBlock Text="حسابداری" FontSize="18" FontWeight="Bold"
-                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"/>
+                                   Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center"/>
                         <TextBlock x:Name="ShopNameLabel" Text="" FontSize="11"
-                                   Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                                   Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,3,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <!-- User Card -->
-                <Border DockPanel.Dock="Top" Background="{DynamicResource CardBgBrush}"
-                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                <Border DockPanel.Dock="Top" Background="{StaticResource CardBgBrush}"
+                        BorderBrush="{StaticResource CustomBorderBrush}" BorderThickness="1"
                         CornerRadius="8" Margin="10,0,10,12" Padding="10">
                     <StackPanel Orientation="Horizontal">
                         <Border Width="34" Height="34" CornerRadius="17"
-                                Background="{DynamicResource AccentBrush}" Margin="0,0,10,0">
+                                Background="{StaticResource AccentBrush}" Margin="0,0,10,0">
                             <TextBlock Text="م" FontSize="15" FontWeight="Bold" Foreground="White"
                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="{Binding CurrentUser}" FontSize="12" FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding StatusMessage}" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                            <TextBlock Text="{Binding StatusMessage}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <!-- Nav -->
-                <StackPanel DockPanel.Dock="Top" Margin="4,0">
-                    <RadioButton Style="{StaticResource SidebarButton}" IsChecked="True"
-                                 Content="&#xE80F;  داشبورد"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Dashboard"/>
-                    <RadioButton Style="{StaticResource SidebarButton}"
-                                 Content="&#xE74C;  صندوق فروشگاهی  (F1)"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="POS"/>
-                    <RadioButton Style="{StaticResource SidebarButton}"
-                                 Content="&#xE71C;  کالاها و خدمات  (F2)"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Products"/>
-                    <RadioButton Style="{StaticResource SidebarButton}"
-                                 Content="&#xE8F1;  دسته‌بندی‌ها  (F4)"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Categories"/>
-                    <RadioButton Style="{StaticResource SidebarButton}"
-                                 Content="&#xE77B;  مشتریان"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Customers"/>
-                    <RadioButton Style="{StaticResource SidebarButton}"
-                                 Content="&#xE7F3;  خزانه‌داری و چک  (F3)"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Cheques"/>
-                    <RadioButton Style="{StaticResource SidebarButton}"
-                                 Content="&#xE74D;  هزینه‌ها"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Expenses"/>
-                    <RadioButton Style="{StaticResource SidebarButton}"
-                                 Content="&#xE9D9;  گزارشات  (F9)"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Reports"/>
-                    <RadioButton Style="{StaticResource SidebarButton}"
-                                 Content="&#xE8D8;  حسابداری"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Accounting"/>
-                    <RadioButton Style="{StaticResource SidebarButton}"
-                                 Content="&#xE8B7;  تامین‌کنندگان"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Suppliers"/>
-                    <RadioButton Style="{StaticResource SidebarButton}"
-                                 Content="&#xE77B;  وفاداری مشتریان"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Loyalty"/>
-                    <RadioButton x:Name="UsersNavBtn" Style="{StaticResource SidebarButton}"
-                                 Content="&#xE77B;  مدیریت کاربران"
-                                 Command="{Binding NavigateToCommand}" CommandParameter="Users"
-                                 Visibility="Collapsed"/>
-                </StackPanel>
+                <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto" MaxHeight="520">
+                    <StackPanel Margin="4,0">
+                        <RadioButton Style="{StaticResource SidebarButton}" IsChecked="True"
+                                     Content="داشبورد"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Dashboard"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="صندوق فروشگاهی (F1)"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="POS"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="کالاها و خدمات (F2)"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Products"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="دسته‌بندی‌ها (F4)"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Categories"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="مشتریان"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Customers"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="خزانه‌داری و چک (F3)"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Cheques"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="هزینه‌ها"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Expenses"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="گزارشات (F9)"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Reports"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="حسابداری"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Accounting"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="تامین‌کنندگان"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Suppliers"/>
+                        <RadioButton x:Name="UsersNavBtn" Style="{StaticResource SidebarButton}"
+                                     Content="مدیریت کاربران"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Users"
+                                     Visibility="Collapsed"/>
+                    </StackPanel>
+                </ScrollViewer>
 
                 <!-- Bottom -->
                 <StackPanel DockPanel.Dock="Bottom" Margin="4,0,4,12">
@@ -127,8 +126,8 @@
         <!-- Content -->
         <DockPanel Grid.Column="1">
             <!-- Top Bar -->
-            <Border DockPanel.Dock="Top" Background="{DynamicResource CardBgBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1"
+            <Border DockPanel.Dock="Top" Background="{StaticResource CardBgBrush}"
+                    BorderBrush="{StaticResource CustomBorderBrush}" BorderThickness="0,0,0,1"
                     Padding="20,12">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -138,10 +137,10 @@
                     <TextBlock Grid.Column="0" Text="{Binding CurrentViewTitle}"
                                FontSize="19" FontWeight="Bold" VerticalAlignment="Center"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Background="{DynamicResource BadgeBgBrush}" CornerRadius="10"
+                        <Border Background="{StaticResource BadgeBgBrush}" CornerRadius="10"
                                 Padding="10,4" Margin="0,0,8,0">
                             <TextBlock Text="{Binding StatusMessage}" FontSize="11"
-                                       Foreground="{DynamicResource BadgeFgBrush}"/>
+                                       Foreground="{StaticResource BadgeFgBrush}"/>
                         </Border>
                         <Button Content="&#xE793;  جستجو  (Ctrl+G)"
                                 FontFamily="Vazirmatn, Segoe UI" FontSize="12"
@@ -152,8 +151,8 @@
             </Border>
 
             <!-- Status Bar -->
-            <Border DockPanel.Dock="Bottom" Background="{DynamicResource SidebarBgBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0"
+            <Border DockPanel.Dock="Bottom" Background="{StaticResource SidebarBgBrush}"
+                    BorderBrush="{StaticResource CustomBorderBrush}" BorderThickness="0,1,0,0"
                     Padding="16,6">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -161,9 +160,9 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="F1 صندوق  |  F2 کالا  |  F4 دسته‌بندی  |  F3 چک  |  Ctrl+G جستجو"
-                               FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                               FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                     <TextBlock Grid.Column="1" Text="{Binding CurrentViewTitle}"
-                               FontSize="11" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                               FontSize="11" Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
 

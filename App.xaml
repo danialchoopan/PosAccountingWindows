@@ -7,12 +7,12 @@
              ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- Styles must come first -->
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Themes.xaml"/>
                 <ResourceDictionary Source="Resources/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Default brush values (set before ThemeManager applies theme) -->
+            <!-- Default brushes -->
             <SolidColorBrush x:Key="BgBrush" Color="#FFF5F7FA"/>
             <SolidColorBrush x:Key="SurfaceBrush" Color="White"/>
             <SolidColorBrush x:Key="SidebarBgBrush" Color="#FFE8EEF4"/>
@@ -24,7 +24,7 @@
             <SolidColorBrush x:Key="ErrorBrush" Color="#FFD32F2F"/>
             <SolidColorBrush x:Key="SuccessBrush" Color="#FF2E7D32"/>
             <SolidColorBrush x:Key="WarningBrush" Color="#FFF57F17"/>
-            <SolidColorBrush x:Key="BorderBrush" Color="#FFD6DEE8"/>
+            <SolidColorBrush x:Key="CustomBorderBrush" Color="#FFD6DEE8"/>
             <SolidColorBrush x:Key="InputBgBrush" Color="White"/>
             <SolidColorBrush x:Key="InputBorderBrush" Color="#FFB0BEC5"/>
             <SolidColorBrush x:Key="HoverBgBrush" Color="#FFF0F4F8"/>
@@ -33,7 +33,7 @@
             <SolidColorBrush x:Key="BadgeBgBrush" Color="#FFE3F2FD"/>
             <SolidColorBrush x:Key="BadgeFgBrush" Color="#FF1565C0"/>
 
-            <!-- Global Converters -->
+            <!-- Converters -->
             <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
             <conv:EnumToPersianConverter x:Key="EnumToPersian"/>
             <conv:DecimalToPersianStringConverter x:Key="DecToPersian"/>

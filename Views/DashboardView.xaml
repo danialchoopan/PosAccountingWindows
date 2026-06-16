@@ -12,7 +12,7 @@
         <StackPanel Margin="8" MaxWidth="1400" HorizontalAlignment="Center">
 
             <TextBlock Text="داشبورد" FontSize="26" FontWeight="Bold" Margin="8,0,8,20"
-                       Foreground="{DynamicResource AccentBrush}"/>
+                       Foreground="{StaticResource AccentBrush}"/>
 
             <!-- Row 1 -->
             <UniformGrid Columns="3" Margin="0,0,0,14">
@@ -68,19 +68,19 @@
             <TextBlock Text="دسترسی سریع" FontSize="17" FontWeight="Bold" Margin="8,8,8,12"/>
             <UniformGrid Columns="4" Margin="0,0,0,8">
                 <Button Content="صندوق فروش (F1)" Margin="6"
-                        Background="{DynamicResource AccentBrush}" Foreground="White"
+                        Background="{StaticResource AccentBrush}" Foreground="White"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToPOS"/>
                 <Button Content="کالاها و خدمات (F2)" Margin="6"
-                        Background="{DynamicResource SuccessBrush}" Foreground="White"
+                        Background="{StaticResource SuccessBrush}" Foreground="White"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToProducts"/>
                 <Button Content="مشتریان" Margin="6"
-                        Background="{DynamicResource WarningBrush}" Foreground="White"
+                        Background="{StaticResource WarningBrush}" Foreground="White"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToCustomers"/>
                 <Button Content="خزانه‌داری و چک (F3)" Margin="6"
-                        Background="{DynamicResource ErrorBrush}" Foreground="White"
+                        Background="{StaticResource ErrorBrush}" Foreground="White"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToCheques"/>
             </UniformGrid>
@@ -88,39 +88,35 @@
             <!-- Quick Actions Row 2 -->
             <UniformGrid Columns="4" Margin="0,0,0,8">
                 <Button Content="دسته‌بندی‌ها (F4)" Margin="6"
-                        Background="{DynamicResource AccentBrush}" Foreground="White"
+                        Background="{StaticResource AccentBrush}" Foreground="White"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToCategories"/>
                 <Button Content="هزینه‌ها" Margin="6"
-                        Background="{DynamicResource WarningBrush}" Foreground="White"
+                        Background="{StaticResource WarningBrush}" Foreground="White"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToExpenses"/>
                 <Button Content="تامین‌کنندگان" Margin="6"
-                        Background="{DynamicResource SuccessBrush}" Foreground="White"
+                        Background="{StaticResource SuccessBrush}" Foreground="White"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToSuppliers"/>
-                <Button Content="وفاداری مشتریان" Margin="6"
-                        Background="{DynamicResource ErrorBrush}" Foreground="White"
-                        FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
-                        Padding="12,10" Cursor="Hand" Click="NavigateToLoyalty"/>
             </UniformGrid>
 
             <!-- Quick Actions Row 3 -->
             <UniformGrid Columns="4">
                 <Button Content="حسابداری" Margin="6"
-                        Background="{DynamicResource AccentBrush}" Foreground="White"
+                        Background="{StaticResource AccentBrush}" Foreground="White"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToAccounting"/>
                 <Button Content="گزارشات (F9)" Margin="6"
-                        Background="{DynamicResource WarningBrush}" Foreground="White"
+                        Background="{StaticResource WarningBrush}" Foreground="White"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToReports"/>
                 <Button Content="مدیریت کاربران" Margin="6"
-                        Background="{DynamicResource SuccessBrush}" Foreground="White"
+                        Background="{StaticResource SuccessBrush}" Foreground="White"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToUsers"/>
                 <Button Content="تنظیمات" Margin="6"
-                        Background="{DynamicResource BorderBrush}" Foreground="{DynamicResource TextPrimaryBrush}"
+                        Background="{StaticResource CustomBorderBrush}" Foreground="{StaticResource TextPrimaryBrush}"
                         FontFamily="Vazirmatn, Segoe UI" FontSize="13" FontWeight="SemiBold"
                         Padding="12,10" Cursor="Hand" Click="NavigateToSettings"/>
             </UniformGrid>

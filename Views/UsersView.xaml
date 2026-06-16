@@ -21,7 +21,7 @@
                 Margin="0,0,0,10" Padding="18">
             <StackPanel>
                 <TextBlock Text="افزودن کاربر جدید" FontSize="15" FontWeight="Bold" Margin="0,0,0,12"
-                           Foreground="{DynamicResource AccentBrush}"/>
+                           Foreground="{StaticResource AccentBrush}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -30,16 +30,16 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0" Margin="4">
-                        <TextBlock Text="نام کاربر" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="نام کاربر" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditName, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="4">
-                        <TextBlock Text="کد عبور (حداقل ۴ رقم)" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="کد عبور (حداقل ۴ رقم)" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditPin, UpdateSourceTrigger=PropertyChanged}"
                                  FlowDirection="LeftToRight" MaxLength="10"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Margin="4">
-                        <TextBlock Text="نقش" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="نقش" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <ComboBox SelectedItem="{Binding EditRole}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
@@ -75,7 +75,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Content="حذف" Background="Transparent" BorderThickness="0"
-                                        Foreground="{DynamicResource ErrorBrush}" Cursor="Hand" FontSize="12"
+                                        Foreground="{StaticResource ErrorBrush}" Cursor="Hand" FontSize="12"
                                         Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}"/>
                             </DataTemplate>
@@ -85,7 +85,7 @@
             </DataGrid>
             <TextBlock Text="هنوز کاربری وجود ندارد."
                        HorizontalAlignment="Center" VerticalAlignment="Center"
-                       FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}" Visibility="Collapsed">
+                       FontSize="14" Foreground="{StaticResource TextSecondaryBrush}" Visibility="Collapsed">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Setter Property="Visibility" Value="Collapsed"/>

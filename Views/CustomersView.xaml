@@ -28,22 +28,22 @@
                 Margin="0,0,0,10" Padding="18">
             <StackPanel>
                 <TextBlock Text="اطلاعات مشتری" FontSize="15" FontWeight="Bold" Margin="0,0,0,12"
-                           Foreground="{DynamicResource AccentBrush}"/>
+                           Foreground="{StaticResource AccentBrush}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Margin="4">
-                        <TextBlock Text="نام مشتری *" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="نام مشتری *" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditName, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="4">
-                        <TextBlock Text="شماره تماس" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="شماره تماس" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditPhone, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Margin="4">
-                        <TextBlock Text="سقف اعتبار" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Text="سقف اعتبار" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
                         <TextBox Text="{Binding EditCreditLimit, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </Grid>
