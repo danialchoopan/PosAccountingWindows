@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PosAccountingApp.Data;
@@ -35,21 +34,25 @@ public partial class SettingsViewModel : ObservableObject
 
     public void LoadSettings()
     {
-        var s = AppSettings.Load();
-        BusinessName = s.ShopName;
-        BusinessPhone = s.Phone;
-        BusinessAddress = s.Address;
-        VatPercentage = s.VatPercentage;
-        CommissionPercentage = s.CommissionPercentage;
-        SelectedThemeIndex = GetThemeIndex(s.SelectedTheme);
-        FontSize = s.FontSize > 0 ? s.FontSize : 14;
-        IsHighContrast = s.IsHighContrast;
-        CurrencySymbol = s.CurrencySymbol ?? "ريال";
-        ReceiptFooter = s.ReceiptFooter ?? "با تشکر از خرید شما";
-        ReceiptHeader = s.ReceiptHeader ?? "فاکتور فروش";
-        InvoicePrefix = s.InvoicePrefix ?? "INV";
-        AddModeIndex = s.AddModeIndex;
-        SelectedProfileIndex = s.SelectedProfileIndex;
+        try
+        {
+            var s = AppSettings.Load();
+            BusinessName = s.ShopName;
+            BusinessPhone = s.Phone;
+            BusinessAddress = s.Address;
+            VatPercentage = s.VatPercentage;
+            CommissionPercentage = s.CommissionPercentage;
+            SelectedThemeIndex = GetThemeIndex(s.SelectedTheme);
+            FontSize = s.FontSize > 0 ? s.FontSize : 14;
+            IsHighContrast = s.IsHighContrast;
+            CurrencySymbol = s.CurrencySymbol ?? "ريال";
+            ReceiptFooter = s.ReceiptFooter ?? "با تشکر از خرید شما";
+            ReceiptHeader = s.ReceiptHeader ?? "فاکتور فروش";
+            InvoicePrefix = s.InvoicePrefix ?? "INV";
+            AddModeIndex = s.AddModeIndex;
+            SelectedProfileIndex = s.SelectedProfileIndex;
+        }
+        catch { }
     }
 
     private static int GetThemeIndex(string theme) => theme switch
@@ -71,20 +74,22 @@ public partial class SettingsViewModel : ObservableObject
             // Apply font size immediately
             var app = Application.Current;
             if (app != null)
-            {
                 app.Resources["AppFontSize"] = FontSize;
-            }
 
             // Apply high contrast immediately
             if (IsHighContrast)
             {
                 if (app != null)
                 {
-                    app.Resources["TextPrimaryBrush"] = new SolidColorBrush(System.Windows.Media.Colors.Black);
-                    app.Resources["TextSecondaryBrush"] = new SolidColorBrush(System.Windows.Media.Colors.DarkGray);
-                    app.Resources["BgBrush"] = new SolidColorBrush(System.Windows.Media.Colors.White);
-                    app.Resources["CardBgBrush"] = new SolidColorBrush(System.Windows.Media.Colors.White);
+                    app.Resources["TextPrimaryBrush"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+                    app.Resources["TextSecondaryBrush"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.DarkGray);
+                    app.Resources["BgBrush"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White);
+                    app.Resources["CardBgBrush"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White);
                 }
+            }
+            else
+            {
+                ThemeManager.ApplyTheme(theme);
             }
 
             // Save to file
@@ -131,4 +136,18 @@ public partial class SettingsViewModel : ObservableObject
 
     [RelayCommand]
     private void RestoreDatabase() { StatusMessage = "بازیابی"; }
+
+    [RelayCommand]
+    private void RunSeedData()
+    {
+        try
+        {
+            Data.SeedData.Seed();
+            StatusMessage = "داده نمونه با موفقیت ایجاد شد";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = "خطا: " + ex.Message;
+        }
+    }
 }

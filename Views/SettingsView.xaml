@@ -154,11 +154,11 @@
                                    Foreground="#FF0078D4" Margin="0,0,0,10"/>
                         <TextBlock Text="تعیین کنید فرم افزودن در کجا نمایش داده شود" FontSize="12"
                                    Foreground="#FF888888" Margin="0,0,0,8"/>
-                        <ComboBox x:Name="AddModeCombo" SelectedIndex="{Binding AddModeIndex}"
+                        <ComboBox SelectedIndex="{Binding AddModeIndex}"
                                   Width="300" HorizontalAlignment="Left" Padding="10,6">
                             <ComboBoxItem Content="پنجره پاپ‌آپ" Tag="Popup"/>
                             <ComboBoxItem Content="صفحه جداگانه" Tag="SeparatePage"/>
-                            <ComboBoxItem Content="در همان صفحه (پیش‌فرض)" Tag="Inline"/>
+                            <ComboBoxItem Content="در همان صفحه" Tag="Inline"/>
                         </ComboBox>
                     </StackPanel>
                 </Border>
@@ -192,22 +192,26 @@
                 <!-- Backup -->
                 <Border Style="{StaticResource CardBorder}" Padding="22">
                     <StackPanel>
-                        <TextBlock Text="پشتیبان‌گیری" FontSize="16" FontWeight="Bold"
+                        <TextBlock Text="پشتیبان‌گیری و نمونه داده" FontSize="16" FontWeight="Bold"
                                    Foreground="#FF0078D4" Margin="0,0,0,10"/>
-                        <TextBlock Text="فایل پشتیبان در دسکتاپ ذخیره می‌شود" FontSize="12"
-                                   Foreground="#FF888888" Margin="0,0,0,8"/>
                         <StackPanel Orientation="Horizontal">
                             <Button Content="پشتیبان‌گیری" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"
                                     Command="{Binding BackupDatabaseCommand}"/>
-                            <Button Content="بازیابی" Style="{StaticResource DangerButton}"
+                            <Button Content="بازیابی" Style="{StaticResource DangerButton}" Margin="0,0,8,0"
                                     Command="{Binding RestoreDatabaseCommand}"/>
+                            <Button Content="تولید داده نمونه" Style="{StaticResource WarningButton}"
+                                    Command="{Binding SeedDataCommand}"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <Button Content="ذخیره تمام تنظیمات" Style="{StaticResource PrimaryButton}"
-                        HorizontalAlignment="Center" Margin="0,16,0,20" Padding="30,12"
+                <Button Content="ذخیره و اعمال تنظیمات" Style="{StaticResource PrimaryButton}"
+                        HorizontalAlignment="Center" Margin="0,16,0,8" Padding="30,12"
                         FontSize="15" Command="{Binding SaveSettingsCommand}"/>
+
+                <TextBlock x:Name="StatusLabel" Text="" FontSize="13" FontWeight="SemiBold"
+                           Foreground="#FF107C10" HorizontalAlignment="Center" Margin="0,4,0,0"
+                           Visibility="Collapsed"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>
