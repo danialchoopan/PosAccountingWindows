@@ -31,6 +31,7 @@ public class AppDbContext : DbContext
     public DbSet<SupplierLedgerEntry> SupplierLedgerEntries => Set<SupplierLedgerEntry>();
     public DbSet<LoyaltyConfig> LoyaltyConfigs => Set<LoyaltyConfig>();
     public DbSet<LoyaltyTransaction> LoyaltyTransactions => Set<LoyaltyTransaction>();
+    public DbSet<Attachment> Attachments => Set<Attachment>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

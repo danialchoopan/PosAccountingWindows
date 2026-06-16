@@ -23,6 +23,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _receiptFooter = "با تشکر از خرید شما";
     [ObservableProperty] private string _receiptHeader = "فاکتور فروش";
     [ObservableProperty] private string _invoicePrefix = "INV";
+    [ObservableProperty] private bool _usePopupForAdd = true;
 
     public string[] ThemeNames { get; } = ["اقیانوس آبی", "سبز زمردی", "بنفش سلطنتی", "غروب نارنجی", "نیمه‌شب تاریک"];
     public double[] FontSizes { get; } = [10, 12, 14, 16, 18, 20];
@@ -44,6 +45,7 @@ public partial class SettingsViewModel : ObservableObject
         ReceiptFooter = s.ReceiptFooter ?? "با تشکر از خرید شما";
         ReceiptHeader = s.ReceiptHeader ?? "فاکتور فروش";
         InvoicePrefix = s.InvoicePrefix ?? "INV";
+        UsePopupForAdd = s.UsePopupForAdd;
     }
 
     private static int GetThemeIndex(string theme) => theme switch
@@ -117,6 +119,7 @@ public partial class SettingsViewModel : ObservableObject
         s.ReceiptFooter = ReceiptFooter;
         s.ReceiptHeader = ReceiptHeader;
         s.InvoicePrefix = InvoicePrefix;
+        s.UsePopupForAdd = UsePopupForAdd;
         s.Save();
     }
 

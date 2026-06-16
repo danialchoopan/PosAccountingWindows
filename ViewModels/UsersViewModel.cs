@@ -15,92 +15,64 @@ public partial class UsersViewModel : ObservableObject
     [ObservableProperty] private string _editName = string.Empty;
     [ObservableProperty] private string _editPin = string.Empty;
     [ObservableProperty] private UserRole _editRole = UserRole.Cashier;
+    [ObservableProperty] private string _errorMessage = string.Empty;
 
     public ObservableCollection<User> Users { get; } = new();
     public UserRole[] Roles { get; } = Enum.GetValues<UserRole>();
 
-    private static readonly Dictionary<UserRole, string> RoleNames = new()
-    {
-        { UserRole.SuperAdmin, "مدیر ارشد" },
-        { UserRole.Admin, "مدیر" },
-        { UserRole.Cashier, "صندوقدار" },
-        { UserRole.Broker, "مشاور" },
-        { UserRole.Accountant, "حسابدار" }
-    };
-
-    public UsersViewModel()
-    {
-        LoadUsers();
-    }
+    public UsersViewModel() { LoadUsers(); }
 
     public void LoadUsers()
     {
-        using var db = DatabaseInitializer.CreateDbContext();
-        Users.Clear();
-        foreach (var u in db.Users.AsNoTracking().Where(u => u.IsActive).OrderBy(u => u.Name).ToList())
-            Users.Add(u);
+        try
+        {
+            using var db = DatabaseInitializer.CreateDbContext();
+            Users.Clear();
+            foreach (var u in db.Users.AsNoTracking().Where(u => u.IsActive).OrderBy(u => u.Name).ToList())
+                Users.Add(u);
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
-    public string GetRoleName(UserRole role)
+    public string GetRoleName(UserRole role) => role switch
     {
-        return RoleNames.TryGetValue(role, out var name) ? name : role.ToString();
-    }
+        UserRole.SuperAdmin => "مدیر ارشد", UserRole.Admin => "مدیر",
+        UserRole.Cashier => "صندوقدار", UserRole.Broker => "مشاور",
+        UserRole.Accountant => "حسابدار", _ => role.ToString()
+    };
 
-    [RelayCommand]
-    private void ToggleAddPanel() => IsAddPanelOpen = !IsAddPanelOpen;
+    [RelayCommand] private void ToggleAddPanel() { IsAddPanelOpen = !IsAddPanelOpen; }
 
     [RelayCommand]
     private void SaveUser()
     {
-        if (string.IsNullOrWhiteSpace(EditName) || string.IsNullOrWhiteSpace(EditPin))
-            return;
-
-        using var db = DatabaseInitializer.CreateDbContext();
-
-        var user = new User
+        try
         {
-            Name = EditName,
-            PinCodeHash = ComputeSha256(EditPin),
-            Role = EditRole
-        };
-
-        db.Users.Add(user);
-        db.SaveChanges();
-
-        IsAddPanelOpen = false;
-        EditName = string.Empty;
-        EditPin = string.Empty;
-        EditRole = UserRole.Cashier;
-        LoadUsers();
+            if (string.IsNullOrWhiteSpace(EditName) || string.IsNullOrWhiteSpace(EditPin)) return;
+            using var db = DatabaseInitializer.CreateDbContext();
+            db.Users.Add(new User { Name = EditName, PinCodeHash = ComputeSha256(EditPin), Role = EditRole });
+            db.SaveChanges();
+            IsAddPanelOpen = false; EditName = string.Empty; EditPin = string.Empty; EditRole = UserRole.Cashier;
+            LoadUsers();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     [RelayCommand]
     private void DeleteUser(User? user)
     {
-        if (user == null) return;
-
-        // Don't delete yourself
-        if (AppSettings.CurrentUser != null && user.Id == AppSettings.CurrentUser.Id)
-            return;
-
-        using var db = DatabaseInitializer.CreateDbContext();
-        var u = db.Users.Find(user.Id);
-        if (u != null)
+        if (user == null || AppSettings.CurrentUser?.Id == user.Id) return;
+        try
         {
-            u.IsActive = false;
-            db.SaveChanges();
+            using var db = DatabaseInitializer.CreateDbContext();
+            var u = db.Users.Find(user.Id);
+            if (u != null) { u.IsActive = false; db.SaveChanges(); }
+            LoadUsers();
         }
-        LoadUsers();
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
-    [RelayCommand]
-    private void CancelEdit()
-    {
-        IsAddPanelOpen = false;
-        EditName = string.Empty;
-        EditPin = string.Empty;
-        EditRole = UserRole.Cashier;
-    }
+    [RelayCommand] private void CancelEdit() { IsAddPanelOpen = false; EditName = string.Empty; EditPin = string.Empty; EditRole = UserRole.Cashier; }
 
     private static string ComputeSha256(string input)
     {

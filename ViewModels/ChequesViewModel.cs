@@ -21,6 +21,7 @@ public partial class ChequesViewModel : ObservableObject
     [ObservableProperty] private string _editPayerName = string.Empty;
     [ObservableProperty] private string _editReceiverName = string.Empty;
     [ObservableProperty] private ChequeType _editType = ChequeType.Receivable;
+    [ObservableProperty] private string _errorMessage = string.Empty;
 
     public ObservableCollection<Cheque> Cheques { get; } = new();
 
@@ -28,9 +29,13 @@ public partial class ChequesViewModel : ObservableObject
 
     public void LoadCheques()
     {
-        using var db = DatabaseInitializer.CreateDbContext();
-        _allCheques = db.Cheques.AsNoTracking().Where(c => c.IsActive).OrderByDescending(c => c.CreatedAt).ToList();
-        ApplyFilter();
+        try
+        {
+            using var db = DatabaseInitializer.CreateDbContext();
+            _allCheques = db.Cheques.AsNoTracking().Where(c => c.IsActive).OrderByDescending(c => c.CreatedAt).ToList();
+            ApplyFilter();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     partial void OnSearchTextChanged(string value) { ApplyFilter(); }
@@ -40,36 +45,26 @@ public partial class ChequesViewModel : ObservableObject
         Cheques.Clear();
         var q = SearchText?.Trim() ?? "";
         var filtered = string.IsNullOrEmpty(q) ? _allCheques
-            : _allCheques.Where(c =>
-                c.ChequeNumber.Contains(q) ||
-                c.BankName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                c.PayerName.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                c.ReceiverName.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+            : _allCheques.Where(c => c.ChequeNumber.Contains(q) || c.BankName.Contains(q, StringComparison.OrdinalIgnoreCase) || c.PayerName.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
         foreach (var c in filtered) Cheques.Add(c);
     }
 
-    [RelayCommand]
-    private void ClearSearch() { SearchText = string.Empty; }
-
-    [RelayCommand]
-    private void ToggleAddPanel() => IsAddPanelOpen = !IsAddPanelOpen;
+    [RelayCommand] private void ClearSearch() { SearchText = string.Empty; }
+    [RelayCommand] private void ToggleAddPanel() { IsAddPanelOpen = !IsAddPanelOpen; }
 
     [RelayCommand]
     private void SaveCheque()
     {
-        if (string.IsNullOrWhiteSpace(EditChequeNumber)) return;
-        using var db = DatabaseInitializer.CreateDbContext();
-        db.Cheques.Add(new Cheque
+        try
         {
-            ChequeNumber = EditChequeNumber, BankName = EditBankName, Branch = EditBranch,
-            Amount = EditAmount, DueDate = EditDueDate, PayerName = EditPayerName,
-            ReceiverName = EditReceiverName, Type = EditType
-        });
-        db.SaveChanges();
-        IsAddPanelOpen = false;
-        LoadCheques();
+            if (string.IsNullOrWhiteSpace(EditChequeNumber)) return;
+            using var db = DatabaseInitializer.CreateDbContext();
+            db.Cheques.Add(new Cheque { ChequeNumber = EditChequeNumber, BankName = EditBankName, Branch = EditBranch, Amount = EditAmount, DueDate = EditDueDate, PayerName = EditPayerName, ReceiverName = EditReceiverName, Type = EditType });
+            db.SaveChanges();
+            IsAddPanelOpen = false; LoadCheques();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
-    [RelayCommand]
-    private void CancelEdit() => IsAddPanelOpen = false;
+    [RelayCommand] private void CancelEdit() => IsAddPanelOpen = false;
 }

@@ -59,6 +59,7 @@ public class AppSettings
     public string? ReceiptFooter { get; set; } = "با تشکر از خرید شما";
     public string? ReceiptHeader { get; set; } = "فاکتور فروش";
     public string? InvoicePrefix { get; set; } = "INV";
+    public bool UsePopupForAdd { get; set; } = true;
 
     public static AppSettings Load()
     {

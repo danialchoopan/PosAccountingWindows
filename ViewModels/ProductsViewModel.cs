@@ -21,6 +21,7 @@ public partial class ProductsViewModel : ObservableObject
     [ObservableProperty] private decimal _editStock;
     [ObservableProperty] private decimal _editMinStock;
     [ObservableProperty] private UnitType _editUnit = UnitType.Number;
+    [ObservableProperty] private string _errorMessage = string.Empty;
 
     public ObservableCollection<Product> Products { get; } = new();
     public ObservableCollection<string> Categories { get; } = new();
@@ -30,17 +31,25 @@ public partial class ProductsViewModel : ObservableObject
 
     public void LoadProducts()
     {
-        using var db = DatabaseInitializer.CreateDbContext();
-        _allProducts = db.Products.AsNoTracking().Where(p => p.IsActive).OrderBy(p => p.Title).ToList();
-        ApplyFilter();
+        try
+        {
+            using var db = DatabaseInitializer.CreateDbContext();
+            _allProducts = db.Products.AsNoTracking().Where(p => p.IsActive).OrderBy(p => p.Title).ToList();
+            ApplyFilter();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     public void LoadCategories()
     {
-        using var db = DatabaseInitializer.CreateDbContext();
-        Categories.Clear();
-        foreach (var c in db.Categories.Where(c => c.IsActive).OrderBy(c => c.SortOrder).Select(c => c.Name).ToList())
-            Categories.Add(c);
+        try
+        {
+            using var db = DatabaseInitializer.CreateDbContext();
+            Categories.Clear();
+            foreach (var c in db.Categories.Where(c => c.IsActive).OrderBy(c => c.SortOrder).Select(c => c.Name).ToList())
+                Categories.Add(c);
+        }
+        catch { }
     }
 
     partial void OnSearchTextChanged(string value) { ApplyFilter(); }
@@ -50,60 +59,48 @@ public partial class ProductsViewModel : ObservableObject
         Products.Clear();
         var q = SearchText?.Trim() ?? "";
         var filtered = string.IsNullOrEmpty(q) ? _allProducts
-            : _allProducts.Where(p =>
-                p.Title.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+            : _allProducts.Where(p => p.Title.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                 (p.Barcode != null && p.Barcode.Contains(q)) ||
-                (p.Category != null && p.Category.Contains(q, StringComparison.OrdinalIgnoreCase)))
-            .ToList();
+                (p.Category != null && p.Category.Contains(q, StringComparison.OrdinalIgnoreCase))).ToList();
         foreach (var p in filtered) Products.Add(p);
     }
 
-    [RelayCommand]
-    private void ClearSearch() { SearchText = string.Empty; }
-
-    [RelayCommand]
-    private void ToggleAddPanel() { IsAddPanelOpen = !IsAddPanelOpen; }
+    [RelayCommand] private void ClearSearch() { SearchText = string.Empty; }
+    [RelayCommand] private void ToggleAddPanel() { IsAddPanelOpen = !IsAddPanelOpen; }
 
     [RelayCommand]
     private void SaveProduct()
     {
-        if (string.IsNullOrWhiteSpace(EditTitle)) return;
-        using var db = DatabaseInitializer.CreateDbContext();
-        db.Products.Add(new Product
+        try
         {
-            Title = EditTitle,
-            Barcode = string.IsNullOrWhiteSpace(EditBarcode) ? null : EditBarcode,
-            Category = EditCategory,
-            Unit = EditUnit,
-            PurchasePrice = EditPurchasePrice,
-            SalePrice = EditSalePrice,
-            Stock = EditStock,
-            MinStock = EditMinStock,
-            WarehouseId = 1
-        });
-        db.SaveChanges();
-        IsAddPanelOpen = false;
-        ClearForm();
-        LoadProducts();
+            if (string.IsNullOrWhiteSpace(EditTitle)) return;
+            using var db = DatabaseInitializer.CreateDbContext();
+            db.Products.Add(new Product
+            {
+                Title = EditTitle, Barcode = string.IsNullOrWhiteSpace(EditBarcode) ? null : EditBarcode,
+                Category = EditCategory, Unit = EditUnit, PurchasePrice = EditPurchasePrice,
+                SalePrice = EditSalePrice, Stock = EditStock, MinStock = EditMinStock, WarehouseId = 1
+            });
+            db.SaveChanges();
+            IsAddPanelOpen = false; ClearForm(); LoadProducts(); LoadCategories();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     [RelayCommand]
     private void DeleteProduct(Product? p)
     {
         if (p == null) return;
-        using var db = DatabaseInitializer.CreateDbContext();
-        var found = db.Products.Find(p.Id);
-        if (found != null) { found.IsActive = false; db.SaveChanges(); }
-        LoadProducts();
+        try
+        {
+            using var db = DatabaseInitializer.CreateDbContext();
+            var found = db.Products.Find(p.Id);
+            if (found != null) { found.IsActive = false; db.SaveChanges(); }
+            LoadProducts();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
-    [RelayCommand]
-    private void CancelEdit() { IsAddPanelOpen = false; ClearForm(); }
-
-    private void ClearForm()
-    {
-        EditTitle = string.Empty; EditBarcode = string.Empty; EditCategory = string.Empty;
-        EditPurchasePrice = 0; EditSalePrice = 0; EditStock = 0; EditMinStock = 0;
-        EditUnit = UnitType.Number;
-    }
+    [RelayCommand] private void CancelEdit() { IsAddPanelOpen = false; ClearForm(); }
+    private void ClearForm() { EditTitle = string.Empty; EditBarcode = string.Empty; EditCategory = string.Empty; EditPurchasePrice = 0; EditSalePrice = 0; EditStock = 0; EditMinStock = 0; EditUnit = UnitType.Number; }
 }

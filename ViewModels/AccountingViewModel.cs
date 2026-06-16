@@ -4,11 +4,13 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
 using PosAccountingApp.Data;
 using PosAccountingApp.Models;
+using PosAccountingApp.Services;
 
 namespace PosAccountingApp.ViewModels;
 
 public partial class AccountingViewModel : ObservableObject
 {
+    private readonly AttachmentService _attachmentService = new();
     private List<Account> _allAccounts = new();
     private List<JournalEntry> _allEntries = new();
 
@@ -18,10 +20,12 @@ public partial class AccountingViewModel : ObservableObject
     [ObservableProperty] private decimal _editDebit;
     [ObservableProperty] private decimal _editCredit;
     [ObservableProperty] private Account? _editAccount;
+    [ObservableProperty] private string _errorMessage = string.Empty;
+    [ObservableProperty] private string _attachmentCount = string.Empty;
 
     public ObservableCollection<Account> Accounts { get; } = new();
     public ObservableCollection<JournalEntry> Entries { get; } = new();
-    public ObservableCollection<Account> AccountList { get; } = new();
+    public ObservableCollection<Attachment> Attachments { get; } = new();
 
     [ObservableProperty] private decimal _totalDebit;
     [ObservableProperty] private decimal _totalCredit;
@@ -31,14 +35,19 @@ public partial class AccountingViewModel : ObservableObject
 
     public void LoadData()
     {
-        using var db = DatabaseInitializer.CreateDbContext();
-        _allAccounts = db.Accounts.AsNoTracking().Where(a => a.IsActive).OrderBy(a => a.Code).ToList();
-        _allEntries = db.JournalEntries.AsNoTracking().Where(e => e.IsActive).OrderByDescending(e => e.EntryDate).ToList();
+        try
+        {
+            using var db = DatabaseInitializer.CreateDbContext();
+            _allAccounts = db.Accounts.AsNoTracking().Where(a => a.IsActive).OrderBy(a => a.Code).ToList();
+            _allEntries = db.JournalEntries.AsNoTracking().Where(e => e.IsActive).OrderByDescending(e => e.EntryDate).ToList();
 
-        AccountList.Clear();
-        foreach (var a in _allAccounts) AccountList.Add(a);
+            AccountList.Clear();
+            foreach (var a in _allAccounts) AccountList.Add(a);
 
-        ApplyFilter();
+            ApplyFilter();
+            ErrorMessage = string.Empty;
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     partial void OnSearchTextChanged(string value) { ApplyFilter(); }
@@ -48,10 +57,7 @@ public partial class AccountingViewModel : ObservableObject
         Entries.Clear();
         var q = SearchText?.Trim() ?? "";
         var filtered = string.IsNullOrEmpty(q) ? _allEntries
-            : _allEntries.Where(e =>
-                e.EntryNumber.Contains(q) ||
-                e.Description.Contains(q, StringComparison.OrdinalIgnoreCase))
-            .ToList();
+            : _allEntries.Where(e => e.EntryNumber.Contains(q) || e.Description.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
         foreach (var e in filtered) Entries.Add(e);
     }
 
@@ -73,24 +79,28 @@ public partial class AccountingViewModel : ObservableObject
     [RelayCommand]
     private void SaveEntry()
     {
-        if (TotalDebit == 0 || TotalCredit == 0 || !IsBalanced) return;
-        using var db = DatabaseInitializer.CreateDbContext();
-        var entry = new JournalEntry
+        try
         {
-            EntryNumber = $"JE-{DateTime.Now:yyyyMMddHHmmss}",
-            EntryDate = DateTime.Now,
-            Description = EditDescription,
-            Status = EntryStatus.Posted,
-            UserId = AppSettings.CurrentUser?.Id ?? 1,
-            TotalDebit = TotalDebit,
-            TotalCredit = TotalCredit
-        };
-        db.JournalEntries.Add(entry);
-        db.SaveChanges();
-        IsAddPanelOpen = false;
-        EditDescription = string.Empty; EditDebit = 0; EditCredit = 0;
-        TotalDebit = 0; TotalCredit = 0; IsBalanced = false;
-        LoadData();
+            if (TotalDebit == 0 || TotalCredit == 0 || !IsBalanced) return;
+            using var db = DatabaseInitializer.CreateDbContext();
+            var entry = new JournalEntry
+            {
+                EntryNumber = $"JE-{DateTime.Now:yyyyMMddHHmmss}",
+                EntryDate = DateTime.Now,
+                Description = EditDescription,
+                Status = EntryStatus.Posted,
+                UserId = AppSettings.CurrentUser?.Id ?? 1,
+                TotalDebit = TotalDebit,
+                TotalCredit = TotalCredit
+            };
+            db.JournalEntries.Add(entry);
+            db.SaveChanges();
+            IsAddPanelOpen = false;
+            EditDescription = string.Empty; EditDebit = 0; EditCredit = 0;
+            TotalDebit = 0; TotalCredit = 0; IsBalanced = false;
+            LoadData();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     [RelayCommand]
@@ -100,4 +110,6 @@ public partial class AccountingViewModel : ObservableObject
         EditDescription = string.Empty; EditDebit = 0; EditCredit = 0;
         TotalDebit = 0; TotalCredit = 0; IsBalanced = false;
     }
+
+    public ObservableCollection<Account> AccountList { get; } = new();
 }

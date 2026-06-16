@@ -18,6 +18,7 @@ public partial class CategoriesViewModel : ObservableObject
     [ObservableProperty] private string _editIcon = "\uE74C";
     [ObservableProperty] private int _editSortOrder;
     [ObservableProperty] private ProductCategory? _editParentCategory;
+    [ObservableProperty] private string _errorMessage = string.Empty;
 
     public ObservableCollection<ProductCategory> Categories { get; } = new();
     public ObservableCollection<ProductCategory> ParentCategories { get; } = new();
@@ -34,32 +35,24 @@ public partial class CategoriesViewModel : ObservableObject
 
     public void LoadCategories()
     {
-        using var db = DatabaseInitializer.CreateDbContext();
-        _allCategories = db.Categories.AsNoTracking()
-            .Where(c => c.IsActive)
-            .OrderBy(c => c.SortOrder)
-            .ThenBy(c => c.Name)
-            .ToList();
-
-        // Build full names with parent prefix
-        foreach (var cat in _allCategories)
+        try
         {
-            if (cat.ParentCategoryId.HasValue)
+            using var db = DatabaseInitializer.CreateDbContext();
+            _allCategories = db.Categories.AsNoTracking().Where(c => c.IsActive).OrderBy(c => c.SortOrder).ThenBy(c => c.Name).ToList();
+            foreach (var cat in _allCategories)
             {
-                var parent = _allCategories.FirstOrDefault(p => p.Id == cat.ParentCategoryId);
-                cat.FullName = parent != null ? $"{parent.Name} / {cat.Name}" : cat.Name;
+                if (cat.ParentCategoryId.HasValue)
+                {
+                    var parent = _allCategories.FirstOrDefault(p => p.Id == cat.ParentCategoryId);
+                    cat.FullName = parent != null ? $"{parent.Name} / {cat.Name}" : cat.Name;
+                }
+                else cat.FullName = cat.Name;
             }
-            else
-            {
-                cat.FullName = cat.Name;
-            }
+            ParentCategories.Clear();
+            foreach (var c in _allCategories.Where(c => !c.ParentCategoryId.HasValue)) ParentCategories.Add(c);
+            ApplyFilter();
         }
-
-        ParentCategories.Clear();
-        foreach (var c in _allCategories.Where(c => !c.ParentCategoryId.HasValue))
-            ParentCategories.Add(c);
-
-        ApplyFilter();
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     partial void OnSearchTextChanged(string value) { ApplyFilter(); }
@@ -69,54 +62,40 @@ public partial class CategoriesViewModel : ObservableObject
         Categories.Clear();
         var q = SearchText?.Trim() ?? "";
         var filtered = string.IsNullOrEmpty(q) ? _allCategories
-            : _allCategories.Where(c =>
-                c.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                (c.FullName != null && c.FullName.Contains(q, StringComparison.OrdinalIgnoreCase)))
-            .ToList();
+            : _allCategories.Where(c => c.Name.Contains(q, StringComparison.OrdinalIgnoreCase) || (c.FullName != null && c.FullName.Contains(q, StringComparison.OrdinalIgnoreCase))).ToList();
         foreach (var c in filtered) Categories.Add(c);
     }
 
-    [RelayCommand]
-    private void ClearSearch() { SearchText = string.Empty; }
-
-    [RelayCommand]
-    private void ToggleAddPanel() { IsAddPanelOpen = !IsAddPanelOpen; }
+    [RelayCommand] private void ClearSearch() { SearchText = string.Empty; }
+    [RelayCommand] private void ToggleAddPanel() { IsAddPanelOpen = !IsAddPanelOpen; }
 
     [RelayCommand]
     private void SaveCategory()
     {
-        if (string.IsNullOrWhiteSpace(EditName)) return;
-        using var db = DatabaseInitializer.CreateDbContext();
-        db.Categories.Add(new ProductCategory
+        try
         {
-            Name = EditName,
-            Description = EditDescription,
-            Icon = EditIcon,
-            SortOrder = EditSortOrder,
-            ParentCategoryId = EditParentCategory?.Id
-        });
-        db.SaveChanges();
-        IsAddPanelOpen = false;
-        EditName = string.Empty; EditDescription = string.Empty;
-        EditIcon = "\uE74C"; EditSortOrder = 0; EditParentCategory = null;
-        LoadCategories();
+            if (string.IsNullOrWhiteSpace(EditName)) return;
+            using var db = DatabaseInitializer.CreateDbContext();
+            db.Categories.Add(new ProductCategory { Name = EditName, Description = EditDescription, Icon = EditIcon, SortOrder = EditSortOrder, ParentCategoryId = EditParentCategory?.Id });
+            db.SaveChanges();
+            IsAddPanelOpen = false; LoadCategories();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     [RelayCommand]
     private void DeleteCategory(ProductCategory? cat)
     {
         if (cat == null) return;
-        using var db = DatabaseInitializer.CreateDbContext();
-        var found = db.Categories.Find(cat.Id);
-        if (found != null) { found.IsActive = false; db.SaveChanges(); }
-        LoadCategories();
+        try
+        {
+            using var db = DatabaseInitializer.CreateDbContext();
+            var found = db.Categories.Find(cat.Id);
+            if (found != null) { found.IsActive = false; db.SaveChanges(); }
+            LoadCategories();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
-    [RelayCommand]
-    private void CancelEdit()
-    {
-        IsAddPanelOpen = false;
-        EditName = string.Empty; EditDescription = string.Empty;
-        EditIcon = "\uE74C"; EditSortOrder = 0; EditParentCategory = null;
-    }
+    [RelayCommand] private void CancelEdit() { IsAddPanelOpen = false; EditName = string.Empty; EditDescription = string.Empty; EditIcon = "\uE74C"; EditSortOrder = 0; EditParentCategory = null; }
 }

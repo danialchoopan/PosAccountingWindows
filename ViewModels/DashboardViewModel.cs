@@ -1,6 +1,4 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using PosAccountingApp.Data;
-using PosAccountingApp.Models;
 
 namespace PosAccountingApp.ViewModels;
 
@@ -17,7 +15,7 @@ public partial class DashboardViewModel : ObservableObject
     {
         try
         {
-            using var db = DatabaseInitializer.CreateDbContext();
+            using var db = Data.DatabaseInitializer.CreateDbContext();
             var today = DateTime.Today;
             var salesToday = db.Sales.Where(s => s.CreatedAt >= today).ToList();
 
@@ -25,17 +23,18 @@ public partial class DashboardViewModel : ObservableObject
             TotalRevenueToday = ToPersian((long)salesToday.Sum(s => s.TotalAmount)) + " ریال";
             TotalCustomers = ToPersian(db.Customers.Count());
             TotalProducts = ToPersian(db.Products.Count());
-            PendingCheques = ToPersian(db.Cheques.Count(c => c.Status == ChequeStatus.InVault));
+            PendingCheques = ToPersian(db.Cheques.Count(c => c.Status == Models.ChequeStatus.InVault));
             LowStockItems = ToPersian(db.Products.Count(p => p.Stock <= p.MinStock)) + " کالا";
         }
-        catch
+        catch (Exception ex)
         {
-            TotalSalesToday = "---";
-            TotalRevenueToday = "---";
-            TotalCustomers = "---";
-            TotalProducts = "---";
-            PendingCheques = "---";
-            LowStockItems = "---";
+            TotalSalesToday = "خطا";
+            TotalRevenueToday = "خطا";
+            TotalCustomers = "خطا";
+            TotalProducts = "خطا";
+            PendingCheques = "خطا";
+            LowStockItems = "خطا";
+            System.Diagnostics.Debug.WriteLine($"Dashboard error: {ex.Message}");
         }
     }
 

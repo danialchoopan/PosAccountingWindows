@@ -186,12 +186,26 @@
                             <TextBox Text="{Binding ReceiptFooter, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </Grid>
-                    <StackPanel Margin="4,10,4,0">
-                        <TextBlock Text="پیشوند شماره فاکتور" FontSize="12"
-                                   Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
-                        <TextBox Text="{Binding InvoicePrefix, UpdateSourceTrigger=PropertyChanged}"
-                                 Width="160" HorizontalAlignment="Left"/>
-                    </StackPanel>
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="4">
+                            <TextBlock Text="پیشوند شماره فاکتور" FontSize="12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding InvoicePrefix, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="4">
+                            <TextBlock Text="نحوه افزودن اطلاعات" FontSize="12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
+                            <ComboBox SelectedIndex="{Binding UsePopupForAdd, Converter={StaticResource BoolToVis}}"
+                                      Width="200" HorizontalAlignment="Left" Padding="10,6"
+                                      x:Name="AddModeCombo" SelectionChanged="AddMode_Changed">
+                                <ComboBoxItem Content="پنجره پاپ‌آپ" Tag="True"/>
+                                <ComboBoxItem Content="صفحه جداگانه" Tag="False"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
             </Border>
 

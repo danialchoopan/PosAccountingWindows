@@ -15,14 +15,13 @@ public partial class SupplierViewModel : ObservableObject
     [ObservableProperty] private bool _isAddPanelOpen;
     [ObservableProperty] private bool _isPaymentPanelOpen;
     [ObservableProperty] private Supplier? _selectedSupplier;
+    [ObservableProperty] private string _errorMessage = string.Empty;
 
-    // Add/Edit fields
     [ObservableProperty] private string _editName = string.Empty;
     [ObservableProperty] private string _editPhone = string.Empty;
     [ObservableProperty] private string _editAddress = string.Empty;
     [ObservableProperty] private string _editContactPerson = string.Empty;
 
-    // Payment fields
     [ObservableProperty] private decimal _paymentAmount;
     [ObservableProperty] private string _paymentDescription = string.Empty;
 
@@ -35,9 +34,17 @@ public partial class SupplierViewModel : ObservableObject
 
     public void LoadSuppliers()
     {
-        _allSuppliers = _supplierService.GetAllSuppliers();
-        TotalDebt = _supplierService.GetTotalSupplierDebt();
-        ApplyFilter();
+        try
+        {
+            _allSuppliers = _supplierService.GetAllSuppliers();
+            TotalDebt = _supplierService.GetTotalSupplierDebt();
+            ApplyFilter();
+            ErrorMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "خطا در بارگذاری تامین‌کنندگان: " + ex.Message;
+        }
     }
 
     partial void OnSearchTextChanged(string value) { ApplyFilter(); }
@@ -57,22 +64,20 @@ public partial class SupplierViewModel : ObservableObject
     private void ClearSearch() { SearchText = string.Empty; }
 
     [RelayCommand]
-    private void ToggleAddPanel()
-    {
-        IsAddPanelOpen = !IsAddPanelOpen;
-        IsPaymentPanelOpen = false;
-        SelectedSupplier = null;
-        ClearForm();
-    }
+    private void ToggleAddPanel() { IsAddPanelOpen = !IsAddPanelOpen; IsPaymentPanelOpen = false; }
 
     [RelayCommand]
     private void SaveSupplier()
     {
-        if (string.IsNullOrWhiteSpace(EditName)) return;
-        _supplierService.CreateSupplier(EditName, EditPhone, EditAddress, EditContactPerson);
-        IsAddPanelOpen = false;
-        ClearForm();
-        LoadSuppliers();
+        try
+        {
+            if (string.IsNullOrWhiteSpace(EditName)) return;
+            _supplierService.CreateSupplier(EditName, EditPhone, EditAddress, EditContactPerson);
+            IsAddPanelOpen = false;
+            ClearForm();
+            LoadSuppliers();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     [RelayCommand]
@@ -80,9 +85,13 @@ public partial class SupplierViewModel : ObservableObject
     {
         if (supplier == null) return;
         SelectedSupplier = supplier;
-        var ledger = _supplierService.GetSupplierLedger(supplier.Id);
-        LedgerEntries.Clear();
-        foreach (var e in ledger) LedgerEntries.Add(e);
+        try
+        {
+            var ledger = _supplierService.GetSupplierLedger(supplier.Id);
+            LedgerEntries.Clear();
+            foreach (var e in ledger) LedgerEntries.Add(e);
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     [RelayCommand]
@@ -97,21 +106,29 @@ public partial class SupplierViewModel : ObservableObject
     [RelayCommand]
     private void RecordPayment()
     {
-        if (SelectedSupplier == null || PaymentAmount <= 0) return;
-        _supplierService.RecordPayment(SelectedSupplier.Id, PaymentAmount,
-            string.IsNullOrEmpty(PaymentDescription) ? "پرداخت" : PaymentDescription);
-        IsPaymentPanelOpen = false;
-        LoadSuppliers();
-        SelectSupplier(SelectedSupplier);
+        try
+        {
+            if (SelectedSupplier == null || PaymentAmount <= 0) return;
+            _supplierService.RecordPayment(SelectedSupplier.Id, PaymentAmount,
+                string.IsNullOrEmpty(PaymentDescription) ? "پرداخت" : PaymentDescription);
+            IsPaymentPanelOpen = false;
+            LoadSuppliers();
+            SelectSupplier(SelectedSupplier);
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     [RelayCommand]
     private void DeleteSupplier(Supplier? supplier)
     {
         if (supplier == null) return;
-        _supplierService.DeleteSupplier(supplier.Id);
-        if (SelectedSupplier?.Id == supplier.Id) SelectedSupplier = null;
-        LoadSuppliers();
+        try
+        {
+            _supplierService.DeleteSupplier(supplier.Id);
+            if (SelectedSupplier?.Id == supplier.Id) SelectedSupplier = null;
+            LoadSuppliers();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     [RelayCommand]

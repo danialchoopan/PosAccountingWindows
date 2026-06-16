@@ -17,6 +17,7 @@ public partial class LoyaltyViewModel : ObservableObject
     [ObservableProperty] private int _customerPoints;
     [ObservableProperty] private decimal _customerTotalPurchases;
     [ObservableProperty] private decimal _tierDiscount;
+    [ObservableProperty] private string _errorMessage = string.Empty;
 
     [ObservableProperty] private int _redeemPointsAmount;
     [ObservableProperty] private string _redeemDescription = string.Empty;
@@ -28,18 +29,26 @@ public partial class LoyaltyViewModel : ObservableObject
 
     public void LoadData()
     {
-        var data = _loyaltyService.GetCustomersWithTiers();
-        CustomerTiers.Clear();
-        foreach (var (customer, tier, points) in data)
+        try
         {
-            CustomerTiers.Add(new CustomerTierInfo
+            var data = _loyaltyService.GetCustomersWithTiers();
+            CustomerTiers.Clear();
+            foreach (var (customer, tier, points) in data)
             {
-                Customer = customer,
-                Tier = tier,
-                Points = points,
-                TotalPurchases = _loyaltyService.GetTotalPurchases(customer.Id),
-                Discount = _loyaltyService.CalculateTierDiscount(tier)
-            });
+                CustomerTiers.Add(new CustomerTierInfo
+                {
+                    Customer = customer,
+                    Tier = tier,
+                    Points = points,
+                    TotalPurchases = _loyaltyService.GetTotalPurchases(customer.Id),
+                    Discount = _loyaltyService.CalculateTierDiscount(tier)
+                });
+            }
+            ErrorMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "خطا در بارگذاری: " + ex.Message;
         }
     }
 
@@ -50,50 +59,34 @@ public partial class LoyaltyViewModel : ObservableObject
     private void SelectCustomer(CustomerTierInfo? info)
     {
         if (info == null) return;
-        SelectedCustomer = info.Customer;
-        SelectedTier = info.Tier;
-        CustomerPoints = info.Points;
-        CustomerTotalPurchases = info.TotalPurchases;
-        TierDiscount = info.Discount;
+        try
+        {
+            SelectedCustomer = info.Customer;
+            SelectedTier = info.Tier;
+            CustomerPoints = info.Points;
+            CustomerTotalPurchases = info.TotalPurchases;
+            TierDiscount = info.Discount;
 
-        var history = _loyaltyService.GetTransactionHistory(info.Customer.Id);
-        Transactions.Clear();
-        foreach (var t in history) Transactions.Add(t);
+            var history = _loyaltyService.GetTransactionHistory(info.Customer.Id);
+            Transactions.Clear();
+            foreach (var t in history) Transactions.Add(t);
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     [RelayCommand]
     private void RedeemPoints()
     {
-        if (SelectedCustomer == null || RedeemPointsAmount <= 0) return;
-        _loyaltyService.RedeemPoints(SelectedCustomer.Id, RedeemPointsAmount,
-            string.IsNullOrEmpty(RedeemDescription) ? "استفاده از امتیاز" : RedeemDescription);
-        RedeemPointsAmount = 0;
-        RedeemDescription = string.Empty;
-        LoadData();
-    }
-
-    [RelayCommand]
-    private void AwardBonus(int points)
-    {
-        if (SelectedCustomer == null || points <= 0) return;
-        using var db = DatabaseInitializer.CreateDbContext();
-        var customer = db.Customers.Find(SelectedCustomer.Id);
-        if (customer != null)
+        try
         {
-            customer.LoyaltyPoints += points;
-            var tx = new LoyaltyTransaction
-            {
-                CustomerId = SelectedCustomer.Id,
-                Type = LoyaltyTransactionType.Bonus,
-                Points = points,
-                Description = $"امتیاز جایزه: {points} امتیاز",
-                TransactionDate = DateTime.Now,
-                CreatedAt = DateTime.Now
-            };
-            db.Set<LoyaltyTransaction>().Add(tx);
-            db.SaveChanges();
+            if (SelectedCustomer == null || RedeemPointsAmount <= 0) return;
+            _loyaltyService.RedeemPoints(SelectedCustomer.Id, RedeemPointsAmount,
+                string.IsNullOrEmpty(RedeemDescription) ? "استفاده از امتیاز" : RedeemDescription);
+            RedeemPointsAmount = 0;
+            RedeemDescription = string.Empty;
+            LoadData();
         }
-        LoadData();
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 }
 

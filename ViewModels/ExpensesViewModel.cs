@@ -17,6 +17,7 @@ public partial class ExpensesViewModel : ObservableObject
     [ObservableProperty] private decimal _editAmount;
     [ObservableProperty] private ExpenseCategory _editCategory = ExpenseCategory.Other;
     [ObservableProperty] private DateTime _editDate = DateTime.Now;
+    [ObservableProperty] private string _errorMessage = string.Empty;
 
     public ObservableCollection<Expense> Expenses { get; } = new();
     public ExpenseCategory[] Categories { get; } = Enum.GetValues<ExpenseCategory>();
@@ -25,9 +26,13 @@ public partial class ExpensesViewModel : ObservableObject
 
     public void LoadExpenses()
     {
-        using var db = DatabaseInitializer.CreateDbContext();
-        _allExpenses = db.Expenses.AsNoTracking().Where(e => e.IsActive).OrderByDescending(e => e.Date).ToList();
-        ApplyFilter();
+        try
+        {
+            using var db = DatabaseInitializer.CreateDbContext();
+            _allExpenses = db.Expenses.AsNoTracking().Where(e => e.IsActive).OrderByDescending(e => e.Date).ToList();
+            ApplyFilter();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
     partial void OnSearchTextChanged(string value) { ApplyFilter(); }
@@ -37,33 +42,26 @@ public partial class ExpensesViewModel : ObservableObject
         Expenses.Clear();
         var q = SearchText?.Trim() ?? "";
         var filtered = string.IsNullOrEmpty(q) ? _allExpenses
-            : _allExpenses.Where(e =>
-                e.Description.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                e.Category.ToString().Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+            : _allExpenses.Where(e => e.Description.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
         foreach (var e in filtered) Expenses.Add(e);
     }
 
-    [RelayCommand]
-    private void ClearSearch() { SearchText = string.Empty; }
-
-    [RelayCommand]
-    private void ToggleAddPanel() => IsAddPanelOpen = !IsAddPanelOpen;
+    [RelayCommand] private void ClearSearch() { SearchText = string.Empty; }
+    [RelayCommand] private void ToggleAddPanel() { IsAddPanelOpen = !IsAddPanelOpen; }
 
     [RelayCommand]
     private void SaveExpense()
     {
-        if (string.IsNullOrWhiteSpace(EditDescription) || EditAmount <= 0) return;
-        using var db = DatabaseInitializer.CreateDbContext();
-        db.Expenses.Add(new Expense
+        try
         {
-            Description = EditDescription, Amount = EditAmount,
-            Category = EditCategory, Date = EditDate
-        });
-        db.SaveChanges();
-        IsAddPanelOpen = false;
-        LoadExpenses();
+            if (string.IsNullOrWhiteSpace(EditDescription) || EditAmount <= 0) return;
+            using var db = DatabaseInitializer.CreateDbContext();
+            db.Expenses.Add(new Expense { Description = EditDescription, Amount = EditAmount, Category = EditCategory, Date = EditDate });
+            db.SaveChanges();
+            IsAddPanelOpen = false; LoadExpenses();
+        }
+        catch (Exception ex) { ErrorMessage = "خطا: " + ex.Message; }
     }
 
-    [RelayCommand]
-    private void CancelEdit() => IsAddPanelOpen = false;
+    [RelayCommand] private void CancelEdit() => IsAddPanelOpen = false;
 }
