@@ -26,13 +26,15 @@ public static class DatabaseInitializer
     }
 
     /// <summary>
-    /// Create a fresh in-memory database for testing
+    /// Create a fresh test database with unique name per instance
     /// </summary>
     public static AppDbContext CreateTestDbContext()
     {
-        _testDbPath = Path.Combine(Path.GetTempPath(), $"pos_test_{Guid.NewGuid()}.db");
+        // Use a unique DB name per thread to avoid conflicts between test classes
+        var dbPath = Path.Combine(Path.GetTempPath(), $"pos_test_{Thread.CurrentThread.ManagedThreadId}_{Guid.NewGuid():N}.db");
+        _testDbPath = dbPath;
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-        optionsBuilder.UseSqlite($"Data Source={_testDbPath}");
+        optionsBuilder.UseSqlite($"Data Source={dbPath}");
         var db = new AppDbContext(optionsBuilder.Options);
         db.Database.EnsureCreated();
         return db;
@@ -47,7 +49,6 @@ public static class DatabaseInitializer
         {
             try
             {
-                // Force close any connections
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 if (File.Exists(_testDbPath))

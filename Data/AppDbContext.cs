@@ -29,6 +29,8 @@ public class AppDbContext : DbContext
     public DbSet<JournalEntryLine> JournalEntryLines => Set<JournalEntryLine>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<SupplierLedgerEntry> SupplierLedgerEntries => Set<SupplierLedgerEntry>();
+    public DbSet<LoyaltyConfig> LoyaltyConfigs => Set<LoyaltyConfig>();
+    public DbSet<LoyaltyTransaction> LoyaltyTransactions => Set<LoyaltyTransaction>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

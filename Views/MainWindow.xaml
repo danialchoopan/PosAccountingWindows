@@ -98,6 +98,9 @@
                     <RadioButton Style="{StaticResource SidebarButton}"
                                  Content="&#xE8B7;  تامین‌کنندگان"
                                  Command="{Binding NavigateToCommand}" CommandParameter="Suppliers"/>
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="&#xE77B;  وفاداری مشتریان"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Loyalty"/>
                     <RadioButton x:Name="UsersNavBtn" Style="{StaticResource SidebarButton}"
                                  Content="&#xE77B;  مدیریت کاربران"
                                  Command="{Binding NavigateToCommand}" CommandParameter="Users"
@@ -201,6 +204,9 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:SupplierViewModel}">
                         <views:SupplierView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:LoyaltyViewModel}">
+                        <views:LoyaltyView/>
                     </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>
