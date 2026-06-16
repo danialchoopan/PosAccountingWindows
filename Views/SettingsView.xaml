@@ -17,9 +17,10 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="پوسته برنامه" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                            <TextBlock Text="روشن یا تاریک" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                            <ComboBox ItemsSource="{Binding ThemeNames}" SelectedIndex="{Binding SelectedThemeIndex}"
+                                      Width="200" HorizontalAlignment="Left" Padding="8,5"/>
                         </StackPanel>
-                        <Button Grid.Column="1" Content="تغییر تم" Style="{StaticResource PrimaryButton}"
+                        <Button Grid.Column="1" Content="اعمال تم" Style="{StaticResource PrimaryButton}"
                                 Command="{Binding ToggleThemeCommand}"/>
                     </Grid>
                 </StackPanel>

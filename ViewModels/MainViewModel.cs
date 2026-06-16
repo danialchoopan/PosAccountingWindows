@@ -50,8 +50,7 @@ public partial class MainViewModel : ObservableObject
 
         // Load saved theme
         var settings = AppSettings.Load();
-        IsDarkTheme = settings.IsDarkTheme;
-        Data.ThemeManager.ApplyTheme(IsDarkTheme);
+        Data.ThemeManager.ApplyThemeByName(settings.SelectedTheme);
 
         DashboardVm.LoadData();
     }
@@ -103,11 +102,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void ToggleTheme()
     {
-        IsDarkTheme = !IsDarkTheme;
-        Data.ThemeManager.ApplyTheme(IsDarkTheme);
-        var settings = AppSettings.Load();
-        settings.IsDarkTheme = IsDarkTheme;
-        settings.Save();
+        // Theme switching is now handled in SettingsViewModel
     }
 
     [RelayCommand]

@@ -52,7 +52,7 @@ public class AppSettings
     public decimal VatPercentage { get; set; } = 10;
     public decimal CommissionPercentage { get; set; } = 2;
     public bool IsSetupComplete { get; set; }
-    public bool IsDarkTheme { get; set; }
+    public string SelectedTheme { get; set; } = "OceanBlue";
     public double FontSize { get; set; } = 14;
     public bool IsHighContrast { get; set; }
 

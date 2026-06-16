@@ -17,11 +17,11 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private decimal _commissionPercentage = 2;
     [ObservableProperty] private RoundingMode _roundingMode = RoundingMode.Off;
     [ObservableProperty] private bool _isDarkTheme;
+    [ObservableProperty] private int _selectedThemeIndex = 0;
     [ObservableProperty] private double _fontSize = 14;
     [ObservableProperty] private bool _isHighContrast;
 
-    public BusinessProfile[] Profiles { get; } = Enum.GetValues<BusinessProfile>();
-    public RoundingMode[] RoundingModes { get; } = Enum.GetValues<RoundingMode>();
+    public string[] ThemeNames { get; } = ["اقیانوس آبی", "سبز زمردی", "بنفش سلطنتی", "غروب نارنجی", "نیمه‌شب تاریک"];
     public double[] FontSizes { get; } = [10, 12, 14, 16, 18, 20];
 
     public SettingsViewModel()
@@ -32,18 +32,30 @@ public partial class SettingsViewModel : ObservableObject
         BusinessAddress = s.Address;
         VatPercentage = s.VatPercentage;
         CommissionPercentage = s.CommissionPercentage;
-        IsDarkTheme = s.IsDarkTheme;
+        IsDarkTheme = s.SelectedTheme == "MidnightDark";
+        SelectedThemeIndex = Array.IndexOf(ThemeNames, GetThemeFarsiName(s.SelectedTheme));
+        if (SelectedThemeIndex < 0) SelectedThemeIndex = 0;
         FontSize = s.FontSize > 0 ? s.FontSize : 14;
         IsHighContrast = s.IsHighContrast;
     }
 
+    private static string GetThemeFarsiName(string theme) => theme switch
+    {
+        "OceanBlue" => "اقیانوس آبی",
+        "EmeraldGreen" => "سبز زمردی",
+        "RoyalPurple" => "بنفش سلطنتی",
+        "SunsetOrange" => "غروب نارنجی",
+        "MidnightDark" => "نیمه‌شب تاریک",
+        _ => "اقیانوس آبی"
+    };
+
     [RelayCommand]
     private void ToggleTheme()
     {
-        IsDarkTheme = !IsDarkTheme;
-        ThemeManager.ApplyTheme(IsDarkTheme);
+        var theme = (AppTheme)SelectedThemeIndex;
+        ThemeManager.ApplyTheme(theme);
         var s = AppSettings.Load();
-        s.IsDarkTheme = IsDarkTheme;
+        s.SelectedTheme = theme.ToString();
         s.Save();
     }
 
@@ -80,7 +92,8 @@ public partial class SettingsViewModel : ObservableObject
         }
         else
         {
-            ThemeManager.ApplyTheme(IsDarkTheme);
+            var theme = (AppTheme)SelectedThemeIndex;
+            ThemeManager.ApplyTheme(theme);
         }
 
         var s = AppSettings.Load();

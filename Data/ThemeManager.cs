@@ -3,48 +3,51 @@ using System.Windows.Media;
 
 namespace PosAccountingApp.Data;
 
+public enum AppTheme { OceanBlue, EmeraldGreen, RoyalPurple, SunsetOrange, MidnightDark }
+
 public static class ThemeManager
 {
-    public static bool IsDark { get; private set; }
+    private static readonly string[] ThemeKeys =
+        ["Theme1_OceanBlue", "Theme2_EmeraldGreen", "Theme3_RoyalPurple", "Theme4_SunsetOrange", "Theme5_MidnightDark"];
 
-    public static void ApplyTheme(bool dark)
+    public static void ApplyTheme(AppTheme theme)
     {
-        IsDark = dark;
         var app = Application.Current;
         if (app == null) return;
 
         var dict = app.Resources.MergedDictionaries[0];
         if (dict == null) return;
 
-        var theme = dark ? dict["DarkTheme"] as ResourceDictionary : dict["LightTheme"] as ResourceDictionary;
-        if (theme == null) return;
+        var themeKey = ThemeKeys[(int)theme];
+        var themeColors = dict[themeKey] as ResourceDictionary;
+        if (themeColors == null) return;
 
-        app.Resources["BgBrush"] = new SolidColorBrush((Color)theme["BgColor"]);
-        app.Resources["SurfaceBrush"] = new SolidColorBrush((Color)theme["SurfaceColor"]);
-        app.Resources["SidebarBgBrush"] = new SolidColorBrush((Color)theme["SidebarBg"]);
-        app.Resources["CardBgBrush"] = new SolidColorBrush((Color)theme["CardBg"]);
-        app.Resources["TextPrimaryBrush"] = new SolidColorBrush((Color)theme["TextPrimaryColor"]);
-        app.Resources["TextSecondaryBrush"] = new SolidColorBrush((Color)theme["TextSecondaryColor"]);
-        app.Resources["AccentBrush"] = new SolidColorBrush((Color)theme["AccentColor"]);
-        app.Resources["AccentDarkBrush"] = new SolidColorBrush((Color)theme["AccentDarkColor"]);
-        app.Resources["ErrorBrush"] = new SolidColorBrush((Color)theme["ErrorColor"]);
-        app.Resources["SuccessBrush"] = new SolidColorBrush((Color)theme["SuccessColor"]);
-        app.Resources["WarningBrush"] = new SolidColorBrush((Color)theme["WarningColor"]);
-        app.Resources["BorderBrush"] = new SolidColorBrush((Color)theme["BorderColor"]);
-        app.Resources["InputBgBrush"] = new SolidColorBrush((Color)theme["InputBg"]);
-        app.Resources["InputBorderBrush"] = new SolidColorBrush((Color)theme["InputBorder"]);
-        app.Resources["HoverBgBrush"] = new SolidColorBrush((Color)theme["HoverBg"]);
-        app.Resources["RowAltBgBrush"] = new SolidColorBrush((Color)theme["RowAltBg"]);
-        app.Resources["HeaderBgBrush"] = new SolidColorBrush((Color)theme["HeaderBg"]);
-        app.Resources["BadgeBgBrush"] = new SolidColorBrush((Color)theme["BadgeBg"]);
-        app.Resources["BadgeFgBrush"] = new SolidColorBrush((Color)theme["BadgeFg"]);
-
-        // Window backgrounds
-        app.Resources["WindowBgBrush"] = app.Resources["BgBrush"];
+        app.Resources["BgBrush"] = new SolidColorBrush((Color)themeColors["BgColor"]);
+        app.Resources["SurfaceBrush"] = new SolidColorBrush((Color)themeColors["SurfaceColor"]);
+        app.Resources["SidebarBgBrush"] = new SolidColorBrush((Color)themeColors["SidebarBg"]);
+        app.Resources["CardBgBrush"] = new SolidColorBrush((Color)themeColors["CardBg"]);
+        app.Resources["TextPrimaryBrush"] = new SolidColorBrush((Color)themeColors["TextPrimaryColor"]);
+        app.Resources["TextSecondaryBrush"] = new SolidColorBrush((Color)themeColors["TextSecondaryColor"]);
+        app.Resources["AccentBrush"] = new SolidColorBrush((Color)themeColors["AccentColor"]);
+        app.Resources["AccentDarkBrush"] = new SolidColorBrush((Color)themeColors["AccentDarkColor"]);
+        app.Resources["ErrorBrush"] = new SolidColorBrush((Color)themeColors["ErrorColor"]);
+        app.Resources["SuccessBrush"] = new SolidColorBrush((Color)themeColors["SuccessColor"]);
+        app.Resources["WarningBrush"] = new SolidColorBrush((Color)themeColors["WarningColor"]);
+        app.Resources["BorderBrush"] = new SolidColorBrush((Color)themeColors["BorderColor"]);
+        app.Resources["InputBgBrush"] = new SolidColorBrush((Color)themeColors["InputBgColor"]);
+        app.Resources["InputBorderBrush"] = new SolidColorBrush((Color)themeColors["InputBorderColor"]);
+        app.Resources["HoverBgBrush"] = new SolidColorBrush((Color)themeColors["HoverBg"]);
+        app.Resources["RowAltBgBrush"] = new SolidColorBrush((Color)themeColors["RowAltBgColor"]);
+        app.Resources["HeaderBgBrush"] = new SolidColorBrush((Color)themeColors["HeaderBgColor"]);
+        app.Resources["BadgeBgBrush"] = new SolidColorBrush((Color)themeColors["BadgeBgColor"]);
+        app.Resources["BadgeFgBrush"] = new SolidColorBrush((Color)themeColors["BadgeFgColor"]);
     }
 
-    public static void Toggle()
+    public static void ApplyThemeByName(string themeName)
     {
-        ApplyTheme(!IsDark);
+        if (Enum.TryParse<AppTheme>(themeName, out var theme))
+            ApplyTheme(theme);
+        else
+            ApplyTheme(AppTheme.OceanBlue);
     }
 }
