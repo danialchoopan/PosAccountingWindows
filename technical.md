@@ -86,6 +86,20 @@ InstallmentBook, InstallmentSchedule, SuspendedInvoice, CashRegister
 
 ## آمار پروژه
 
-- ۱۲ commit
-- ۵۰+ فایل
-- ۵۰۰۰+ خط کد
+- ۲۰+ commit
+- ۶۰+ فایل
+- ۷۰۰۰+ خط کد
+- ۱۰ تست xUnit
+
+## ماژول جدید: مدیریت بدهی تامین‌کنندگان
+
+### مدل‌ها
+- `Supplier` - اطلاعات تامین‌کننده (نام، تلفن، آدرس، بدهی کل، پرداختی کل)
+- `SupplierLedgerEntry` - تاریخچه تراکنش‌ها (خرید، پرداخت، مرجوعی، تعدیل)
+- `LedgerEntryType` - ایلوم نوع تراکنش
+
+### سرویس‌ها
+- `SupplierService` - CRUD + عملیات مالی با تراکنش اتمیک
+
+### تست‌ها
+- ۱۰ تست xUnit پوشش‌دهنده تمام عملیات
