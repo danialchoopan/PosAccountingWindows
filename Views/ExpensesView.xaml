@@ -36,8 +36,14 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Margin="4">
-                        <TextBlock Text="دسته‌بندی" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>
-                        <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding EditCategory}"/>
+                        <TextBlock Text="دسته‌بندی" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,3"/>
+                        <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding EditCategory}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumToPersian}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="4">
                         <TextBlock Text="مبلغ" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,3"/>

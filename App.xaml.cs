@@ -10,6 +10,7 @@ public partial class App : Application
     private static readonly string LogPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "PosAccountingApp", "errors.log");
+    private static bool _isHandlingError;
 
     private void OnStartup(object sender, StartupEventArgs e)
     {
@@ -58,7 +59,6 @@ public partial class App : Application
         catch (Exception ex)
         {
             LogError(ex);
-            try { MessageBox.Show("خطا: " + ex.Message, "خطا", MessageBoxButton.OK, MessageBoxImage.Error); } catch { }
             Shutdown();
         }
     }

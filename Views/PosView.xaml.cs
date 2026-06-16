@@ -8,26 +8,29 @@ namespace PosAccountingApp.Views;
 
 public partial class PosView : UserControl
 {
-    private PosViewModel? _vm;
     private bool _isUpdating;
 
     public PosView()
     {
         InitializeComponent();
-        DataContext = new PosViewModel();
-        _vm = (PosViewModel)DataContext;
-        BarcodeBox.Focus();
+        Loaded += (_, _) => BarcodeBox.Focus();
     }
+
+    private PosViewModel? GetVm() => DataContext as PosViewModel;
 
     private void BarcodeBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (_isUpdating) return;
-        var code = BarcodeBox.Text?.Trim() ?? "";
-        _vm.BarcodeInput = code;
+        var vm = GetVm();
+        if (vm == null) return;
+        vm.BarcodeInput = BarcodeBox.Text?.Trim() ?? "";
     }
 
     private void BarcodeBox_KeyDown(object sender, KeyEventArgs e)
     {
+        var vm = GetVm();
+        if (vm == null) return;
+
         if (e.Key == Key.Down && SearchList.Items.Count > 0)
         {
             SearchList.SelectedIndex = 0;
@@ -38,24 +41,19 @@ public partial class PosView : UserControl
         {
             if (SearchList.SelectedItem is Product product)
             {
-                _vm.AddProductToCartCommand.Execute(product);
-                _isUpdating = true;
-                BarcodeBox.Text = "";
-                _isUpdating = false;
-                BarcodeBox.Focus();
+                vm.AddProductToCartCommand.Execute(product);
+                ClearInput();
             }
             else if (!string.IsNullOrWhiteSpace(BarcodeBox.Text))
             {
-                _vm.BarcodeInput = BarcodeBox.Text.Trim();
-                _vm.AddByBarcodeCommand.Execute(null);
-                _isUpdating = true;
-                BarcodeBox.Text = "";
-                _isUpdating = false;
+                vm.BarcodeInput = BarcodeBox.Text.Trim();
+                vm.AddByBarcodeCommand.Execute(null);
+                ClearInput();
             }
         }
         else if (e.Key == Key.Escape)
         {
-            _vm.IsSearchOpen = false;
+            vm.IsSearchOpen = false;
         }
     }
 
@@ -63,10 +61,11 @@ public partial class PosView : UserControl
     {
         if (e.Key == Key.Enter && SearchList.SelectedItem is Product product)
         {
-            _vm.AddProductToCartCommand.Execute(product);
-            _isUpdating = true;
-            BarcodeBox.Text = "";
-            _isUpdating = false;
+            GetVm()?.AddProductToCartCommand.Execute(product);
+            ClearInput();
+        }
+        else if (e.Key == Key.Escape)
+        {
             BarcodeBox.Focus();
         }
     }
@@ -75,37 +74,42 @@ public partial class PosView : UserControl
     {
         if (SearchList.SelectedItem is Product product)
         {
-            _vm.AddProductToCartCommand.Execute(product);
-            _isUpdating = true;
-            BarcodeBox.Text = "";
-            _isUpdating = false;
-            BarcodeBox.Focus();
+            GetVm()?.AddProductToCartCommand.Execute(product);
+            ClearInput();
         }
+    }
+
+    private void ClearInput()
+    {
+        _isUpdating = true;
+        BarcodeBox.Text = "";
+        _isUpdating = false;
+        BarcodeBox.Focus();
     }
 
     private void AddBtn_Click(object sender, RoutedEventArgs e)
     {
+        var vm = GetVm();
+        if (vm == null) return;
         var code = BarcodeBox.Text?.Trim();
         if (!string.IsNullOrEmpty(code))
         {
-            _vm.BarcodeInput = code;
-            _vm.AddByBarcodeCommand.Execute(null);
-            _isUpdating = true;
-            BarcodeBox.Text = "";
-            _isUpdating = false;
+            vm.BarcodeInput = code;
+            vm.AddByBarcodeCommand.Execute(null);
+            ClearInput();
         }
     }
 
     private void IncreaseBtn_Click(object sender, RoutedEventArgs e)
     {
         if (sender is Button btn && btn.Tag is PosCartItem item)
-            _vm.IncreaseQuantityCommand.Execute(item);
+            GetVm()?.IncreaseQuantityCommand.Execute(item);
     }
 
     private void DecreaseBtn_Click(object sender, RoutedEventArgs e)
     {
         if (sender is Button btn && btn.Tag is PosCartItem item)
-            _vm.DecreaseQuantityCommand.Execute(item);
+            GetVm()?.DecreaseQuantityCommand.Execute(item);
     }
 
     private void DeleteBtn_Click(object sender, RoutedEventArgs e)
@@ -116,22 +120,16 @@ public partial class PosView : UserControl
                 $"آیا از حذف '{item.ProductTitle}' از سبد اطمینان دارید؟",
                 "تایید حذف", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
-                _vm.RemoveItemCommand.Execute(item);
+                GetVm()?.RemoveItemCommand.Execute(item);
         }
     }
 
-    private void FullyPaid_Checked(object sender, RoutedEventArgs e)
-    {
-        _vm.SetFullyPaidCommand.Execute(true);
-    }
+    private void FullyPaid_Checked(object sender, RoutedEventArgs e) =>
+        GetVm()?.SetFullyPaidCommand.Execute(true);
 
-    private void FullyPaid_Unchecked(object sender, RoutedEventArgs e)
-    {
-        _vm.SetFullyPaidCommand.Execute(false);
-    }
+    private void FullyPaid_Unchecked(object sender, RoutedEventArgs e) =>
+        GetVm()?.SetFullyPaidCommand.Execute(false);
 
-    private void FinalizeBtn_Click(object sender, RoutedEventArgs e)
-    {
-        _vm.FinalizeSaleCommand.Execute(null);
-    }
+    private void FinalizeBtn_Click(object sender, RoutedEventArgs e) =>
+        GetVm()?.FinalizeSaleCommand.Execute(null);
 }
