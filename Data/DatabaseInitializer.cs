@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using PosAccountingApp.Models;
 
@@ -6,6 +7,7 @@ namespace PosAccountingApp.Data;
 
 public static class DatabaseInitializer
 {
+    [ThreadStatic]
     private static string? _testDbPath;
 
     private static string GetDbPath()
@@ -26,12 +28,11 @@ public static class DatabaseInitializer
     }
 
     /// <summary>
-    /// Create a fresh test database with unique name per instance
+    /// Create a fresh test database. Each thread gets its own isolated DB.
     /// </summary>
     public static AppDbContext CreateTestDbContext()
     {
-        // Use a unique DB name per thread to avoid conflicts between test classes
-        var dbPath = Path.Combine(Path.GetTempPath(), $"pos_test_{Thread.CurrentThread.ManagedThreadId}_{Guid.NewGuid():N}.db");
+        var dbPath = Path.Combine(Path.GetTempPath(), $"pos_test_{Guid.NewGuid():N}.db");
         _testDbPath = dbPath;
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
         optionsBuilder.UseSqlite($"Data Source={dbPath}");
@@ -40,9 +41,6 @@ public static class DatabaseInitializer
         return db;
     }
 
-    /// <summary>
-    /// Cleanup test database
-    /// </summary>
     public static void CleanupTestDb()
     {
         if (_testDbPath != null)

@@ -130,6 +130,21 @@ public class AppDbContext : DbContext
             new Account { Id = 13, Code = "5300", Name = "هزینه اجاره", Type = AccountType.Expense, IsActive = true },
             new Account { Id = 14, Code = "5400", Name = "هزینه حقوق و دستمزد", Type = AccountType.Expense, IsActive = true }
         );
+
+        // Seed default loyalty config
+        modelBuilder.Entity<LoyaltyConfig>().HasData(new LoyaltyConfig
+        {
+            Id = 1,
+            BronzeThreshold = 0,
+            SilverThreshold = 1000000,
+            GoldThreshold = 5000000,
+            PointsPer1000Tomans = 10,
+            RedemptionRate = 100,
+            BronzeDiscount = 0,
+            SilverDiscount = 2,
+            GoldDiscount = 5,
+            IsActive = true
+        });
     }
 }
 
