@@ -39,6 +39,17 @@ Professional point of sale and accounting software built with `C#`, `.NET 9`, an
 - **Barcode:** ZXing.Net
 - **Font:** Vazirmatn + Segoe MDL2 Assets (icons)
 
+### Documentation
+- [Installation Guide (English/Farsi)](setup.md)
+- [Technical Documentation (English/Farsi)](technical.md)
+- [Complete Feature List (English/Farsi)](thisapp2.txt)
+
+### Screenshots
+
+<img src="screenshot/1.jpg" width="100%">
+
+<img src="screenshot/2.jpg" width="100%">
+
 ---
 
 # سیستم مدیریت فروش و حسابداری چندکسب‌وکاره
