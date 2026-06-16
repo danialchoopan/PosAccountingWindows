@@ -8,6 +8,7 @@
         Width="1400" Height="800"
         MinWidth="1000" MinHeight="600"
         WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         FlowDirection="RightToLeft"
         Background="{DynamicResource BgBrush}"
         Icon="{StaticResource AppIcon}">
@@ -31,7 +32,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="210"/>
+            <ColumnDefinition Width="Auto" MinWidth="180" MaxWidth="280"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 

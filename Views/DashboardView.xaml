@@ -9,7 +9,7 @@
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
-        <StackPanel Margin="8" MaxWidth="1200" HorizontalAlignment="Center">
+        <StackPanel Margin="8" MaxWidth="1400" HorizontalAlignment="Center">
 
             <TextBlock Text="داشبورد" FontSize="26" FontWeight="Bold" Margin="8,0,8,20"
                        Foreground="{DynamicResource AccentBrush}"/>
@@ -64,13 +64,41 @@
                 </Border>
             </UniformGrid>
 
-            <!-- Quick Actions -->
+            <!-- Quick Actions Row 1 -->
             <TextBlock Text="دسترسی سریع" FontSize="17" FontWeight="Bold" Margin="8,8,8,12"/>
+            <UniformGrid Columns="4" Margin="0,0,0,8">
+                <Button Content="صندوق فروش (F1)" Style="{StaticResource PrimaryButton}" Margin="6"
+                        Click="NavigateToPOS"/>
+                <Button Content="کالاها و خدمات (F2)" Style="{StaticResource SuccessButton}" Margin="6"
+                        Click="NavigateToProducts"/>
+                <Button Content="مشتریان" Style="{StaticResource WarningButton}" Margin="6"
+                        Click="NavigateToCustomers"/>
+                <Button Content="خزانه‌داری و چک (F3)" Style="{StaticResource DangerButton}" Margin="6"
+                        Click="NavigateToCheques"/>
+            </UniformGrid>
+
+            <!-- Quick Actions Row 2 -->
+            <UniformGrid Columns="4" Margin="0,0,0,8">
+                <Button Content="دسته‌بندی‌ها (F4)" Style="{StaticResource PrimaryButton}" Margin="6"
+                        Click="NavigateToCategories"/>
+                <Button Content="هزینه‌ها" Style="{StaticResource WarningButton}" Margin="6"
+                        Click="NavigateToExpenses"/>
+                <Button Content="تامین‌کنندگان" Style="{StaticResource SuccessButton}" Margin="6"
+                        Click="NavigateToSuppliers"/>
+                <Button Content="وفاداری مشتریان" Style="{StaticResource DangerButton}" Margin="6"
+                        Click="NavigateToLoyalty"/>
+            </UniformGrid>
+
+            <!-- Quick Actions Row 3 -->
             <UniformGrid Columns="4">
-                <Button Content="صندوق فروش (F1)" Style="{StaticResource PrimaryButton}" Margin="6"/>
-                <Button Content="کالای جدید" Style="{StaticResource SuccessButton}" Margin="6"/>
-                <Button Content="مشتری جدید" Style="{StaticResource WarningButton}" Margin="6"/>
-                <Button Content="ثبت چک" Style="{StaticResource DangerButton}" Margin="6"/>
+                <Button Content="حسابداری" Style="{StaticResource PrimaryButton}" Margin="6"
+                        Click="NavigateToAccounting"/>
+                <Button Content="گزارشات (F9)" Style="{StaticResource WarningButton}" Margin="6"
+                        Click="NavigateToReports"/>
+                <Button Content="مدیریت کاربران" Style="{StaticResource SuccessButton}" Margin="6"
+                        Click="NavigateToUsers"/>
+                <Button Content="تنظیمات" Style="{StaticResource OutlineButton}" Margin="6"
+                        Click="NavigateToSettings"/>
             </UniformGrid>
 
         </StackPanel>
