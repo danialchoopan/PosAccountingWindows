@@ -16,16 +16,16 @@ public partial class App : Application
     {
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
-            if (args.ExceptionObject is Exception ex) LogError(ex);
+            if (args.ExceptionObject is Exception ex) SafeLogAndShow(ex);
         };
         TaskScheduler.UnobservedTaskException += (_, args) =>
         {
-            LogError(args.Exception);
+            SafeLogAndShow(args.Exception);
             args.SetObserved();
         };
         DispatcherUnhandledException += (_, args) =>
         {
-            LogError(args.Exception);
+            SafeLogAndShow(args.Exception);
             args.Handled = true;
         };
 
@@ -58,9 +58,30 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            LogError(ex);
+            SafeLogAndShow(ex);
             Shutdown();
         }
+    }
+
+    private static void SafeLogAndShow(Exception ex)
+    {
+        if (_isHandlingError) return;
+        _isHandlingError = true;
+
+        // Always log to file first
+        LogError(ex);
+
+        // Then try to show dialog safely
+        try
+        {
+            MessageBox.Show(
+                $"خطا رخ داد:\n\n{ex.Message}\n\nجزئیات در فایل errors.log ذخیره شد.",
+                "خطای برنامه",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        catch { }
+
+        _isHandlingError = false;
     }
 
     public static void LogError(Exception ex)
