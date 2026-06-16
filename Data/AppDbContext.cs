@@ -27,6 +27,8 @@ public class AppDbContext : DbContext
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<JournalEntry> JournalEntries => Set<JournalEntry>();
     public DbSet<JournalEntryLine> JournalEntryLines => Set<JournalEntryLine>();
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<SupplierLedgerEntry> SupplierLedgerEntries => Set<SupplierLedgerEntry>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

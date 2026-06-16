@@ -23,6 +23,7 @@ public partial class MainViewModel : ObservableObject
     public UsersViewModel UsersVm { get; } = new();
     public CategoriesViewModel CategoriesVm { get; } = new();
     public AccountingViewModel AccountingVm { get; } = new();
+    public SupplierViewModel SupplierVm { get; } = new();
 
     public bool IsAdmin => AppSettings.CurrentUser?.Role == UserRole.SuperAdmin
                         || AppSettings.CurrentUser?.Role == UserRole.Admin;
@@ -87,6 +88,9 @@ public partial class MainViewModel : ObservableObject
             case "Accounting":
                 CurrentView = AccountingVm; CurrentViewTitle = "حسابداری";
                 AccountingVm.LoadData(); break;
+            case "Suppliers":
+                CurrentView = SupplierVm; CurrentViewTitle = "تامین‌کنندگان";
+                SupplierVm.LoadSuppliers(); break;
             case "Settings":
                 CurrentView = SettingsVm; CurrentViewTitle = "تنظیمات"; break;
         }

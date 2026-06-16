@@ -95,6 +95,9 @@
                     <RadioButton Style="{StaticResource SidebarButton}"
                                  Content="&#xE8D8;  حسابداری"
                                  Command="{Binding NavigateToCommand}" CommandParameter="Accounting"/>
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="&#xE8B7;  تامین‌کنندگان"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Suppliers"/>
                     <RadioButton x:Name="UsersNavBtn" Style="{StaticResource SidebarButton}"
                                  Content="&#xE77B;  مدیریت کاربران"
                                  Command="{Binding NavigateToCommand}" CommandParameter="Users"
@@ -195,6 +198,9 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:AccountingViewModel}">
                         <views:AccountingView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:SupplierViewModel}">
+                        <views:SupplierView/>
                     </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>
