@@ -1,6 +1,5 @@
 using System.IO;
 using System.Windows;
-using System.Windows.Threading;
 using PosAccountingApp.Models;
 using PosAccountingApp.Views;
 
@@ -8,62 +7,72 @@ namespace PosAccountingApp;
 
 public partial class App : Application
 {
+    private static readonly string LogPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "PosAccountingApp", "errors.log");
+
     private void OnStartup(object sender, StartupEventArgs e)
     {
-        // Global error handler - never crash, show dialog instead
-        DispatcherUnhandledException += OnDispatcherUnhandledException;
-        AppDomain.CurrentDomain.UnhandledException += OnDomainUnhandledException;
-        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
-
-        Data.ThemeManager.ApplyTheme(Data.AppTheme.OceanBlue);
-        Data.DatabaseInitializer.Initialize();
-
-        var settingsPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "PosAccountingApp", "settings.json");
-
-        if (!File.Exists(settingsPath))
+        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
-            var setupWindow = new SetupWindow();
-            setupWindow.ShowDialog();
-            if (!File.Exists(settingsPath)) { Shutdown(); return; }
-        }
-
-        var loginWindow = new LoginWindow();
-        loginWindow.ShowDialog();
-
-        if (AppSettings.CurrentUser != null)
+            if (args.ExceptionObject is Exception ex) LogError(ex);
+        };
+        TaskScheduler.UnobservedTaskException += (_, args) =>
         {
-            var mainWindow = new MainWindow();
-            mainWindow.ShowDialog();
-        }
+            LogError(args.Exception);
+            args.SetObserved();
+        };
+        DispatcherUnhandledException += (_, args) =>
+        {
+            LogError(args.Exception);
+            args.Handled = true;
+        };
 
-        Shutdown();
+        try
+        {
+            Data.ThemeManager.ApplyTheme(Data.AppTheme.OceanBlue);
+            Data.DatabaseInitializer.Initialize();
+
+            var settingsPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "PosAccountingApp", "settings.json");
+
+            if (!File.Exists(settingsPath))
+            {
+                var setupWindow = new SetupWindow();
+                setupWindow.ShowDialog();
+                if (!File.Exists(settingsPath)) { Shutdown(); return; }
+            }
+
+            var loginWindow = new LoginWindow();
+            loginWindow.ShowDialog();
+
+            if (AppSettings.CurrentUser != null)
+            {
+                var mainWindow = new MainWindow();
+                mainWindow.ShowDialog();
+            }
+
+            Shutdown();
+        }
+        catch (Exception ex)
+        {
+            LogError(ex);
+            try { MessageBox.Show("خطا: " + ex.Message, "خطا", MessageBoxButton.OK, MessageBoxImage.Error); } catch { }
+            Shutdown();
+        }
     }
 
-    private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    public static void LogError(Exception ex)
     {
-        MessageBox.Show(
-            "خطا در برنامه:\n\n" + e.Exception.Message + "\n\n" + e.Exception.StackTrace,
-            "خطای برنامه",
-            MessageBoxButton.OK, MessageBoxImage.Error);
-        e.Handled = true;
-    }
-
-    private void OnDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
-    {
-        if (e.ExceptionObject is Exception ex)
+        try
         {
-            MessageBox.Show("خطای بحرانی:\n\n" + ex.Message, "خطای بحرانی",
-                MessageBoxButton.OK, MessageBoxImage.Error);
+            var dir = Path.GetDirectoryName(LogPath);
+            if (dir != null) Directory.CreateDirectory(dir);
+            File.AppendAllText(LogPath,
+                $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {ex.Message}\n{ex.StackTrace}\n\n");
         }
-    }
-
-    private void OnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
-    {
-        MessageBox.Show("خطای پس‌زمینه:\n\n" + e.Exception.Message, "خطا",
-            MessageBoxButton.OK, MessageBoxImage.Error);
-        e.SetObserved();
+        catch { }
     }
 
     private void OnExit(object sender, ExitEventArgs e) { }
@@ -87,9 +96,9 @@ public class AppSettings
     public string SelectedTheme { get; set; } = "OceanBlue";
     public double FontSize { get; set; } = 14;
     public bool IsHighContrast { get; set; }
-    public string? CurrencySymbol { get; set; } = "ريال";
-    public string? ReceiptFooter { get; set; } = "با تشکر از خرید شما";
-    public string? ReceiptHeader { get; set; } = "فاکتور فروش";
+    public string? CurrencySymbol { get; set; } = "\u0631\u064A\u0627\u0644";
+    public string? ReceiptFooter { get; set; } = "\u0628\u0627 \u062A\u0634\u06A9\u0631 \u0627\u0632 \u062E\u0631\u06CC\u062F \u0634\u0645\u0627";
+    public string? ReceiptHeader { get; set; } = "\u0641\u0627\u06A9\u062A\u0648\u0631 \u0641\u0631\u0648\u0634";
     public string? InvoicePrefix { get; set; } = "INV";
     public bool UsePopupForAdd { get; set; } = true;
     public int AddModeIndex { get; set; } = 2;
@@ -99,17 +108,25 @@ public class AppSettings
     {
         if (File.Exists(SettingsPath))
         {
-            var json = File.ReadAllText(SettingsPath);
-            return System.Text.Json.JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            try
+            {
+                var json = File.ReadAllText(SettingsPath);
+                return System.Text.Json.JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            }
+            catch { return new AppSettings(); }
         }
         return new AppSettings();
     }
 
     public void Save()
     {
-        var dir = Path.GetDirectoryName(SettingsPath);
-        if (dir != null) Directory.CreateDirectory(dir);
-        var json = System.Text.Json.JsonSerializer.Serialize(this, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(SettingsPath, json);
+        try
+        {
+            var dir = Path.GetDirectoryName(SettingsPath);
+            if (dir != null) Directory.CreateDirectory(dir);
+            var json = System.Text.Json.JsonSerializer.Serialize(this, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(SettingsPath, json);
+        }
+        catch { }
     }
 }

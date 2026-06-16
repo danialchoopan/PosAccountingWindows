@@ -19,7 +19,7 @@
 
         <!-- Left: Cart -->
         <DockPanel Grid.Column="0" Margin="0,0,10,0">
-            <!-- Barcode Input -->
+            <!-- Barcode/Search Input -->
             <Border DockPanel.Dock="Top" Style="{StaticResource CardBorder}" Padding="14">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -28,37 +28,39 @@
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
                         <TextBox x:Name="BarcodeBox" FontSize="16" Padding="12,10"
-                                 KeyDown="BarcodeBox_KeyDown" VerticalContentAlignment="Center"/>
+                                 TextChanged="BarcodeBox_TextChanged"
+                                 KeyDown="BarcodeBox_KeyDown"
+                                 VerticalContentAlignment="Center"/>
                         <Border Background="White" BorderBrush="#FFE0E0E0" BorderThickness="1"
                                 CornerRadius="6" VerticalAlignment="Top"
                                 Visibility="{Binding IsSearchOpen, Converter={StaticResource BoolToVis}}"
                                 MaxHeight="220">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <ItemsControl ItemsSource="{Binding SearchResults}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate DataType="{x:Type m:Product}">
-                                            <Border Padding="10,8" Cursor="Hand" Margin="2"
-                                                    BorderBrush="#FFE8E8E8" BorderThickness="1" CornerRadius="4"
-                                                    Background="White" MouseLeftButtonDown="SearchItem_Click">
-                                                <Border.Tag><Binding/></Border.Tag>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                                    <TextBlock Grid.Column="1" Text="{Binding Barcode}" FontSize="11" Foreground="#FF888888" Margin="10,0" VerticalAlignment="Center"/>
-                                                    <TextBlock Grid.Column="2" Text="{Binding Stock}" FontSize="11" Foreground="#FF107C10" VerticalAlignment="Center"/>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
+                            <ListBox x:Name="SearchList" BorderThickness="0"
+                                     Background="White"
+                                     KeyDown="SearchList_KeyDown"
+                                     SelectionChanged="SearchList_SelectionChanged">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type m:Product}">
+                                        <Border Padding="10,8" Margin="2"
+                                                BorderBrush="#FFE8E8E8" BorderThickness="1" CornerRadius="4"
+                                                Background="White">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Barcode}" FontSize="11" Foreground="#FF888888" Margin="10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding Stock}" FontSize="11" Foreground="#FF107C10" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </Border>
                     </Grid>
-                    <Button Grid.Column="1" Content="افزودن" FontFamily="Segoe MDL2 Assets"
+                    <Button Grid.Column="1" Content="افزودن"
                             Style="{StaticResource PrimaryButton}" Padding="14,8" Margin="8,0,0,0"
                             Click="AddBtn_Click"/>
                 </Grid>
@@ -117,7 +119,6 @@
                     <TextBox Text="{Binding CustomerName, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
-                <!-- Totals -->
                 <StackPanel DockPanel.Dock="Top">
                     <Border Background="#FFF5F7FA" BorderBrush="#FFE0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
                         <StackPanel>
@@ -139,7 +140,6 @@
                     </Border>
                 </StackPanel>
 
-                <!-- Payment Method -->
                 <StackPanel DockPanel.Dock="Top" Margin="0,12,0,0">
                     <TextBlock Text="روش پرداخت" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
                     <ComboBox ItemsSource="{Binding PaymentMethods}" SelectedItem="{Binding SelectedPaymentMethod}" Padding="10,7">
@@ -151,20 +151,17 @@
                     </ComboBox>
                 </StackPanel>
 
-                <!-- Fully Paid Checkbox -->
                 <StackPanel DockPanel.Dock="Top" Margin="0,10,0,0">
                     <CheckBox x:Name="FullyPaidCheck" Content="پول کامل پرداخت شده"
                               IsChecked="True" FontSize="13" Checked="FullyPaid_Checked"
                               Unchecked="FullyPaid_Unchecked"/>
                 </StackPanel>
 
-                <!-- Payment Amount -->
                 <StackPanel DockPanel.Dock="Top" Margin="0,8,0,0">
                     <TextBlock Text="مبلغ پرداختی" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
                     <TextBox Text="{Binding CustomerPaid, UpdateSourceTrigger=PropertyChanged}" FontSize="15"/>
                 </StackPanel>
 
-                <!-- Change -->
                 <Border DockPanel.Dock="Top" Background="#FFDFF6DD" BorderBrush="#FF107C10"
                         BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
                     <Grid>
@@ -174,7 +171,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Buttons -->
                 <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
                     <Button Content="تکمیل فروش" Style="{StaticResource SuccessButton}"
                             FontSize="15" Padding="10,12" Margin="0,0,0,6"

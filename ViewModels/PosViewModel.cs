@@ -115,6 +115,7 @@ public partial class PosViewModel : ObservableObject
                 TotalNetProfit = CartItems.Sum(i => (i.UnitPrice - i.PurchasePrice) * i.Quantity),
                 CustomerPaid = CustomerPaid, ChangeAmount = ChangeAmount,
                 PaymentMethod = SelectedPaymentMethod, CreatedAt = DateTime.Now,
+                Status = SaleStatus.Normal,
                 Items = CartItems.Select(i => new SaleItem
                 {
                     ProductId = i.ProductId, ProductTitle = i.ProductTitle,

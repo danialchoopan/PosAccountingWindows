@@ -76,7 +76,7 @@
                         <DataGridTemplateColumn Header="وضعیت" Width="80">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Status}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Status, Converter={StaticResource EnumToPersian}}" VerticalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
