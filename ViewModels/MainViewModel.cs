@@ -22,6 +22,7 @@ public partial class MainViewModel : ObservableObject
     public SettingsViewModel SettingsVm { get; } = new();
     public UsersViewModel UsersVm { get; } = new();
     public CategoriesViewModel CategoriesVm { get; } = new();
+    public AccountingViewModel AccountingVm { get; } = new();
 
     public bool IsAdmin => AppSettings.CurrentUser?.Role == UserRole.SuperAdmin
                         || AppSettings.CurrentUser?.Role == UserRole.Admin;
@@ -83,6 +84,9 @@ public partial class MainViewModel : ObservableObject
             case "Categories":
                 CurrentView = CategoriesVm; CurrentViewTitle = "دسته‌بندی کالاها";
                 CategoriesVm.LoadCategories(); break;
+            case "Accounting":
+                CurrentView = AccountingVm; CurrentViewTitle = "حسابداری";
+                AccountingVm.LoadData(); break;
             case "Settings":
                 CurrentView = SettingsVm; CurrentViewTitle = "تنظیمات"; break;
         }
@@ -103,5 +107,21 @@ public partial class MainViewModel : ObservableObject
     {
         var window = new Views.GlobalSearchWindow();
         window.ShowDialog();
+    }
+
+    [RelayCommand]
+    private void OpenBarcodeScanner()
+    {
+        var scanner = new Views.BarcodeScannerWindow();
+        scanner.BarcodeScanned += code =>
+        {
+            // If POS is active, send the scanned code to POS
+            if (CurrentView is PosViewModel posVm)
+            {
+                posVm.BarcodeInput = code;
+                posVm.AddByBarcodeCommand.Execute(null);
+            }
+        };
+        scanner.ShowDialog();
     }
 }

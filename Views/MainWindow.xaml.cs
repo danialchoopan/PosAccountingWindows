@@ -60,4 +60,9 @@ public partial class MainWindow : Window
         var helpWindow = new HelpWindow { Owner = this };
         helpWindow.ShowDialog();
     }
+
+    private void ScanBarcode_Click(object sender, RoutedEventArgs e)
+    {
+        _vm.OpenBarcodeScannerCommand.Execute(null);
+    }
 }

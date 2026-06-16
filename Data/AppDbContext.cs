@@ -24,6 +24,9 @@ public class AppDbContext : DbContext
     public DbSet<SuspendedInvoice> SuspendedInvoices => Set<SuspendedInvoice>();
     public DbSet<CashRegister> CashRegisters => Set<CashRegister>();
     public DbSet<ProductCategory> Categories => Set<ProductCategory>();
+    public DbSet<Account> Accounts => Set<Account>();
+    public DbSet<JournalEntry> JournalEntries => Set<JournalEntry>();
+    public DbSet<JournalEntryLine> JournalEntryLines => Set<JournalEntryLine>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -100,6 +103,29 @@ public class AppDbContext : DbContext
             Location = "محل اصلی فروشگاه",
             IsActive = true
         });
+
+        // Seed chart of accounts (حساب‌ها)
+        modelBuilder.Entity<Account>().HasData(
+            // Assets
+            new Account { Id = 1, Code = "1100", Name = "صندوق نقدی", Type = AccountType.Asset, IsActive = true },
+            new Account { Id = 2, Code = "1200", Name = "بانک", Type = AccountType.Asset, IsActive = true },
+            new Account { Id = 3, Code = "1300", Name = "حساب‌های دریافتنی", Type = AccountType.Asset, IsActive = true },
+            new Account { Id = 4, Code = "1400", Name = "موجودی کالا", Type = AccountType.Asset, IsActive = true },
+            // Liabilities
+            new Account { Id = 5, Code = "2100", Name = "حساب‌های پرداختنی", Type = AccountType.Liability, IsActive = true },
+            new Account { Id = 6, Code = "2200", Name = "بدهی بانکی", Type = AccountType.Liability, IsActive = true },
+            // Equity
+            new Account { Id = 7, Code = "3100", Name = "سرمایه", Type = AccountType.Equity, IsActive = true },
+            new Account { Id = 8, Code = "3200", Name = "سود انباشته", Type = AccountType.Equity, IsActive = true },
+            // Revenue
+            new Account { Id = 9, Code = "4100", Name = "فروش کالا", Type = AccountType.Revenue, IsActive = true },
+            new Account { Id = 10, Code = "4200", Name = "درآمد خدمات", Type = AccountType.Revenue, IsActive = true },
+            // Expenses
+            new Account { Id = 11, Code = "5100", Name = "بهای تمام شده کالای فروش رفته", Type = AccountType.Expense, IsActive = true },
+            new Account { Id = 12, Code = "5200", Name = "هزینه‌های اداری", Type = AccountType.Expense, IsActive = true },
+            new Account { Id = 13, Code = "5300", Name = "هزینه اجاره", Type = AccountType.Expense, IsActive = true },
+            new Account { Id = 14, Code = "5400", Name = "هزینه حقوق و دستمزد", Type = AccountType.Expense, IsActive = true }
+        );
     }
 }
 

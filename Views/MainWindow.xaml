@@ -92,6 +92,9 @@
                     <RadioButton Style="{StaticResource SidebarButton}"
                                  Content="&#xE9D9;  گزارشات  (F9)"
                                  Command="{Binding NavigateToCommand}" CommandParameter="Reports"/>
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="&#xE8D8;  حسابداری"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="Accounting"/>
                     <RadioButton x:Name="UsersNavBtn" Style="{StaticResource SidebarButton}"
                                  Content="&#xE77B;  مدیریت کاربران"
                                  Command="{Binding NavigateToCommand}" CommandParameter="Users"
@@ -103,6 +106,9 @@
                     <RadioButton x:Name="HelpNavBtn" Style="{StaticResource SidebarButton}"
                                  Content="&#xE897;  راهنما"
                                  Click="Help_Click"/>
+                    <RadioButton Style="{StaticResource SidebarButton}"
+                                 Content="&#xE722;  اسکن بارکد"
+                                 Click="ScanBarcode_Click"/>
                     <RadioButton Style="{StaticResource SidebarButton}"
                                  Content="&#xE713;  تنظیمات"
                                  Command="{Binding NavigateToCommand}" CommandParameter="Settings"/>
@@ -186,6 +192,9 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:CategoriesViewModel}">
                         <views:CategoriesView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:AccountingViewModel}">
+                        <views:AccountingView/>
                     </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>
