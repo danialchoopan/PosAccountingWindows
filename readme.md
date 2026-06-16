@@ -29,6 +29,10 @@ Professional point of sale and accounting software built with `C#`, `.NET 9`, an
 - 5 color themes (Ocean Blue, Emerald Green, Royal Purple, Sunset Orange, Midnight Dark)
 - Font size adjustment and high contrast accessibility
 - Responsive layout for all screen sizes
+- Detail Edit Window for all tables (view/edit/delete)
+- Keyboard shortcuts customization (15 shortcuts)
+- Error logging to file with dialog display
+- Invoice preview with professional print layout
 
 ### Technology Stack
 - **Runtime:** .NET 9.0 Desktop SDK

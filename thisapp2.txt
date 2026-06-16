@@ -144,11 +144,11 @@ TESTS
 STATS
 =====
 - 23+ commits
-- 60+ source files
+- 70+ source files
 - 8000+ lines of code
 - 19 tests
 - 5 color themes
-- 22 features
+- 24 features
 
 ---
 
