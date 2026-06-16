@@ -10,19 +10,24 @@ namespace PosAccountingApp.ViewModels;
 public partial class SettingsViewModel : ObservableObject
 {
     [ObservableProperty] private BusinessProfile _selectedProfile = BusinessProfile.Supermarket;
-    [ObservableProperty] private string _businessName = "فروشگاه من";
+    [ObservableProperty] private string _businessName = "";
     [ObservableProperty] private string _businessPhone = string.Empty;
     [ObservableProperty] private string _businessAddress = string.Empty;
     [ObservableProperty] private decimal _vatPercentage = 10;
     [ObservableProperty] private decimal _commissionPercentage = 2;
     [ObservableProperty] private RoundingMode _roundingMode = RoundingMode.Off;
-    [ObservableProperty] private bool _isDarkTheme;
     [ObservableProperty] private int _selectedThemeIndex = 0;
     [ObservableProperty] private double _fontSize = 14;
     [ObservableProperty] private bool _isHighContrast;
+    [ObservableProperty] private string _currencySymbol = "ريال";
+    [ObservableProperty] private string _receiptFooter = "با تشکر از خرید شما";
+    [ObservableProperty] private string _receiptHeader = "فاکتور فروش";
+    [ObservableProperty] private string _invoicePrefix = "INV";
 
     public string[] ThemeNames { get; } = ["اقیانوس آبی", "سبز زمردی", "بنفش سلطنتی", "غروب نارنجی", "نیمه‌شب تاریک"];
     public double[] FontSizes { get; } = [10, 12, 14, 16, 18, 20];
+    public BusinessProfile[] Profiles { get; } = Enum.GetValues<BusinessProfile>();
+    public RoundingMode[] RoundingModes { get; } = Enum.GetValues<RoundingMode>();
 
     public SettingsViewModel()
     {
@@ -32,25 +37,24 @@ public partial class SettingsViewModel : ObservableObject
         BusinessAddress = s.Address;
         VatPercentage = s.VatPercentage;
         CommissionPercentage = s.CommissionPercentage;
-        IsDarkTheme = s.SelectedTheme == "MidnightDark";
-        SelectedThemeIndex = Array.IndexOf(ThemeNames, GetThemeFarsiName(s.SelectedTheme));
-        if (SelectedThemeIndex < 0) SelectedThemeIndex = 0;
+        SelectedThemeIndex = GetThemeIndex(s.SelectedTheme);
         FontSize = s.FontSize > 0 ? s.FontSize : 14;
         IsHighContrast = s.IsHighContrast;
+        CurrencySymbol = s.CurrencySymbol ?? "ريال";
+        ReceiptFooter = s.ReceiptFooter ?? "با تشکر از خرید شما";
+        ReceiptHeader = s.ReceiptHeader ?? "فاکتور فروش";
+        InvoicePrefix = s.InvoicePrefix ?? "INV";
     }
 
-    private static string GetThemeFarsiName(string theme) => theme switch
+    private static int GetThemeIndex(string theme) => theme switch
     {
-        "OceanBlue" => "اقیانوس آبی",
-        "EmeraldGreen" => "سبز زمردی",
-        "RoyalPurple" => "بنفش سلطنتی",
-        "SunsetOrange" => "غروب نارنجی",
-        "MidnightDark" => "نیمه‌شب تاریک",
-        _ => "اقیانوس آبی"
+        "EmeraldGreen" => 1, "RoyalPurple" => 2,
+        "SunsetOrange" => 3, "MidnightDark" => 4,
+        _ => 0
     };
 
     [RelayCommand]
-    private void ToggleTheme()
+    private void ApplyTheme()
     {
         var theme = (AppTheme)SelectedThemeIndex;
         ThemeManager.ApplyTheme(theme);
@@ -63,11 +67,12 @@ public partial class SettingsViewModel : ObservableObject
     private void ApplyFontSize()
     {
         var app = Application.Current;
-        if (app == null) return;
-        app.Resources["AppFontSize"] = FontSize;
-        app.Resources["AppFontLarge"] = FontSize + 4;
-        app.Resources["AppFontSmall"] = FontSize - 2;
-
+        if (app != null)
+        {
+            app.Resources["AppFontSize"] = FontSize;
+            app.Resources["AppFontLarge"] = FontSize + 4;
+            app.Resources["AppFontSmall"] = FontSize - 2;
+        }
         var s = AppSettings.Load();
         s.FontSize = FontSize;
         s.Save();
@@ -87,8 +92,6 @@ public partial class SettingsViewModel : ObservableObject
             app.Resources["BgBrush"] = new SolidColorBrush(System.Windows.Media.Colors.White);
             app.Resources["CardBgBrush"] = new SolidColorBrush(System.Windows.Media.Colors.White);
             app.Resources["SurfaceBrush"] = new SolidColorBrush(System.Windows.Media.Colors.WhiteSmoke);
-            app.Resources["AccentBrush"] = new SolidColorBrush(System.Windows.Media.Colors.Black);
-            app.Resources["AccentDarkBrush"] = new SolidColorBrush(System.Windows.Media.Colors.DarkGray);
         }
         else
         {
@@ -110,6 +113,10 @@ public partial class SettingsViewModel : ObservableObject
         s.Address = BusinessAddress;
         s.VatPercentage = VatPercentage;
         s.CommissionPercentage = CommissionPercentage;
+        s.CurrencySymbol = CurrencySymbol;
+        s.ReceiptFooter = ReceiptFooter;
+        s.ReceiptHeader = ReceiptHeader;
+        s.InvoicePrefix = InvoicePrefix;
         s.Save();
     }
 
@@ -127,5 +134,7 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void RestoreDatabase() { }
+    private void RestoreDatabase()
+    {
+    }
 }

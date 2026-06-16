@@ -55,6 +55,10 @@ public class AppSettings
     public string SelectedTheme { get; set; } = "OceanBlue";
     public double FontSize { get; set; } = 14;
     public bool IsHighContrast { get; set; }
+    public string? CurrencySymbol { get; set; } = "ريال";
+    public string? ReceiptFooter { get; set; } = "با تشکر از خرید شما";
+    public string? ReceiptHeader { get; set; } = "فاکتور فروش";
+    public string? InvoicePrefix { get; set; } = "INV";
 
     public static AppSettings Load()
     {

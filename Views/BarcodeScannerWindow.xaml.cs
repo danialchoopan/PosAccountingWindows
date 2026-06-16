@@ -11,32 +11,44 @@ public partial class BarcodeScannerWindow : Window
     public BarcodeScannerWindow()
     {
         InitializeComponent();
-        BarcodeInput.Focus();
+        ManualInput.Focus();
     }
 
-    private void BarcodeInput_KeyDown(object sender, KeyEventArgs e)
+    private void ManualInput_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
-        {
-            AddCode();
-        }
+            ManualAdd_Click(sender, e);
     }
 
-    private void AddBtn_Click(object sender, RoutedEventArgs e)
+    private void ManualAdd_Click(object sender, RoutedEventArgs e)
     {
-        AddCode();
-    }
-
-    private void AddCode()
-    {
-        var code = BarcodeInput.Text?.Trim();
+        var code = ManualInput.Text?.Trim();
         if (string.IsNullOrEmpty(code)) return;
 
-        ScanHistory.Items.Add($"{DateTime.Now:HH:mm:ss} - {code}");
+        ScanResultText.Text = code;
+        ScanHistory.Items.Add($"{DateTime.Now:HH:mm:ss}  -  {code}");
         BarcodeScanned?.Invoke(code);
-        BarcodeInput.Text = string.Empty;
-        BarcodeInput.Focus();
+        ManualInput.Text = string.Empty;
+        ManualInput.Focus();
     }
 
-    private void Close_Click(object sender, RoutedEventArgs e) { Close(); }
+    private void StartCamBtn_Click(object sender, RoutedEventArgs e)
+    {
+        MessageBox.Show(
+            "برای استفاده از دوربین، کتابخانه OpenCvSharp را نصب کنید:\n\n" +
+            "dotnet add package OpenCvSharp4\n" +
+            "dotnet add package OpenCvSharp4.runtime.win\n\n" +
+            "یا از اسکنر USB یا ورود دستی استفاده کنید.",
+            "دوربین", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void StopCamBtn_Click(object sender, RoutedEventArgs e)
+    {
+        NoCameraText.Visibility = Visibility.Visible;
+        CameraPreview.Source = null;
+        StartCamBtn.IsEnabled = true;
+        StopCamBtn.IsEnabled = false;
+    }
+
+    private void Close_Click(object sender, RoutedEventArgs e) => Close();
 }
