@@ -68,14 +68,19 @@ public partial class App : Application
         if (_isHandlingError) return;
         _isHandlingError = true;
 
-        // Always log to file first
+        // Unwrap TargetInvocationException
+        var real = ex;
+        while (real.InnerException != null && real.GetType().Name == "TargetInvocationException")
+            real = real.InnerException;
+
+        // Log to file
         LogError(ex);
 
-        // Then try to show dialog safely
+        // Show dialog
         try
         {
             MessageBox.Show(
-                $"خطا رخ داد:\n\n{ex.Message}\n\nجزئیات در فایل errors.log ذخیره شد.",
+                $"خطا: {real.GetType().Name}\n\n{real.Message}",
                 "خطای برنامه",
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -90,8 +95,14 @@ public partial class App : Application
         {
             var dir = Path.GetDirectoryName(LogPath);
             if (dir != null) Directory.CreateDirectory(dir);
+
+            // Unwrap TargetInvocationException to get the real error
+            var real = ex;
+            while (real.InnerException != null && real.GetType().Name == "TargetInvocationException")
+                real = real.InnerException;
+
             File.AppendAllText(LogPath,
-                $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {ex.Message}\n{ex.StackTrace}\n\n");
+                $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {real.GetType().Name}: {real.Message}\n{real.StackTrace}\n\n");
         }
         catch { }
     }

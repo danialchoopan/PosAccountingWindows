@@ -42,6 +42,7 @@
                     x:Name="SearchDropdown" Visibility="Collapsed">
                 <ListBox x:Name="SearchResultsList" BorderThickness="0"
                          MaxHeight="200"
+                         DisplayMemberPath="Title"
                          SelectionChanged="SearchResultsList_SelectionChanged"
                          KeyDown="SearchResultsList_KeyDown"/>
             </Border>
