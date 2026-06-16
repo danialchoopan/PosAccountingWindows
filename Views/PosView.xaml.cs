@@ -1,118 +1,179 @@
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.EntityFrameworkCore;
+using PosAccountingApp.Data;
 using PosAccountingApp.Models;
-using PosAccountingApp.ViewModels;
 
 namespace PosAccountingApp.Views;
 
 public partial class PosView : UserControl
 {
+    private ObservableCollection<PosCartItem> _cart = new();
     private bool _isUpdating;
+    private List<Product> _allProducts = new();
 
     public PosView()
     {
         InitializeComponent();
-        Loaded += (_, _) => BarcodeBox.Focus();
+        LoadProducts();
+        LoadPaymentMethods();
+        FullyPaidChk.IsChecked = true;
+        UpdateTotals();
+        Loaded += (_, _) => SearchBox.Focus();
     }
 
-    private PosViewModel? GetVm() => DataContext as PosViewModel;
+    private void LoadProducts()
+    {
+        try
+        {
+            using var db = DatabaseInitializer.CreateDbContext();
+            _allProducts = db.Products.AsNoTracking().Where(p => p.IsActive).ToList();
+        }
+        catch { }
+    }
 
-    private void BarcodeBox_TextChanged(object sender, TextChangedEventArgs e)
+    private void LoadPaymentMethods()
+    {
+        PaymentCombo.Items.Clear();
+        PaymentCombo.Items.Add(new ComboBoxItem { Content = "نقدی" });
+        PaymentCombo.Items.Add(new ComboBoxItem { Content = "کارتخوان" });
+        PaymentCombo.Items.Add(new ComboBoxItem { Content = "نسیه" });
+        PaymentCombo.Items.Add(new ComboBoxItem { Content = "اقساطی" });
+        PaymentCombo.Items.Add(new ComboBoxItem { Content = "ترکیبی" });
+        PaymentCombo.SelectedIndex = 0;
+    }
+
+    private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (_isUpdating) return;
-        var vm = GetVm();
-        if (vm == null) return;
-        vm.BarcodeInput = BarcodeBox.Text?.Trim() ?? "";
+        var query = SearchBox.Text?.Trim() ?? "";
+        SearchResultsList.Items.Clear();
+
+        if (string.IsNullOrEmpty(query) || query.Length < 1)
+        {
+            SearchDropdown.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var matches = _allProducts.Where(p =>
+            p.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+            (p.Barcode != null && p.Barcode.Contains(query)) ||
+            (p.Category != null && p.Category.Contains(query, StringComparison.OrdinalIgnoreCase))
+        ).Take(10).ToList();
+
+        foreach (var p in matches)
+            SearchResultsList.Items.Add(p);
+
+        SearchDropdown.Visibility = matches.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
-    private void BarcodeBox_KeyDown(object sender, KeyEventArgs e)
+    private void SearchBox_KeyDown(object sender, KeyEventArgs e)
     {
-        var vm = GetVm();
-        if (vm == null) return;
-
-        if (e.Key == Key.Down && SearchList.Items.Count > 0)
+        if (e.Key == Key.Down && SearchResultsList.Items.Count > 0)
         {
-            SearchList.SelectedIndex = 0;
-            SearchList.Focus();
+            SearchResultsList.SelectedIndex = 0;
+            SearchResultsList.Focus();
             e.Handled = true;
         }
         else if (e.Key == Key.Enter)
         {
-            if (SearchList.SelectedItem is Product product)
-            {
-                vm.AddProductToCartCommand.Execute(product);
-                ClearInput();
-            }
-            else if (!string.IsNullOrWhiteSpace(BarcodeBox.Text))
-            {
-                vm.BarcodeInput = BarcodeBox.Text.Trim();
-                vm.AddByBarcodeCommand.Execute(null);
-                ClearInput();
-            }
+            if (SearchResultsList.SelectedItem is Product p)
+                AddToCart(p);
+            else if (!string.IsNullOrWhiteSpace(SearchBox.Text))
+                SearchByBarcode(SearchBox.Text.Trim());
         }
         else if (e.Key == Key.Escape)
         {
-            vm.IsSearchOpen = false;
+            SearchDropdown.Visibility = Visibility.Collapsed;
         }
     }
 
-    private void SearchList_KeyDown(object sender, KeyEventArgs e)
+    private void SearchResultsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.Key == Key.Enter && SearchList.SelectedItem is Product product)
-        {
-            GetVm()?.AddProductToCartCommand.Execute(product);
-            ClearInput();
-        }
-        else if (e.Key == Key.Escape)
-        {
-            BarcodeBox.Focus();
-        }
+        if (SearchResultsList.SelectedItem is Product p)
+            AddToCart(p);
     }
 
-    private void SearchList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void SearchResultsList_KeyDown(object sender, KeyEventArgs e)
     {
-        if (SearchList.SelectedItem is Product product)
-        {
-            GetVm()?.AddProductToCartCommand.Execute(product);
-            ClearInput();
-        }
+        if (e.Key == Key.Enter && SearchResultsList.SelectedItem is Product p)
+            AddToCart(p);
     }
 
-    private void ClearInput()
+    private void SearchByBarcode(string barcode)
     {
+        var product = _allProducts.FirstOrDefault(p =>
+            p.Barcode != null && p.Barcode == barcode);
+        if (product != null) AddToCart(product);
+    }
+
+    private void AddButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!string.IsNullOrWhiteSpace(SearchBox.Text))
+            SearchByBarcode(SearchBox.Text.Trim());
+    }
+
+    private void AddToCart(Product product)
+    {
+        var existing = _cart.FirstOrDefault(c => c.ProductId == product.Id);
+        if (existing != null)
+        {
+            existing.Quantity++;
+            existing.Subtotal = existing.Quantity * existing.UnitPrice;
+        }
+        else
+        {
+            _cart.Add(new PosCartItem
+            {
+                ProductId = product.Id,
+                ProductTitle = product.Title,
+                Quantity = 1,
+                UnitPrice = product.SalePrice,
+                PurchasePrice = product.PurchasePrice,
+                Subtotal = product.SalePrice
+            });
+        }
+
+        CartGrid.ItemsSource = null;
+        CartGrid.ItemsSource = _cart;
         _isUpdating = true;
-        BarcodeBox.Text = "";
+        SearchBox.Text = "";
         _isUpdating = false;
-        BarcodeBox.Focus();
+        SearchDropdown.Visibility = Visibility.Collapsed;
+        SearchBox.Focus();
+        UpdateTotals();
     }
 
-    private void AddBtn_Click(object sender, RoutedEventArgs e)
+    private void IncBtn_Click(object sender, RoutedEventArgs e)
     {
-        var vm = GetVm();
-        if (vm == null) return;
-        var code = BarcodeBox.Text?.Trim();
-        if (!string.IsNullOrEmpty(code))
+        if (sender is Button btn && btn.Tag is PosCartItem item)
         {
-            vm.BarcodeInput = code;
-            vm.AddByBarcodeCommand.Execute(null);
-            ClearInput();
+            item.Quantity++;
+            item.Subtotal = item.Quantity * item.UnitPrice;
+            UpdateTotals();
         }
     }
 
-    private void IncreaseBtn_Click(object sender, RoutedEventArgs e)
+    private void DecBtn_Click(object sender, RoutedEventArgs e)
     {
         if (sender is Button btn && btn.Tag is PosCartItem item)
-            GetVm()?.IncreaseQuantityCommand.Execute(item);
+        {
+            if (item.Quantity > 1)
+            {
+                item.Quantity--;
+                item.Subtotal = item.Quantity * item.UnitPrice;
+            }
+            else
+                _cart.Remove(item);
+
+            UpdateTotals();
+        }
     }
 
-    private void DecreaseBtn_Click(object sender, RoutedEventArgs e)
-    {
-        if (sender is Button btn && btn.Tag is PosCartItem item)
-            GetVm()?.DecreaseQuantityCommand.Execute(item);
-    }
-
-    private void DeleteBtn_Click(object sender, RoutedEventArgs e)
+    private void DelBtn_Click(object sender, RoutedEventArgs e)
     {
         if (sender is Button btn && btn.Tag is PosCartItem item)
         {
@@ -120,16 +181,131 @@ public partial class PosView : UserControl
                 $"آیا از حذف '{item.ProductTitle}' از سبد اطمینان دارید؟",
                 "تایید حذف", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
-                GetVm()?.RemoveItemCommand.Execute(item);
+            {
+                _cart.Remove(item);
+                UpdateTotals();
+            }
         }
     }
 
-    private void FullyPaid_Checked(object sender, RoutedEventArgs e) =>
-        GetVm()?.SetFullyPaidCommand.Execute(true);
+    private void FullyPaidChk_Checked(object sender, RoutedEventArgs e)
+    {
+        var total = CalculateTotal();
+        PaidAmountBox.Text = total.ToString("N0");
+        UpdateChange();
+    }
 
-    private void FullyPaid_Unchecked(object sender, RoutedEventArgs e) =>
-        GetVm()?.SetFullyPaidCommand.Execute(false);
+    private void FullyPaidChk_Unchecked(object sender, RoutedEventArgs e)
+    {
+        PaidAmountBox.Text = "0";
+        UpdateChange();
+    }
 
-    private void FinalizeBtn_Click(object sender, RoutedEventArgs e) =>
-        GetVm()?.FinalizeSaleCommand.Execute(null);
+    private void FinalizeBtn_Click(object sender, RoutedEventArgs e)
+    {
+        if (_cart.Count == 0)
+        {
+            MessageBox.Show("سبد خرید خالی است", "توجه", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        var total = CalculateTotal();
+        var result = MessageBox.Show(
+            $"آیا از ثبت فاکتور به مبلغ {total:N0} ریال اطمینان دارید؟",
+            "تایید فروش", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+        if (result != MessageBoxResult.Yes) return;
+
+        try
+        {
+            using var db = DatabaseInitializer.CreateDbContext();
+            var sale = new Sale
+            {
+                InvoiceNumber = $"INV-{DateTime.Now:yyyyMMdd}-{DateTime.Now:HHmmss}",
+                UserId = AppSettings.CurrentUser?.Id ?? 1,
+                Subtotal = _cart.Sum(c => c.Subtotal),
+                TaxAmount = _cart.Sum(c => c.Subtotal) * 0.10m,
+                TotalAmount = total,
+                TotalNetProfit = _cart.Sum(c => (c.UnitPrice - c.PurchasePrice) * c.Quantity),
+                PaymentMethod = PaymentMethod.Cash,
+                CustomerPaid = decimal.TryParse(PaidAmountBox.Text?.Replace(",", ""), out var paid) ? paid : 0,
+                ChangeAmount = (decimal.TryParse(PaidAmountBox.Text?.Replace(",", ""), out var p2) ? p2 : 0) - total,
+                CreatedAt = DateTime.Now,
+                Status = SaleStatus.Normal
+            };
+
+            foreach (var item in _cart)
+            {
+                sale.Items.Add(new SaleItem
+                {
+                    ProductId = item.ProductId,
+                    ProductTitle = item.ProductTitle,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.UnitPrice,
+                    PurchasePrice = item.PurchasePrice,
+                    Subtotal = item.Subtotal
+                });
+
+                var product = db.Products.Find(item.ProductId);
+                if (product != null) product.Stock -= item.Quantity;
+            }
+
+            db.Sales.Add(sale);
+            db.SaveChanges();
+
+            var invoiceWin = new InvoicePreviewWindow(sale);
+            invoiceWin.ShowDialog();
+
+            _cart.Clear();
+            CartGrid.ItemsSource = null;
+            UpdateTotals();
+        }
+        catch (Exception ex)
+        {
+            App.LogError(ex);
+            MessageBox.Show("خطا: " + ex.Message, "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private decimal CalculateTotal()
+    {
+        var subtotal = _cart.Sum(c => c.Subtotal);
+        var tax = subtotal * 0.10m;
+        return subtotal + tax;
+    }
+
+    private void UpdateTotals()
+    {
+        var subtotal = _cart.Sum(c => c.Subtotal);
+        var tax = subtotal * 0.10m;
+        var total = subtotal + tax;
+
+        SubtotalText.Text = $"{subtotal:N0}";
+        TaxText.Text = $"{tax:N0}";
+        TotalText.Text = $"{total:N0}";
+
+        if (FullyPaidChk.IsChecked == true)
+            PaidAmountBox.Text = total.ToString("N0");
+
+        UpdateChange();
+    }
+
+    private void UpdateChange()
+    {
+        var total = CalculateTotal();
+        if (decimal.TryParse(PaidAmountBox.Text?.Replace(",", ""), out var paid))
+            ChangeText.Text = $"{paid - total:N0}";
+        else
+            ChangeText.Text = $"-{total:N0}";
+    }
+}
+
+public class PosCartItem
+{
+    public int ProductId { get; set; }
+    public string ProductTitle { get; set; } = "";
+    public decimal Quantity { get; set; }
+    public decimal UnitPrice { get; set; }
+    public decimal PurchasePrice { get; set; }
+    public decimal Subtotal { get; set; }
 }
