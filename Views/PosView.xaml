@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:conv="clr-namespace:PosAccountingApp.Converters"
              xmlns:vm="clr-namespace:PosAccountingApp.ViewModels"
-             xmlns:m="clr-namespace:PosAccountingApp.Models">
+             xmlns:m="clr-namespace:PosAccountingApp.Models"
+             x:Name="ThisControl">
 
     <UserControl.Resources>
         <conv:DecimalToPersianStringConverter x:Key="DecToPersian"/>
@@ -16,51 +17,39 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Cart -->
+        <!-- Left: Cart -->
         <DockPanel Grid.Column="0" Margin="0,0,10,0">
-            <!-- Barcode/Search -->
-            <Border DockPanel.Dock="Top" Style="{StaticResource CardBorder}" Padding="12">
+            <!-- Barcode Input -->
+            <Border DockPanel.Dock="Top" Style="{StaticResource CardBorder}" Padding="14">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <TextBox Text="{Binding BarcodeInput, UpdateSourceTrigger=PropertyChanged}"
-                                 FontSize="15" Padding="10,8"
-                                 KeyDown="BarcodeInput_KeyDown"
-                                 VerticalContentAlignment="Center"/>
-
-                        <!-- Search Results Popup -->
-                        <Border Grid.Column="0" Background="White" BorderBrush="#FFCCCCCC"
-                                BorderThickness="1" CornerRadius="6" Margin="0,2,0,0"
-                                MaxHeight="300" VerticalAlignment="Top"
-                                Visibility="{Binding IsSearchOpen, Converter={StaticResource BoolToVis}}">
+                        <TextBox x:Name="BarcodeBox" FontSize="16" Padding="12,10"
+                                 KeyDown="BarcodeBox_KeyDown" VerticalContentAlignment="Center"/>
+                        <Border Background="White" BorderBrush="#FFE0E0E0" BorderThickness="1"
+                                CornerRadius="6" VerticalAlignment="Top"
+                                Visibility="{Binding IsSearchOpen, Converter={StaticResource BoolToVis}}"
+                                MaxHeight="220">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <ItemsControl ItemsSource="{Binding SearchResults}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type m:Product}">
                                             <Border Padding="10,8" Cursor="Hand" Margin="2"
-                                                    BorderBrush="#FFE8E8E8" BorderThickness="1" CornerRadius="4">
-                                                <Border.InputBindings>
-                                                    <MouseBinding MouseAction="LeftClick"
-                                                                  Command="{Binding DataContext.AddProductToCartCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                  CommandParameter="{Binding}"/>
-                                                </Border.InputBindings>
+                                                    BorderBrush="#FFE8E8E8" BorderThickness="1" CornerRadius="4"
+                                                    Background="White" MouseLeftButtonDown="SearchItem_Click">
+                                                <Border.Tag><Binding/></Border.Tag>
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold"
-                                                               VerticalAlignment="Center"/>
-                                                    <TextBlock Grid.Column="1" Text="{Binding Barcode}"
-                                                               FontSize="11" Foreground="#FF888888"
-                                                               Margin="12,0" VerticalAlignment="Center"/>
-                                                    <TextBlock Grid.Column="2" Text="{Binding Stock}"
-                                                               FontSize="11" Foreground="#FF107C10"
-                                                               VerticalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Barcode}" FontSize="11" Foreground="#FF888888" Margin="10,0" VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding Stock}" FontSize="11" Foreground="#FF107C10" VerticalAlignment="Center"/>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -69,66 +58,78 @@
                             </ScrollViewer>
                         </Border>
                     </Grid>
-                    <Button Grid.Column="1" Content="افزودن" Style="{StaticResource PrimaryButton}"
-                            Padding="12,8" Margin="8,0,0,0"
-                            Command="{Binding AddByBarcodeCommand}"/>
+                    <Button Grid.Column="1" Content="افزودن" FontFamily="Segoe MDL2 Assets"
+                            Style="{StaticResource PrimaryButton}" Padding="14,8" Margin="8,0,0,0"
+                            Click="AddBtn_Click"/>
                 </Grid>
             </Border>
 
-            <!-- Cart Grid or Empty -->
+            <!-- Cart Table -->
             <Grid Margin="0,10,0,0">
-                <DataGrid ItemsSource="{Binding CartItems}">
+                <DataGrid x:Name="CartGrid" ItemsSource="{Binding CartItems}" AutoGenerateColumns="False"
+                          IsReadOnly="True" CanUserAddRows="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="کالا" Binding="{Binding ProductTitle}" Width="*"/>
-                        <DataGridTextColumn Header="تعداد" Binding="{Binding Quantity}" Width="80"/>
-                        <DataGridTextColumn Header="قیمت واحد" Binding="{Binding UnitPrice}" Width="120"/>
-                        <DataGridTextColumn Header="جمع" Binding="{Binding Subtotal}" Width="120"/>
-                        <DataGridTemplateColumn Header="حذف" Width="50">
+                        <DataGridTemplateColumn Header="تعداد" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="+" Background="#FF2E7D32" Foreground="White"
+                                                BorderThickness="0" Padding="8,2" Cursor="Hand" FontSize="14"
+                                                Tag="{Binding}" Click="IncreaseBtn_Click"/>
+                                        <TextBlock Text="{Binding Quantity, StringFormat=N0}" VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="8,0"/>
+                                        <Button Content="-" Background="#FFD32F2F" Foreground="White"
+                                                BorderThickness="0" Padding="8,2" Cursor="Hand" FontSize="14"
+                                                Tag="{Binding}" Click="DecreaseBtn_Click"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="قیمت واحد" Binding="{Binding UnitPrice, StringFormat=N0}" Width="100"/>
+                        <DataGridTextColumn Header="جمع" Binding="{Binding Subtotal, StringFormat=N0}" Width="100"/>
+                        <DataGridTemplateColumn Header="حذف" Width="60">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="X" Background="Transparent" BorderThickness="0"
-                                            Foreground="#FFD13438" Cursor="Hand" FontSize="12" FontWeight="Bold"
-                                            Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"/>
+                                            Foreground="#FFD32F2F" Cursor="Hand" FontSize="14" FontWeight="Bold"
+                                            Tag="{Binding}" Click="DeleteBtn_Click"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Border x:Name="EmptyCart" Background="Transparent" Padding="0,60,0,60">
+                <Border x:Name="EmptyCart" Background="Transparent" Padding="0,60,0,60" Visibility="Collapsed">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="&#xE74C;" FontFamily="Segoe MDL2 Assets" FontSize="48"
-                                   Foreground="#FFCCCCCC" HorizontalAlignment="Center"/>
-                        <TextBlock Text="سبد خرید خالی است" FontSize="16" Foreground="#FFAAAAAA"
-                                   HorizontalAlignment="Center" Margin="0,12,0,0"/>
-                        <TextBlock Text="نام یا بارکد کالا را تایپ کنید" FontSize="12"
-                                   Foreground="#FFCCCCCC" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                        <TextBlock Text="سبد خرید خالی است" FontSize="16"
+                                   Foreground="#FFAAAAAA" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
             </Grid>
         </DockPanel>
 
-        <!-- Summary -->
-        <Border Grid.Column="1" Style="{StaticResource CardBorder}" Padding="16">
+        <!-- Right: Summary -->
+        <Border Grid.Column="1" Style="{StaticResource CardBorder}" Padding="18">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top" Margin="0,0,0,12">
-                    <TextBlock Text="نام مشتری" FontSize="11" Foreground="#FF888888" Margin="0,0,0,3"/>
+                    <TextBlock Text="نام مشتری" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
                     <TextBox Text="{Binding CustomerName, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
+                <!-- Totals -->
                 <StackPanel DockPanel.Dock="Top">
-                    <Border Background="#FFF5F7FA" BorderBrush="#FFE8E8E8" BorderThickness="1" CornerRadius="8" Padding="14">
+                    <Border Background="#FFF5F7FA" BorderBrush="#FFE0E0E0" BorderThickness="1" CornerRadius="8" Padding="16">
                         <StackPanel>
                             <Grid Margin="0,0,0,6">
                                 <TextBlock Text="جمع کل" HorizontalAlignment="Left" FontWeight="SemiBold"/>
                                 <TextBlock Text="{Binding Subtotal, StringFormat=N0}" HorizontalAlignment="Right"/>
                             </Grid>
                             <Grid Margin="0,0,0,6">
-                                <TextBlock Text="مالیات (۱۰٪)" HorizontalAlignment="Left" Foreground="#FF888888"/>
+                                <TextBlock Text="مالیات (10%)" HorizontalAlignment="Left" Foreground="#FF888888"/>
                                 <TextBlock Text="{Binding TaxAmount, StringFormat=N0}" HorizontalAlignment="Right"/>
                             </Grid>
-                            <Separator Background="#FFE8E8E8" Margin="0,6"/>
+                            <Separator Background="#FFE0E0E0" Margin="0,6"/>
                             <Grid Margin="0,6,0,0">
                                 <TextBlock Text="مبلغ قابل پرداخت" HorizontalAlignment="Left" FontSize="15" FontWeight="Bold"/>
                                 <TextBlock Text="{Binding TotalAmount, StringFormat=N0}" HorizontalAlignment="Right"
@@ -138,10 +139,10 @@
                     </Border>
                 </StackPanel>
 
+                <!-- Payment Method -->
                 <StackPanel DockPanel.Dock="Top" Margin="0,12,0,0">
-                    <TextBlock Text="روش پرداخت" FontSize="11" Foreground="#FF888888" Margin="0,0,0,3"/>
-                    <ComboBox ItemsSource="{Binding PaymentMethods}"
-                              SelectedItem="{Binding SelectedPaymentMethod}" Padding="10,6">
+                    <TextBlock Text="روش پرداخت" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
+                    <ComboBox ItemsSource="{Binding PaymentMethods}" SelectedItem="{Binding SelectedPaymentMethod}" Padding="10,7">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Converter={StaticResource EnumToPersian}}"/>
@@ -150,11 +151,20 @@
                     </ComboBox>
                 </StackPanel>
 
+                <!-- Fully Paid Checkbox -->
                 <StackPanel DockPanel.Dock="Top" Margin="0,10,0,0">
-                    <TextBlock Text="مبلغ پرداختی" FontSize="11" Foreground="#FF888888" Margin="0,0,0,3"/>
+                    <CheckBox x:Name="FullyPaidCheck" Content="پول کامل پرداخت شده"
+                              IsChecked="True" FontSize="13" Checked="FullyPaid_Checked"
+                              Unchecked="FullyPaid_Unchecked"/>
+                </StackPanel>
+
+                <!-- Payment Amount -->
+                <StackPanel DockPanel.Dock="Top" Margin="0,8,0,0">
+                    <TextBlock Text="مبلغ پرداختی" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
                     <TextBox Text="{Binding CustomerPaid, UpdateSourceTrigger=PropertyChanged}" FontSize="15"/>
                 </StackPanel>
 
+                <!-- Change -->
                 <Border DockPanel.Dock="Top" Background="#FFDFF6DD" BorderBrush="#FF107C10"
                         BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
                     <Grid>
@@ -164,12 +174,13 @@
                     </Grid>
                 </Border>
 
+                <!-- Buttons -->
                 <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
                     <Button Content="تکمیل فروش" Style="{StaticResource SuccessButton}"
                             FontSize="15" Padding="10,12" Margin="0,0,0,6"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                            Command="{Binding FinalizeSaleCommand}"/>
-                    <Button Content="نگهداری فاکتور (F4)" Style="{StaticResource WarningButton}"
+                            Click="FinalizeBtn_Click"/>
+                    <Button Content="نگهداری فاکتور" Style="{StaticResource WarningButton}"
                             Margin="0,0,0,6" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                             Command="{Binding SuspendInvoiceCommand}"/>
                 </StackPanel>

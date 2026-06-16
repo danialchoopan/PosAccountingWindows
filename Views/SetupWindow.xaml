@@ -19,34 +19,40 @@
 
         <Border Grid.Column="1" Background="White" CornerRadius="16"
                 BorderBrush="#FFE0E0E0" BorderThickness="1"
-                Margin="0" Padding="40,28"
                 VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                MaxWidth="600">
+                MaxWidth="550" Margin="20">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" Opacity="0.1" ShadowDepth="4"/>
             </Border.Effect>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="850">
-                <StackPanel>
-                    <Border Background="#FF0078D4" CornerRadius="12" Padding="20,16" Margin="0,0,0,24">
+                <StackPanel Margin="8">
+                    <!-- Header -->
+                    <Border Background="#FF0078D4" CornerRadius="12" Padding="20,16" Margin="0,0,0,22">
                         <StackPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE74C;" FontFamily="Segoe MDL2 Assets" FontSize="30"
                                        Foreground="White" HorizontalAlignment="Center"/>
-                            <TextBlock Text="تنظیم اولیه سیستم" FontSize="20" FontWeight="Bold"
+                            <TextBlock Text="تنظیم اولیه سیستم" FontSize="19" FontWeight="Bold"
                                        Foreground="White" HorizontalAlignment="Center" Margin="0,6,0,2"/>
                             <TextBlock Text="اطلاعات فروشگاه خود را وارد کنید" FontSize="12"
                                        Foreground="#CCFFFFFF" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
 
-                    <TextBlock Text="نام فروشگاه" FontSize="13" FontWeight="SemiBold" Foreground="#FF333333" Margin="0,0,0,5"/>
-                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6" Background="White" Margin="0,0,0,16">
-                        <TextBox x:Name="ShopNameBox" FontSize="14" Padding="10,8" Background="Transparent" BorderThickness="0"/>
+                    <!-- Shop Name -->
+                    <TextBlock Text="نام فروشگاه" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
+                            Background="White" Margin="0,0,0,16">
+                        <TextBox x:Name="ShopNameBox" FontSize="14" Padding="10,7"
+                                 Background="Transparent" BorderThickness="0"/>
                     </Border>
 
-                    <TextBlock Text="نوع کسب‌وکار" FontSize="13" FontWeight="SemiBold" Foreground="#FF333333" Margin="0,0,0,5"/>
-                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6" Background="White" Margin="0,0,0,16">
-                        <ComboBox x:Name="BusinessTypeCombo" FontSize="14" Padding="10,8" Background="Transparent" BorderThickness="0">
+                    <!-- Business Type -->
+                    <TextBlock Text="نوع کسب‌وکار" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
+                            Background="White" Margin="0,0,0,16">
+                        <ComboBox x:Name="BusinessTypeCombo" FontSize="14" Padding="10,7"
+                                  Background="Transparent" BorderThickness="0">
                             <ComboBoxItem Content="سوپرمارکت و خرده‌فروشی" Tag="Supermarket"/>
                             <ComboBoxItem Content="پوشاک و کیف و کفش" Tag="Boutique"/>
                             <ComboBoxItem Content="بنگاه املاک" Tag="RealEstate"/>
@@ -55,37 +61,52 @@
                         </ComboBox>
                     </Border>
 
-                    <TextBlock Text="تلفن فروشگاه" FontSize="13" FontWeight="SemiBold" Foreground="#FF333333" Margin="0,0,0,5"/>
-                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6" Background="White" Margin="0,0,0,16">
-                        <TextBox x:Name="PhoneBox" FontSize="14" Padding="10,8" Background="Transparent" BorderThickness="0" FlowDirection="LeftToRight"/>
+                    <!-- Phone -->
+                    <TextBlock Text="تلفن فروشگاه" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
+                            Background="White" Margin="0,0,0,16">
+                        <TextBox x:Name="PhoneBox" FontSize="14" Padding="10,7"
+                                 Background="Transparent" BorderThickness="0"
+                                 FlowDirection="LeftToRight"/>
                     </Border>
 
-                    <TextBlock Text="آدرس فروشگاه" FontSize="13" FontWeight="SemiBold" Foreground="#FF333333" Margin="0,0,0,5"/>
-                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6" Background="White" Margin="0,0,0,16">
-                        <TextBox x:Name="AddressBox" FontSize="14" Padding="10,8" Background="Transparent" BorderThickness="0"/>
-                    </Border>
-
-                    <TextBlock Text="کد عبور مدیر (۴ رقمی)" FontSize="13" FontWeight="SemiBold" Foreground="#FF333333" Margin="0,0,0,5"/>
-                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6" Background="White" Margin="0,0,0,16">
-                        <TextBox x:Name="PinBox" FontSize="22" Padding="10,8" MaxLength="4"
-                                 FlowDirection="LeftToRight" FontWeight="Bold" HorizontalContentAlignment="Center"
+                    <!-- Address -->
+                    <TextBlock Text="آدرس فروشگاه" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
+                            Background="White" Margin="0,0,0,16">
+                        <TextBox x:Name="AddressBox" FontSize="14" Padding="10,7"
                                  Background="Transparent" BorderThickness="0"/>
                     </Border>
 
-                    <TextBlock Text="درصد مالیات (VAT)" FontSize="13" FontWeight="SemiBold" Foreground="#FF333333" Margin="0,0,0,5"/>
-                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6" Background="White" Margin="0,0,0,16"
-                            Width="120" HorizontalAlignment="Left">
-                        <TextBox x:Name="VatBox" FontSize="14" Padding="10,8" Text="10"
+                    <!-- PIN -->
+                    <TextBlock Text="کد عبور مدیر (۴ رقمی)" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
+                            Background="White" Margin="0,0,0,16">
+                        <TextBox x:Name="PinBox" FontSize="22" Padding="10,7"
+                                 MaxLength="4" FlowDirection="LeftToRight" FontWeight="Bold"
+                                 HorizontalContentAlignment="Center"
+                                 Background="Transparent" BorderThickness="0"/>
+                    </Border>
+
+                    <!-- VAT -->
+                    <TextBlock Text="درصد مالیات (VAT)" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <Border BorderBrush="#FFCCCCCC" BorderThickness="1" CornerRadius="6"
+                            Background="White" Margin="0,0,0,16" Width="120" HorizontalAlignment="Left">
+                        <TextBox x:Name="VatBox" FontSize="14" Padding="10,7" Text="10"
                                  FlowDirection="LeftToRight" HorizontalContentAlignment="Center"
                                  Background="Transparent" BorderThickness="0"/>
                     </Border>
 
-                    <TextBlock x:Name="ErrorText" Text="" Foreground="#FFD13438" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                    <!-- Error -->
+                    <TextBlock x:Name="ErrorText" Text="" Foreground="#FFD13438"
+                               FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
+                    <!-- Button -->
                     <Button x:Name="StartButton" Content="&#xE768;  شروع به کار"
-                            Width="240" Height="48" FontSize="16" FontWeight="Bold"
-                            Cursor="Hand" Margin="0,8,0,16" HorizontalAlignment="Center"
-                            Style="{StaticResource PrimaryButton}" Click="StartButton_Click"/>
+                            FontFamily="Segoe MDL2 Assets" FontSize="16" FontWeight="Bold"
+                            Width="260" Height="48" Cursor="Hand" Margin="0,4,0,16"
+                            HorizontalAlignment="Center" Background="#FF0078D4" Foreground="White"
+                            BorderThickness="0" Click="StartButton_Click"/>
                 </StackPanel>
             </ScrollViewer>
         </Border>

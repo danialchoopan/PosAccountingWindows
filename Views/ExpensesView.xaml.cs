@@ -1,8 +1,9 @@
-using System.Collections.Specialized;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using PosAccountingApp.Controls;
+using PosAccountingApp.Data;
+using PosAccountingApp.Models;
 using PosAccountingApp.ViewModels;
 
 namespace PosAccountingApp.Views;
@@ -22,16 +23,15 @@ public partial class ExpensesView : UserControl
         if (DataContext is ExpensesViewModel vm)
         {
             _vm = vm;
-            PagedGrid.SetTitle("لیست هزینه‌ها");
+            PagedGrid.SetTitle("\u0644\u06CC\u0633\u062A \u0647\u0632\u06CC\u0646\u0647\u200C\u0647\u0627");
             PagedGrid.SetColumns(
-                ("Category", "دسته", 120),
-                ("Description", "توضیحات", 250),
-                ("Amount", "مبلغ", 120),
-                ("Date", "تاریخ", 100)
+                ("Category", "\u062F\u0633\u062A\u0647", 120),
+                ("Description", "\u062A\u0648\u0636\u06CC\u062D\u0627\u062A", 250),
+                ("Amount", "\u0645\u0628\u0644\u063A", 120),
+                ("Date", "\u062A\u0627\u0631\u06CC\u062E", 100)
             );
-            PagedGrid.SetHeaders("دسته", "توضیحات", "مبلغ", "تاریخ");
+            PagedGrid.SetHeaders("\u062F\u0633\u062A\u0647", "\u062A\u0648\u0636\u06CC\u062D", "\u0645\u0628\u0644\u063A", "\u062A\u0627\u0631\u06CC\u062E");
             PagedGrid.ItemDoubleClicked += OnItemDoubleClicked;
-            vm.Expenses.CollectionChanged += (_, _) => RefreshGrid();
             RefreshGrid();
         }
     }
@@ -52,9 +52,12 @@ public partial class ExpensesView : UserControl
     {
         if (item is DataRow row)
         {
-            var win = new DetailWindow($"جزئیات هزینه: {row["Description"]}", row);
-            win.Owner = Window.GetWindow(this);
-            win.ShowDialog();
+            var result = MessageBox.Show(
+                $"\u062A\u0648\u0636\u06CC\u062D: {row["Description"]}\n\u0645\u0628\u0644\u063A: {row["Amount"]}\n\u062A\u0627\u0631\u06CC\u062E: {row["Date"]}\n\n\u0627\u0637\u0644\u0627\u0639\u0627\u062A \u0628\u0631\u0627\u06CC \u062D\u0630\u0641 \u062C\u0627\u0631\u06CC \u0627\u0633\u062A\u061F",
+                "\u062D\u0630\u0641 \u0647\u0632\u06CC\u0646\u0647",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+                ConfirmHelper.ShowSuccess("\u0647\u0632\u06CC\u0646\u0647 \u062D\u0630\u0641 \u0634\u062F");
         }
     }
 }
