@@ -1,3 +1,4 @@
+using System.IO;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -17,9 +18,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int _selectedThemeIndex = 0;
     [ObservableProperty] private double _fontSize = 14;
     [ObservableProperty] private bool _isHighContrast;
-    [ObservableProperty] private string _currencySymbol = "ريال";
-    [ObservableProperty] private string _receiptFooter = "با تشکر از خرید شما";
-    [ObservableProperty] private string _receiptHeader = "فاکتور فروش";
+    [ObservableProperty] private string _currencySymbol = "\u0631\u064A\u0627\u0644";
+    [ObservableProperty] private string _receiptFooter = "\u0628\u0627 \u062A\u0634\u06A9\u0631 \u0627\u0632 \u062E\u0631\u06CC\u062F \u0634\u0645\u0627";
+    [ObservableProperty] private string _receiptHeader = "\u0641\u0627\u06A9\u062A\u0648\u0631 \u0641\u0631\u0648\u0634";
     [ObservableProperty] private string _invoicePrefix = "INV";
     [ObservableProperty] private int _addModeIndex = 2;
     [ObservableProperty] private string _statusMessage = string.Empty;
@@ -45,9 +46,9 @@ public partial class SettingsViewModel : ObservableObject
             SelectedThemeIndex = GetThemeIndex(s.SelectedTheme);
             FontSize = s.FontSize > 0 ? s.FontSize : 14;
             IsHighContrast = s.IsHighContrast;
-            CurrencySymbol = s.CurrencySymbol ?? "ريال";
-            ReceiptFooter = s.ReceiptFooter ?? "با تشکر از خرید شما";
-            ReceiptHeader = s.ReceiptHeader ?? "فاکتور فروش";
+            CurrencySymbol = s.CurrencySymbol ?? "\u0631\u064A\u0627\u0644";
+            ReceiptFooter = s.ReceiptFooter ?? "\u0628\u0627 \u062A\u0634\u06A9\u0631 \u0627\u0632 \u062E\u0631\u06CC\u062F \u0634\u0645\u0627";
+            ReceiptHeader = s.ReceiptHeader ?? "\u0641\u0627\u06A9\u062A\u0648\u0631 \u0641\u0631\u0648\u0634";
             InvoicePrefix = s.InvoicePrefix ?? "INV";
             AddModeIndex = s.AddModeIndex;
             SelectedProfileIndex = s.SelectedProfileIndex;
@@ -62,21 +63,20 @@ public partial class SettingsViewModel : ObservableObject
         _ => 0
     };
 
-    [RelayCommand]
-    private void SaveSettings()
+    public void SaveAndApply()
     {
         try
         {
-            // Apply theme immediately
+            // 1. Apply theme
             var theme = (AppTheme)SelectedThemeIndex;
             ThemeManager.ApplyTheme(theme);
 
-            // Apply font size immediately
+            // 2. Apply font size
             var app = Application.Current;
             if (app != null)
                 app.Resources["AppFontSize"] = FontSize;
 
-            // Apply high contrast immediately
+            // 3. Apply high contrast
             if (IsHighContrast)
             {
                 if (app != null)
@@ -92,7 +92,7 @@ public partial class SettingsViewModel : ObservableObject
                 ThemeManager.ApplyTheme(theme);
             }
 
-            // Save to file
+            // 4. Save to file
             var s = AppSettings.Load();
             s.ShopName = BusinessName;
             s.Phone = BusinessPhone;
@@ -110,44 +110,39 @@ public partial class SettingsViewModel : ObservableObject
             s.SelectedProfileIndex = SelectedProfileIndex;
             s.Save();
 
-            StatusMessage = "تنظیمات ذخیره و اعمال شد";
+            StatusMessage = "\u062A\u0636\u06CC\u0645\u06CC\u0645\u0627\u062A \u0630\u062E\u06CC\u0631\u0647 \u0648 \u0627\u0639\u0645\u0627\u0644 \u0634\u062F";
         }
         catch (Exception ex)
         {
-            StatusMessage = "خطا: " + ex.Message;
+            StatusMessage = "\u062E\u0637\u0627: " + ex.Message;
         }
     }
 
-    [RelayCommand]
-    private void BackupDatabase()
-    {
-        var dbPath = System.IO.Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "PosAccountingApp", "pos_data.db");
-        var backupPath = System.IO.Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-            $"pos_backup_{DateTime.Now:yyyyMMdd_HHmmss}.db");
-        if (System.IO.File.Exists(dbPath))
-        {
-            System.IO.File.Copy(dbPath, backupPath, true);
-            StatusMessage = "پشتیبان ذخیره شد در دسکتاپ";
-        }
-    }
-
-    [RelayCommand]
-    private void RestoreDatabase() { StatusMessage = "بازیابی"; }
-
-    [RelayCommand]
-    private void RunSeedData()
+    public void SeedSampleData()
     {
         try
         {
-            Data.SeedData.Seed();
-            StatusMessage = "داده نمونه با موفقیت ایجاد شد";
+            SeedData.Seed();
+            StatusMessage = "\u062F\u0627\u062F\u0647 \u0646\u0645\u0648\u0646\u0647 \u0628\u0627 \u0645\u0648\u0641\u0642\u06CC\u062A \u0627\u06CC\u062C\u0627\u062F \u0634\u062F";
         }
         catch (Exception ex)
         {
-            StatusMessage = "خطا: " + ex.Message;
+            StatusMessage = "\u062E\u0637\u0627: " + ex.Message;
+        }
+    }
+
+    public void BackupDb()
+    {
+        var dbPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "PosAccountingApp", "pos_data.db");
+        var backupPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+            $"pos_backup_{DateTime.Now:yyyyMMdd_HHmmss}.db");
+        if (File.Exists(dbPath))
+        {
+            File.Copy(dbPath, backupPath, true);
+            StatusMessage = "\u067E\u0634\u062A\u06CC\u0628\u0627\u0646 \u0630\u062E\u06CC\u0631\u0647 \u0634\u062F";
         }
     }
 }

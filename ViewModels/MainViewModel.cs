@@ -24,6 +24,8 @@ public partial class MainViewModel : ObservableObject
     public CategoriesViewModel CategoriesVm { get; } = new();
     public AccountingViewModel AccountingVm { get; } = new();
     public SupplierViewModel SupplierVm { get; } = new();
+    public InventoryViewModel InventoryVm { get; } = new();
+    public SellsViewModel SellsVm { get; } = new();
 
     public bool IsAdmin => AppSettings.CurrentUser?.Role == UserRole.SuperAdmin
                         || AppSettings.CurrentUser?.Role == UserRole.Admin;
@@ -88,8 +90,14 @@ public partial class MainViewModel : ObservableObject
                 CurrentView = AccountingVm; CurrentViewTitle = "حسابداری";
                 AccountingVm.LoadData(); break;
             case "Suppliers":
-                CurrentView = SupplierVm; CurrentViewTitle = "تامین‌کنندگان";
+                CurrentView = SupplierVm; CurrentViewTitle = "\u062A\u0627\u0645\u06CC\u0646\u200C\u06A9\u0646\u0646\u062F\u06AF\u0627\u0646";
                 SupplierVm.LoadSuppliers(); break;
+            case "Inventory":
+                CurrentView = InventoryVm; CurrentViewTitle = "\u0645\u062F\u06CC\u0631\u06CC\u062A \u0627\u0646\u0628\u0627\u0631";
+                InventoryVm.LoadData(); break;
+            case "Sells":
+                CurrentView = SellsVm; CurrentViewTitle = "\u0641\u0631\u0648\u0634\u200C\u0647\u0627";
+                SellsVm.LoadData(); break;
             case "Settings":
                 CurrentView = SettingsVm; CurrentViewTitle = "تنظیمات"; break;
         }

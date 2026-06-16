@@ -100,6 +100,12 @@
                         <RadioButton Style="{StaticResource SidebarButton}"
                                      Content="تامین‌کنندگان"
                                      Command="{Binding NavigateToCommand}" CommandParameter="Suppliers"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="مدیریت انبار"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Inventory"/>
+                        <RadioButton Style="{StaticResource SidebarButton}"
+                                     Content="فروش‌ها"
+                                     Command="{Binding NavigateToCommand}" CommandParameter="Sells"/>
                         <RadioButton x:Name="UsersNavBtn" Style="{StaticResource SidebarButton}"
                                      Content="مدیریت کاربران"
                                      Command="{Binding NavigateToCommand}" CommandParameter="Users"
@@ -204,6 +210,12 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:SupplierViewModel}">
                         <views:SupplierView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:InventoryViewModel}">
+                        <views:InventoryView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:SellsViewModel}">
+                        <views:SellsView/>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:LoyaltyViewModel}">
                         <views:LoyaltyView/>

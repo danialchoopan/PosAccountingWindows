@@ -4,9 +4,9 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.15*"/>
-            <ColumnDefinition Width="0.70*"/>
-            <ColumnDefinition Width="0.15*"/>
+            <ColumnDefinition Width="0.12*"/>
+            <ColumnDefinition Width="0.76*"/>
+            <ColumnDefinition Width="0.12*"/>
         </Grid.ColumnDefinitions>
 
         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Padding="10,14">
@@ -17,96 +17,79 @@
                 <!-- Theme -->
                 <Border Style="{StaticResource CardBorder}" Padding="22">
                     <StackPanel>
-                        <TextBlock Text="ظاهر برنامه" FontSize="16" FontWeight="Bold"
-                                   Foreground="#FF0078D4" Margin="0,0,0,10"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="پوسته برنامه" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                                <TextBlock Text="یکی از ۵ پوسته رنگی را انتخاب کنید" FontSize="11" Foreground="#FF888888"/>
-                                <ComboBox ItemsSource="{Binding ThemeNames}" SelectedIndex="{Binding SelectedThemeIndex}"
-                                          Width="240" HorizontalAlignment="Left" Padding="10,6" Margin="0,6,0,0"/>
-                            </StackPanel>
-                            <Button Grid.Column="1" Content="اعمال تم" Style="{StaticResource PrimaryButton}"
-                                    Command="{Binding ApplyThemeCommand}" VerticalAlignment="Bottom"/>
-                        </Grid>
+                        <TextBlock Text="ظاهر برنامه" FontSize="16" FontWeight="Bold" Foreground="#FF0078D4" Margin="0,0,0,10"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="پوسته:" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <ComboBox x:Name="ThemeCombo" Width="240" Padding="10,6" SelectedIndex="0">
+                                <ComboBoxItem Content="اقیانوس آبی"/>
+                                <ComboBoxItem Content="سبز زمردی"/>
+                                <ComboBoxItem Content="بنفش سلطنتی"/>
+                                <ComboBoxItem Content="غروب نارنجی"/>
+                                <ComboBoxItem Content="نیمه‌شب تاریک"/>
+                            </ComboBox>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <!-- Font -->
                 <Border Style="{StaticResource CardBorder}" Padding="22">
                     <StackPanel>
-                        <TextBlock Text="اندازه فونت" FontSize="16" FontWeight="Bold"
-                                   Foreground="#FF0078D4" Margin="0,0,0,10"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="اندازه متن برنامه" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                                <ComboBox ItemsSource="{Binding FontSizes}" SelectedItem="{Binding FontSize}"
-                                          Width="120" HorizontalAlignment="Left" Padding="10,6"/>
-                            </StackPanel>
-                            <Button Grid.Column="1" Content="اعمال" Style="{StaticResource SuccessButton}"
-                                    Command="{Binding ApplyFontSizeCommand}" VerticalAlignment="Bottom"/>
-                        </Grid>
+                        <TextBlock Text="اندازه فونت" FontSize="16" FontWeight="Bold" Foreground="#FF0078D4" Margin="0,0,0,10"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="اندازه:" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <ComboBox x:Name="FontSizeCombo" Width="120" Padding="10,6" SelectedIndex="2">
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="12"/>
+                                <ComboBoxItem Content="14"/>
+                                <ComboBoxItem Content="16"/>
+                                <ComboBoxItem Content="18"/>
+                                <ComboBoxItem Content="20"/>
+                            </ComboBox>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <!-- High Contrast -->
                 <Border Style="{StaticResource CardBorder}" Padding="22">
                     <StackPanel>
-                        <TextBlock Text="دسترسی‌پذیری" FontSize="16" FontWeight="Bold"
-                                   Foreground="#FF0078D4" Margin="0,0,0,10"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="کنتراست بالا" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                                <TextBlock Text="متن مشکی روی زمینه سفید" FontSize="11" Foreground="#FF888888"/>
-                            </StackPanel>
-                            <Button Grid.Column="1" Content="فعال/غیرفعال" Style="{StaticResource WarningButton}"
-                                    Command="{Binding ToggleHighContrastCommand}"/>
-                        </Grid>
+                        <TextBlock Text="دسترسی‌پذیری" FontSize="16" FontWeight="Bold" Foreground="#FF0078D4" Margin="0,0,0,10"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="کنتراست بالا:" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <CheckBox x:Name="HighContrastCheck" Content="فعال کردن کنتراست بالا"
+                                      FontSize="13" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <!-- Shop Profile -->
                 <Border Style="{StaticResource CardBorder}" Padding="22">
                     <StackPanel>
-                        <TextBlock Text="پروفایل کسب‌وکار" FontSize="16" FontWeight="Bold"
-                                   Foreground="#FF0078D4" Margin="0,0,0,10"/>
+                        <TextBlock Text="پروفایل کسب‌وکار" FontSize="16" FontWeight="Bold" Foreground="#FF0078D4" Margin="0,0,0,10"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="4">
                                 <TextBlock Text="نام فروشگاه" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                                <TextBox Text="{Binding BusinessName, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="ShopNameBox"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="4">
                                 <TextBlock Text="تلفن" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                                <TextBox Text="{Binding BusinessPhone, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="PhoneBox"/>
                             </StackPanel>
                         </Grid>
                         <StackPanel Margin="4,10,4,0">
                             <TextBlock Text="آدرس" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                            <TextBox Text="{Binding BusinessAddress, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox x:Name="AddressBox"/>
                         </StackPanel>
                         <StackPanel Margin="4,10,4,0">
                             <TextBlock Text="نوع کسب‌وکار" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                            <ComboBox SelectedItem="{Binding SelectedProfile}" Width="240" HorizontalAlignment="Left" Padding="10,6">
-                                <ComboBoxItem Content="سوپرمارکت و خرده‌فروشی" Tag="Supermarket"/>
-                                <ComboBoxItem Content="پوشاک و کیف و کفش" Tag="Boutique"/>
-                                <ComboBoxItem Content="بنگاه املاک" Tag="RealEstate"/>
-                                <ComboBoxItem Content="نمایشگاه خودرو" Tag="CarDealership"/>
-                                <ComboBoxItem Content="فروشگاه مصالح ساختمانی" Tag="ConstructionMaterials"/>
+                            <ComboBox x:Name="ProfileCombo" Width="240" HorizontalAlignment="Left" Padding="10,6">
+                                <ComboBoxItem Content="سوپرمارکت"/>
+                                <ComboBoxItem Content="پوشاک"/>
+                                <ComboBoxItem Content="املاک"/>
+                                <ComboBoxItem Content="خودرو"/>
+                                <ComboBoxItem Content="مصالح"/>
                             </ComboBox>
                         </StackPanel>
                     </StackPanel>
@@ -115,33 +98,18 @@
                 <!-- Tax -->
                 <Border Style="{StaticResource CardBorder}" Padding="22">
                     <StackPanel>
-                        <TextBlock Text="مالیات و گرد کردن" FontSize="16" FontWeight="Bold"
-                                   Foreground="#FF0078D4" Margin="0,0,0,10"/>
+                        <TextBlock Text="مالیات و گرد کردن" FontSize="16" FontWeight="Bold" Foreground="#FF0078D4" Margin="0,0,0,10"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="4">
                                 <TextBlock Text="درصد مالیات (VAT)" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                                <TextBox Text="{Binding VatPercentage, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="VatBox"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="4">
-                                <TextBlock Text="روش گرد کردن" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                                <ComboBox ItemsSource="{Binding RoundingModes}" SelectedItem="{Binding RoundingMode}"
-                                          Width="200" HorizontalAlignment="Left" Padding="10,6"/>
-                            </StackPanel>
-                        </Grid>
-                        <Grid Margin="0,10,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="4">
                                 <TextBlock Text="درصد کارمزد" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                                <TextBox Text="{Binding CommissionPercentage, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Margin="4">
-                                <TextBlock Text="نماد ارز" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                                <TextBox Text="{Binding CurrencySymbol, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="CommissionBox"/>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
@@ -150,15 +118,11 @@
                 <!-- Add Mode -->
                 <Border Style="{StaticResource CardBorder}" Padding="22">
                     <StackPanel>
-                        <TextBlock Text="نحوه افزودن اطلاعات" FontSize="16" FontWeight="Bold"
-                                   Foreground="#FF0078D4" Margin="0,0,0,10"/>
-                        <TextBlock Text="تعیین کنید فرم افزودن در کجا نمایش داده شود" FontSize="12"
-                                   Foreground="#FF888888" Margin="0,0,0,8"/>
-                        <ComboBox SelectedIndex="{Binding AddModeIndex}"
-                                  Width="300" HorizontalAlignment="Left" Padding="10,6">
+                        <TextBlock Text="نحوه افزودن اطلاعات" FontSize="16" FontWeight="Bold" Foreground="#FF0078D4" Margin="0,0,0,10"/>
+                        <ComboBox x:Name="AddModeCombo" Width="300" HorizontalAlignment="Left" Padding="10,6">
                             <ComboBoxItem Content="پنجره پاپ‌آپ" Tag="Popup"/>
                             <ComboBoxItem Content="صفحه جداگانه" Tag="SeparatePage"/>
-                            <ComboBoxItem Content="در همان صفحه" Tag="Inline"/>
+                            <ComboBoxItem Content="در همان صفحه" Tag="Inline" IsSelected="True"/>
                         </ComboBox>
                     </StackPanel>
                 </Border>
@@ -166,52 +130,45 @@
                 <!-- Receipt -->
                 <Border Style="{StaticResource CardBorder}" Padding="22">
                     <StackPanel>
-                        <TextBlock Text="تنظیمات رسید" FontSize="16" FontWeight="Bold"
-                                   Foreground="#FF0078D4" Margin="0,0,0,10"/>
+                        <TextBlock Text="تنظیمات رسید" FontSize="16" FontWeight="Bold" Foreground="#FF0078D4" Margin="0,0,0,10"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="4">
                                 <TextBlock Text="سربرگ رسید" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                                <TextBox Text="{Binding ReceiptHeader, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="ReceiptHeaderBox"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="4">
                                 <TextBlock Text="پیام انتهای رسید" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                                <TextBox Text="{Binding ReceiptFooter, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="ReceiptFooterBox"/>
                             </StackPanel>
                         </Grid>
-                        <StackPanel Margin="4,10,4,0">
-                            <TextBlock Text="پیشوند شماره فاکتور" FontSize="12" Foreground="#FF888888" Margin="0,0,0,4"/>
-                            <TextBox Text="{Binding InvoicePrefix, UpdateSourceTrigger=PropertyChanged}"
-                                     Width="160" HorizontalAlignment="Left"/>
-                        </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <!-- Backup -->
                 <Border Style="{StaticResource CardBorder}" Padding="22">
                     <StackPanel>
-                        <TextBlock Text="پشتیبان‌گیری و نمونه داده" FontSize="16" FontWeight="Bold"
-                                   Foreground="#FF0078D4" Margin="0,0,0,10"/>
+                        <TextBlock Text="پشتیبان‌گیری و نمونه" FontSize="16" FontWeight="Bold" Foreground="#FF0078D4" Margin="0,0,0,10"/>
                         <StackPanel Orientation="Horizontal">
                             <Button Content="پشتیبان‌گیری" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"
-                                    Command="{Binding BackupDatabaseCommand}"/>
-                            <Button Content="بازیابی" Style="{StaticResource DangerButton}" Margin="0,0,8,0"
-                                    Command="{Binding RestoreDatabaseCommand}"/>
+                                    Click="Backup_Click"/>
                             <Button Content="تولید داده نمونه" Style="{StaticResource WarningButton}"
-                                    Command="{Binding SeedDataCommand}"/>
+                                    Click="Seed_Click"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <Button Content="ذخیره و اعمال تنظیمات" Style="{StaticResource PrimaryButton}"
-                        HorizontalAlignment="Center" Margin="0,16,0,8" Padding="30,12"
-                        FontSize="15" Command="{Binding SaveSettingsCommand}"/>
-
-                <TextBlock x:Name="StatusLabel" Text="" FontSize="13" FontWeight="SemiBold"
-                           Foreground="#FF107C10" HorizontalAlignment="Center" Margin="0,4,0,0"
+                <!-- Status -->
+                <TextBlock x:Name="StatusLabel" Text="" FontSize="14" FontWeight="Bold"
+                           Foreground="#FF107C10" HorizontalAlignment="Center" Margin="0,10,0,0"
                            Visibility="Collapsed"/>
+
+                <!-- Single Apply Button -->
+                <Button Content="ذخیره و اعمال تنظیمات" Style="{StaticResource PrimaryButton}"
+                        HorizontalAlignment="Center" Margin="0,16,0,20" Padding="40,14"
+                        FontSize="16" Click="Apply_Click"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>
