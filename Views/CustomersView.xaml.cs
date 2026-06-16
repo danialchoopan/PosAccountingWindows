@@ -23,15 +23,12 @@ public partial class CustomersView : UserControl
         if (DataContext is CustomersViewModel vm)
         {
             _vm = vm;
-            PagedGrid.SetTitle("\u0644\u06CC\u0633\u062A \u0645\u0634\u062A\u0631\u06CC\u0627\u0646");
+            PagedGrid.SetTitle("لیست مشتریان");
             PagedGrid.SetColumns(
-                ("Name", "\u0646\u0627\u0645", 200),
-                ("Phone", "\u062A\u0644\u0641\u0646", 140),
-                ("Balance", "\u0645\u0648\u062C\u0648\u062F\u06CC \u062D\u0633\u0627\u0628", 120),
-                ("CreditLimit", "\u0633\u0642\u0641 \u0627\u0639\u062A\u0628\u0627\u0631", 120),
-                ("LoyaltyPoints", "\u0627\u0645\u062A\u06CC\u0627\u0632", 80)
-            );
-            PagedGrid.SetHeaders("\u0646\u0627\u0645", "\u062A\u0644\u0641\u0646", "\u0645\u0648\u062C\u0648\u062F\u06CC \u062D\u0633\u0627\u0628", "\u0633\u0642\u0641 \u0627\u0639\u062A\u0628\u0627\u0631", "\u0627\u0645\u062A\u06CC\u0627\u0632");
+                ("Name", "نام", 200), ("Phone", "تلفن", 140),
+                ("Balance", "موجودی حساب", 120), ("CreditLimit", "سقف اعتبار", 120),
+                ("LoyaltyPoints", "امتیاز", 80));
+            PagedGrid.SetHeaders("نام", "تلفن", "موجودی حساب", "سقف اعتبار", "امتیاز");
             PagedGrid.ItemDoubleClicked += OnItemDoubleClicked;
             RefreshGrid();
         }
@@ -53,12 +50,9 @@ public partial class CustomersView : UserControl
     {
         if (item is DataRow row)
         {
-            var result = MessageBox.Show(
-                $"\u0646\u0627\u0645: {row["Name"]}\n\u062A\u0644\u0641\u0646: {row["Phone"]}\n\u0645\u0648\u062C\u0648\u062F\u06CC: {row["Balance"]}\n\u0633\u0642\u0641 \u0627\u0639\u062A\u0628\u0627\u0631: {row["CreditLimit"]}\n\n\u0627\u0637\u0644\u0627\u0639\u0627\u062A \u0628\u0631\u0627\u06CC \u062D\u0630\u0641 \u062C\u0627\u0631\u06CC \u0627\u0633\u062A\u061F",
-                "\u062D\u0630\u0641 \u0645\u0634\u062A\u0631\u06CC",
-                MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.Yes)
-                _vm?.DeleteCustomerCommand.Execute(_vm.Customers.FirstOrDefault(c => c.Id == (int)row["Id"]));
+            var win = new DetailEditWindow($"مشتری: {row["Name"]}", row, "Customer");
+            win.Owner = Window.GetWindow(this);
+            if (win.ShowDialog() == true) RefreshGrid();
         }
     }
 }

@@ -35,7 +35,8 @@
         </Border>
 
         <!-- DataGrid -->
-        <DataGrid x:Name="MainGrid" DockPanel.Dock="Top"/>
+        <DataGrid x:Name="MainGrid" DockPanel.Dock="Top" MouseDoubleClick="MainGrid_MouseDoubleClick"/>
+
 
         <!-- Pagination -->
         <Border DockPanel.Dock="Bottom" Padding="0,6,0,0"

@@ -32,16 +32,29 @@ public partial class PaginatedDataGrid : UserControl
     public void SetColumns(params (string Binding, string Header, double Width)[] columns)
     {
         MainGrid.Columns.Clear();
-        foreach (var (binding, header, width) in columns)
+        foreach (var colDef in columns)
         {
             var col = new DataGridTextColumn
             {
-                Header = header,
-                Binding = new System.Windows.Data.Binding(binding),
-                Width = new DataGridLength(width)
+                Header = colDef.Header,
+                Binding = new System.Windows.Data.Binding(colDef.Binding),
+                Width = new DataGridLength(colDef.Width)
             };
             MainGrid.Columns.Add(col);
         }
+
+        // Add View/Edit column
+        var viewCol = new DataGridTemplateColumn { Header = "نمایش", Width = 70 };
+        var template = new DataTemplate();
+        var factory = new FrameworkElementFactory(typeof(Button));
+        factory.SetValue(Button.ContentProperty, "نمایش");
+        factory.SetValue(Button.StyleProperty, Application.Current.FindResource("PrimaryButton"));
+        factory.SetValue(Button.PaddingProperty, new Thickness(8, 4, 8, 4));
+        factory.SetValue(Button.FontSizeProperty, 11.0);
+        factory.AddHandler(Button.ClickEvent, new RoutedEventHandler(ViewBtn_Click));
+        template.VisualTree = factory;
+        viewCol.CellTemplate = template;
+        MainGrid.Columns.Add(viewCol);
     }
 
     public void LoadData(DataTable table)
@@ -127,6 +140,12 @@ public partial class PaginatedDataGrid : UserControl
     }
 
     private void MainGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (MainGrid.SelectedItem is DataRowView row)
+            ItemDoubleClicked?.Invoke(row.Row);
+    }
+
+    private void ViewBtn_Click(object sender, RoutedEventArgs e)
     {
         if (MainGrid.SelectedItem is DataRowView row)
             ItemDoubleClicked?.Invoke(row.Row);
